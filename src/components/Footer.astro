@@ -1,0 +1,77 @@
+---
+const links = [
+  {
+    title: "Product",
+    items: [
+      { label: "Tools", href: "#tools" },
+      { label: "Pricing", href: "#pricing" },
+      { label: "Get API Key", href: "https://tally.so/r/nightlife-api-waitlist" },
+    ],
+  },
+  {
+    title: "Developers",
+    items: [
+      { label: "Documentation", href: "https://github.com/nicepicks/nightlife-mcp" },
+      { label: "GitHub", href: "https://github.com/nicepicks/nightlife-mcp" },
+      { label: "MCP Protocol", href: "https://modelcontextprotocol.io" },
+    ],
+  },
+  {
+    title: "Company",
+    items: [
+      { label: "Nightlife Tokyo", href: "https://nightlifetokyo.com" },
+      { label: "Contact", href: "mailto:allen@nightlifetokyo.com" },
+    ],
+  },
+];
+---
+
+<footer class="border-t border-border py-12">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="grid gap-8 md:grid-cols-4">
+      <!-- Brand -->
+      <div>
+        <a href="/" class="mb-4 block text-lg font-bold">
+          <span class="text-primary">nightlife</span><span class="text-text-muted">.dev</span>
+        </a>
+        <p class="text-sm text-text-muted">
+          The first nightlife discovery MCP server.<br />
+          Built in Tokyo.
+        </p>
+      </div>
+
+      <!-- Link columns -->
+      {
+        links.map((col) => (
+          <div>
+            <h4 class="mb-3 text-sm font-semibold">{col.title}</h4>
+            <ul class="space-y-2">
+              {col.items.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    class="text-sm text-text-muted transition-colors hover:text-text"
+                    target={item.href.startsWith("http") ? "_blank" : undefined}
+                    rel={
+                      item.href.startsWith("http")
+                        ? "noopener noreferrer"
+                        : undefined
+                    }
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div
+      class="mt-12 border-t border-border pt-6 text-center text-sm text-text-muted"
+    >
+      &copy; {new Date().getFullYear()} Nightlife Tokyo. All rights reserved.
+    </div>
+  </div>
+</footer>

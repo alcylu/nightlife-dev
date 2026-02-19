@@ -1,0 +1,31 @@
+---
+import ToolCard from "./ToolCard.astro";
+import { tools } from "../data/tools";
+---
+
+<section id="tools" class="py-20 md:py-28">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="mb-12 text-center">
+      <h2 class="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
+        Three tools. Infinite possibilities.
+      </h2>
+      <p class="mx-auto max-w-2xl text-text-muted">
+        The nightlife MCP server exposes three tools that give your AI agents
+        structured access to real-time nightlife event data.
+      </p>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-3">
+      {
+        tools.map((tool) => (
+          <ToolCard
+            name={tool.name}
+            description={tool.description}
+            params={tool.params}
+            example={tool.example}
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>

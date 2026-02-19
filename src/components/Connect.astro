@@ -1,0 +1,131 @@
+---
+const tabs = [
+  {
+    id: "claude",
+    label: "Claude Desktop",
+    language: "json",
+    code: `{
+  "mcpServers": {
+    "nightlife": {
+      "url": "https://nightlife-mcp-production.up.railway.app/mcp",
+      "headers": {
+        "x-api-key": "YOUR_API_KEY"
+      }
+    }
+  }
+}`,
+  },
+  {
+    id: "curl",
+    label: "curl",
+    language: "bash",
+    code: `curl https://nightlife-mcp-production.up.railway.app/mcp \\
+  -H 'content-type: application/json' \\
+  -H 'accept: application/json, text/event-stream' \\
+  -H 'x-api-key: YOUR_API_KEY' \\
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/call",
+    "params": {
+      "name": "get_tonight",
+      "arguments": { "city": "tokyo" }
+    }
+  }'`,
+  },
+  {
+    id: "typescript",
+    label: "TypeScript",
+    language: "typescript",
+    code: `import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+
+const transport = new StreamableHTTPClientTransport(
+  new URL("https://nightlife-mcp-production.up.railway.app/mcp"),
+  { requestInit: { headers: { "x-api-key": "YOUR_API_KEY" } } }
+);
+
+const client = new Client({ name: "my-app", version: "1.0.0" });
+await client.connect(transport);
+
+const result = await client.callTool({
+  name: "get_tonight",
+  arguments: { city: "tokyo", limit: 5 }
+});`,
+  },
+];
+---
+
+<section id="connect" class="py-20 md:py-28">
+  <div class="mx-auto max-w-4xl px-6">
+    <div class="mb-12 text-center">
+      <h2 class="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
+        Connect in seconds
+      </h2>
+      <p class="mx-auto max-w-2xl text-text-muted">
+        Add the nightlife MCP server to Claude Desktop, call it from curl, or
+        use the TypeScript SDK. No complex setup required.
+      </p>
+    </div>
+
+    <div class="rounded-xl border border-border bg-bg-card overflow-hidden">
+      <!-- Tabs -->
+      <div class="flex border-b border-border" role="tablist">
+        {
+          tabs.map((tab, i) => (
+            <button
+              role="tab"
+              aria-selected={i === 0 ? "true" : "false"}
+              aria-controls={`panel-${tab.id}`}
+              data-tab={tab.id}
+              class:list={[
+                "connect-tab px-5 py-3 text-sm font-medium transition-colors",
+                i === 0
+                  ? "border-b-2 border-primary text-text"
+                  : "text-text-muted hover:text-text",
+              ]}
+            >
+              {tab.label}
+            </button>
+          ))
+        }
+      </div>
+
+      <!-- Panels -->
+      {
+        tabs.map((tab, i) => (
+          <div
+            id={`panel-${tab.id}`}
+            role="tabpanel"
+            class:list={["connect-panel", i !== 0 && "hidden"]}
+          >
+            <pre class="overflow-x-auto p-6 text-sm leading-relaxed font-mono text-text-muted"><code set:text={tab.code} /></pre>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll(".connect-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const targetId = (tab as HTMLElement).dataset.tab;
+
+      document.querySelectorAll(".connect-tab").forEach((t) => {
+        t.setAttribute("aria-selected", "false");
+        t.classList.remove("border-b-2", "border-primary", "text-text");
+        t.classList.add("text-text-muted");
+      });
+
+      tab.setAttribute("aria-selected", "true");
+      tab.classList.add("border-b-2", "border-primary", "text-text");
+      tab.classList.remove("text-text-muted");
+
+      document.querySelectorAll(".connect-panel").forEach((p) => {
+        p.classList.add("hidden");
+      });
+      document.getElementById(`panel-${targetId}`)?.classList.remove("hidden");
+    });
+  });
+</script>

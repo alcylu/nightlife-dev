@@ -1,0 +1,48 @@
+---
+interface Props {
+  name: string;
+  description: string;
+  params: string[];
+  example: string;
+}
+
+const { name, description, params, example } = Astro.props;
+---
+
+<div
+  class="group rounded-xl border border-border bg-bg-card p-6 transition-colors hover:border-border-hover hover:bg-bg-card-hover"
+>
+  <div class="mb-3 flex items-center gap-3">
+    <div class="rounded-lg bg-primary/10 p-2">
+      <svg
+        class="h-5 w-5 text-primary"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+      </svg>
+    </div>
+    <h3 class="font-mono text-lg font-semibold text-text">{name}</h3>
+  </div>
+
+  <p class="mb-4 text-sm leading-relaxed text-text-muted">{description}</p>
+
+  <div class="mb-4 flex flex-wrap gap-1.5">
+    {
+      params.map((p) => (
+        <span class="rounded-md bg-primary/10 px-2 py-0.5 font-mono text-xs text-primary">
+          {p}
+        </span>
+      ))
+    }
+  </div>
+
+  <pre
+    class="overflow-x-auto rounded-lg bg-bg p-4 text-xs leading-relaxed font-mono text-text-muted"
+    ><code set:text={example} /></pre>
+</div>
