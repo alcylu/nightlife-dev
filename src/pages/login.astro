@@ -1,0 +1,78 @@
+---
+import AuthPage from "../layouts/AuthPage.astro";
+---
+
+<AuthPage title="Log In — nightlife.dev" heading="Welcome back">
+  <form id="login-form" class="space-y-4">
+    <div>
+      <label for="email" class="mb-1 block text-sm font-medium">Email</label>
+      <input
+        id="email"
+        type="email"
+        required
+        autocomplete="email"
+        placeholder="you@example.com"
+        class="w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm text-text placeholder-text-muted outline-none transition-colors focus:border-primary"
+      />
+    </div>
+
+    <div>
+      <label for="password" class="mb-1 block text-sm font-medium">Password</label>
+      <input
+        id="password"
+        type="password"
+        required
+        autocomplete="current-password"
+        placeholder="Your password"
+        class="w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm text-text placeholder-text-muted outline-none transition-colors focus:border-primary"
+      />
+    </div>
+
+    <div id="error-msg" class="hidden rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-400">
+    </div>
+
+    <button
+      type="submit"
+      id="submit-btn"
+      class="w-full rounded-lg bg-primary py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
+    >
+      Sign in
+    </button>
+  </form>
+
+  <p class="mt-6 text-center text-sm text-text-muted">
+    Don't have an account?
+    <a href="/signup" class="text-primary hover:underline">Sign up</a>
+  </p>
+</AuthPage>
+
+<script>
+  import { supabase } from "../lib/supabase";
+
+  const form = document.getElementById("login-form") as HTMLFormElement;
+  const emailInput = document.getElementById("email") as HTMLInputElement;
+  const passwordInput = document.getElementById("password") as HTMLInputElement;
+  const errorMsg = document.getElementById("error-msg") as HTMLDivElement;
+  const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorMsg.classList.add("hidden");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Signing in...";
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: emailInput.value,
+      password: passwordInput.value,
+    });
+
+    if (error) {
+      errorMsg.textContent = error.message;
+      errorMsg.classList.remove("hidden");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Sign in";
+    } else {
+      window.location.href = "/dashboard";
+    }
+  });
+</script>

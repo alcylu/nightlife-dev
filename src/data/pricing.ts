@@ -22,7 +22,7 @@ export const pricing: PricingTier[] = [
       "Community support",
     ],
     cta: "Get API Key",
-    ctaHref: "https://tally.so/r/nightlife-api-waitlist",
+    ctaHref: "/signup",
   },
   {
     name: "Pro",
@@ -37,7 +37,7 @@ export const pricing: PricingTier[] = [
       "Webhooks (coming soon)",
     ],
     cta: "Get API Key",
-    ctaHref: "https://tally.so/r/nightlife-api-waitlist",
+    ctaHref: "/signup",
     highlighted: true,
   },
   {

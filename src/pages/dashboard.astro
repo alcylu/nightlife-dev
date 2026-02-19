@@ -1,0 +1,472 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Dashboard — nightlife.dev" description="Manage your API keys and usage.">
+  <!-- Loading state -->
+  <div id="loading" class="flex min-h-screen items-center justify-center">
+    <div class="text-center">
+      <div
+        class="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-border border-t-primary"
+      >
+      </div>
+      <p class="text-sm text-text-muted">Loading dashboard...</p>
+    </div>
+  </div>
+
+  <!-- Dashboard (hidden until auth confirmed) -->
+  <div id="dashboard" class="hidden min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-border bg-bg/80 backdrop-blur-lg">
+      <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+        <div class="flex items-center gap-3">
+          <a href="/" class="text-xl font-bold tracking-tight">
+            <span class="text-primary">nightlife</span><span class="text-text-muted">.dev</span>
+          </a>
+          <span class="text-text-muted">/</span>
+          <span class="text-sm font-medium">Dashboard</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span id="user-email" class="hidden text-sm text-text-muted sm:inline"></span>
+          <button
+            id="signout-btn"
+            class="rounded-lg border border-border px-3 py-1.5 text-sm text-text-muted transition-colors hover:border-border-hover hover:text-text"
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-5xl px-6 py-8">
+      <!-- Plan banner -->
+      <div
+        class="mb-8 flex items-center justify-between rounded-xl border border-border bg-bg-card p-4"
+      >
+        <div>
+          <span class="text-sm font-medium">Free Plan</span>
+          <span class="ml-2 text-sm text-text-muted">100 requests / day</span>
+        </div>
+        <a
+          href="mailto:allen@nightlifetokyo.com?subject=Upgrade to Pro"
+          class="rounded-lg border border-primary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-white"
+        >
+          Upgrade
+        </a>
+      </div>
+
+      <!-- Usage -->
+      <div class="mb-8 grid gap-4 sm:grid-cols-2">
+        <div class="rounded-xl border border-border bg-bg-card p-5">
+          <p class="mb-1 text-sm text-text-muted">Today's usage</p>
+          <div class="mb-2 flex items-baseline gap-2">
+            <span id="usage-today" class="text-2xl font-bold">--</span>
+            <span class="text-sm text-text-muted">/ 100</span>
+          </div>
+          <div class="h-2 overflow-hidden rounded-full bg-bg">
+            <div
+              id="usage-bar"
+              class="h-full rounded-full bg-primary transition-all"
+              style="width: 0%"
+            >
+            </div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-border bg-bg-card p-5">
+          <p class="mb-1 text-sm text-text-muted">Last 30 days</p>
+          <span id="usage-30d" class="text-2xl font-bold">--</span>
+          <span class="ml-1 text-sm text-text-muted">requests</span>
+        </div>
+      </div>
+
+      <!-- API Keys section -->
+      <div class="rounded-xl border border-border bg-bg-card">
+        <div class="flex items-center justify-between border-b border-border px-5 py-4">
+          <h2 class="font-semibold">API Keys</h2>
+          <button
+            id="create-key-btn"
+            class="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Create key
+          </button>
+        </div>
+
+        <!-- Keys table -->
+        <div id="keys-loading" class="px-5 py-8 text-center text-sm text-text-muted">
+          Loading keys...
+        </div>
+        <div id="keys-empty" class="hidden px-5 py-8 text-center text-sm text-text-muted">
+          No API keys yet. Click "Create key" to get started.
+        </div>
+        <div id="keys-error" class="hidden px-5 py-8 text-center text-sm text-red-400">
+          <span id="keys-error-msg"></span>
+          <button id="keys-retry" class="ml-2 text-primary hover:underline">Retry</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table id="keys-table" class="hidden w-full text-sm">
+            <thead>
+              <tr class="border-b border-border text-left text-text-muted">
+                <th class="px-5 py-3 font-medium">Name</th>
+                <th class="px-5 py-3 font-medium">Key</th>
+                <th class="px-5 py-3 font-medium">Status</th>
+                <th class="px-5 py-3 font-medium">Created</th>
+                <th class="px-5 py-3 font-medium">Today</th>
+                <th class="px-5 py-3 font-medium"></th>
+              </tr>
+            </thead>
+            <tbody id="keys-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Key reveal modal -->
+  <div
+    id="key-modal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 px-4 backdrop-blur-sm"
+  >
+    <div class="w-full max-w-lg rounded-xl border border-border bg-bg-card p-6">
+      <h3 class="mb-4 text-lg font-semibold">Your new API key</h3>
+      <div
+        class="mb-3 flex items-center gap-2 rounded-lg border border-border bg-bg px-4 py-3 font-mono text-sm"
+      >
+        <code id="modal-key" class="flex-1 break-all"></code>
+        <button id="copy-btn" class="shrink-0 text-text-muted transition-colors hover:text-text">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-width="2"></rect>
+            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-width="2"
+            ></path>
+          </svg>
+        </button>
+      </div>
+      <p class="mb-6 text-sm text-yellow-400/80">
+        Save this key now. It won't be shown again.
+      </p>
+      <button
+        id="modal-done-btn"
+        class="w-full rounded-lg bg-primary py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
+      >
+        Done
+      </button>
+    </div>
+  </div>
+
+  <!-- Create key name modal -->
+  <div
+    id="name-modal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 px-4 backdrop-blur-sm"
+  >
+    <div class="w-full max-w-sm rounded-xl border border-border bg-bg-card p-6">
+      <h3 class="mb-4 text-lg font-semibold">Name your API key</h3>
+      <form id="name-form" class="space-y-4">
+        <input
+          id="key-name-input"
+          type="text"
+          required
+          maxlength="50"
+          placeholder="e.g. my-app, production, testing"
+          class="w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm text-text placeholder-text-muted outline-none transition-colors focus:border-primary"
+        />
+        <div class="flex gap-3">
+          <button
+            type="button"
+            id="name-cancel-btn"
+            class="flex-1 rounded-lg border border-border py-2.5 text-sm font-medium text-text-muted transition-colors hover:border-border-hover hover:text-text"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            id="name-submit-btn"
+            class="flex-1 rounded-lg bg-primary py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
+          >
+            Create
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { supabase } from "../lib/supabase";
+
+  // --- DOM refs ---
+  const loadingEl = document.getElementById("loading")!;
+  const dashboardEl = document.getElementById("dashboard")!;
+  const userEmailEl = document.getElementById("user-email")!;
+  const signoutBtn = document.getElementById("signout-btn")!;
+  const usageTodayEl = document.getElementById("usage-today")!;
+  const usageBarEl = document.getElementById("usage-bar")!;
+  const usage30dEl = document.getElementById("usage-30d")!;
+
+  const keysLoadingEl = document.getElementById("keys-loading")!;
+  const keysEmptyEl = document.getElementById("keys-empty")!;
+  const keysErrorEl = document.getElementById("keys-error")!;
+  const keysErrorMsgEl = document.getElementById("keys-error-msg")!;
+  const keysRetryBtn = document.getElementById("keys-retry")!;
+  const keysTableEl = document.getElementById("keys-table")!;
+  const keysTbodyEl = document.getElementById("keys-tbody")!;
+  const createKeyBtn = document.getElementById("create-key-btn") as HTMLButtonElement;
+
+  const keyModal = document.getElementById("key-modal")!;
+  const modalKeyEl = document.getElementById("modal-key")!;
+  const copyBtn = document.getElementById("copy-btn")!;
+  const modalDoneBtn = document.getElementById("modal-done-btn")!;
+
+  const nameModal = document.getElementById("name-modal")!;
+  const nameForm = document.getElementById("name-form") as HTMLFormElement;
+  const keyNameInput = document.getElementById("key-name-input") as HTMLInputElement;
+  const nameCancelBtn = document.getElementById("name-cancel-btn")!;
+  const nameSubmitBtn = document.getElementById("name-submit-btn") as HTMLButtonElement;
+
+  const QUOTA = 100;
+  const MAX_KEYS = 3;
+  let isFirstLoad = true;
+
+  // --- Auth guard ---
+  async function init() {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      window.location.href = "/login";
+      return;
+    }
+
+    userEmailEl.textContent = session.user.email ?? "";
+    loadingEl.classList.add("hidden");
+    dashboardEl.classList.remove("hidden");
+
+    await loadDashboard();
+  }
+
+  // --- Load keys + usage ---
+  async function loadDashboard() {
+    await Promise.all([loadKeys(), loadUsage()]);
+  }
+
+  async function loadKeys() {
+    keysLoadingEl.classList.remove("hidden");
+    keysEmptyEl.classList.add("hidden");
+    keysErrorEl.classList.add("hidden");
+    keysTableEl.classList.add("hidden");
+
+    const { data, error } = await supabase.rpc("get_user_usage_summary");
+
+    if (error) {
+      keysLoadingEl.classList.add("hidden");
+      keysErrorMsgEl.textContent = error.message;
+      keysErrorEl.classList.remove("hidden");
+      return;
+    }
+
+    keysLoadingEl.classList.add("hidden");
+
+    if (!data || data.length === 0) {
+      if (isFirstLoad) {
+        isFirstLoad = false;
+        await autoCreateKey();
+        return;
+      }
+      keysEmptyEl.classList.remove("hidden");
+      updateCreateBtnState(0);
+      return;
+    }
+
+    isFirstLoad = false;
+    renderKeys(data);
+  }
+
+  async function loadUsage() {
+    const { data } = await supabase.rpc("get_user_usage_summary");
+    if (!data || data.length === 0) {
+      usageTodayEl.textContent = "0";
+      usage30dEl.textContent = "0";
+      return;
+    }
+
+    const todayTotal = data.reduce(
+      (sum: number, k: any) => sum + (k.today_usage || 0),
+      0,
+    );
+    const thirtyDayTotal = data.reduce(
+      (sum: number, k: any) => sum + (k.last_30_days_usage || 0),
+      0,
+    );
+
+    usageTodayEl.textContent = String(todayTotal);
+    usage30dEl.textContent = String(thirtyDayTotal);
+
+    const pct = Math.min((todayTotal / QUOTA) * 100, 100);
+    usageBarEl.style.width = `${pct}%`;
+    if (pct >= 90) {
+      usageBarEl.classList.remove("bg-primary");
+      usageBarEl.classList.add("bg-red-500");
+    }
+  }
+
+  function renderKeys(keys: any[]) {
+    const activeKeys = keys.filter((k: any) => k.status === "active");
+    updateCreateBtnState(activeKeys.length);
+
+    keysTbodyEl.innerHTML = "";
+    for (const key of keys) {
+      const tr = document.createElement("tr");
+      tr.className = "border-b border-border last:border-0";
+      const created = new Date(key.created_at).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+      const statusClass =
+        key.status === "active" ? "text-green-400" : "text-text-muted line-through";
+
+      tr.innerHTML = `
+        <td class="px-5 py-3 font-medium">${escapeHtml(key.key_name)}</td>
+        <td class="px-5 py-3 font-mono text-text-muted">${escapeHtml(key.key_prefix)}...</td>
+        <td class="px-5 py-3"><span class="${statusClass}">${key.status}</span></td>
+        <td class="px-5 py-3 text-text-muted">${created}</td>
+        <td class="px-5 py-3 text-text-muted">${key.today_usage ?? 0}</td>
+        <td class="px-5 py-3">
+          ${
+            key.status === "active"
+              ? `<button data-revoke="${key.key_id}" class="text-sm text-red-400 hover:text-red-300 transition-colors">Revoke</button>`
+              : ""
+          }
+        </td>
+      `;
+      keysTbodyEl.appendChild(tr);
+    }
+
+    keysTableEl.classList.remove("hidden");
+
+    // Attach revoke handlers
+    keysTbodyEl.querySelectorAll("[data-revoke]").forEach((btn) => {
+      btn.addEventListener("click", () => revokeKey(btn.getAttribute("data-revoke")!));
+    });
+  }
+
+  function updateCreateBtnState(activeCount: number) {
+    if (activeCount >= MAX_KEYS) {
+      createKeyBtn.disabled = true;
+      createKeyBtn.title = `Maximum ${MAX_KEYS} active keys`;
+    } else {
+      createKeyBtn.disabled = false;
+      createKeyBtn.title = "";
+    }
+  }
+
+  // --- Auto-create key on first visit ---
+  async function autoCreateKey() {
+    const { data, error } = await supabase.rpc("create_user_api_key", {
+      p_key_name: "default",
+    });
+
+    if (error) {
+      keysErrorMsgEl.textContent = error.message;
+      keysErrorEl.classList.remove("hidden");
+      return;
+    }
+
+    showKeyModal(data[0].raw_key);
+    await loadKeys();
+  }
+
+  // --- Create key flow ---
+  createKeyBtn.addEventListener("click", () => {
+    keyNameInput.value = "";
+    nameModal.classList.remove("hidden");
+    nameModal.classList.add("flex");
+    keyNameInput.focus();
+  });
+
+  nameCancelBtn.addEventListener("click", () => {
+    nameModal.classList.add("hidden");
+    nameModal.classList.remove("flex");
+  });
+
+  nameForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = keyNameInput.value.trim();
+    if (!name) return;
+
+    nameSubmitBtn.disabled = true;
+    nameSubmitBtn.textContent = "Creating...";
+
+    const { data, error } = await supabase.rpc("create_user_api_key", {
+      p_key_name: name,
+    });
+
+    nameSubmitBtn.disabled = false;
+    nameSubmitBtn.textContent = "Create";
+    nameModal.classList.add("hidden");
+    nameModal.classList.remove("flex");
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    showKeyModal(data[0].raw_key);
+    await Promise.all([loadKeys(), loadUsage()]);
+  });
+
+  // --- Key reveal modal ---
+  function showKeyModal(rawKey: string) {
+    modalKeyEl.textContent = rawKey;
+    keyModal.classList.remove("hidden");
+    keyModal.classList.add("flex");
+  }
+
+  copyBtn.addEventListener("click", async () => {
+    const key = modalKeyEl.textContent ?? "";
+    await navigator.clipboard.writeText(key);
+    copyBtn.innerHTML = `<span class="text-xs text-green-400">Copied!</span>`;
+    setTimeout(() => {
+      copyBtn.innerHTML = `<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-width="2"></rect><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-width="2"></path></svg>`;
+    }, 2000);
+  });
+
+  modalDoneBtn.addEventListener("click", () => {
+    keyModal.classList.add("hidden");
+    keyModal.classList.remove("flex");
+  });
+
+  // --- Revoke ---
+  async function revokeKey(keyId: string) {
+    if (!confirm("Revoke this API key? This cannot be undone.")) return;
+
+    const { error } = await supabase.rpc("revoke_user_api_key", {
+      p_key_id: keyId,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    await Promise.all([loadKeys(), loadUsage()]);
+  }
+
+  // --- Sign out ---
+  signoutBtn.addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/login";
+  });
+
+  // --- Retry ---
+  keysRetryBtn.addEventListener("click", () => loadDashboard());
+
+  // --- Escape HTML ---
+  function escapeHtml(str: string) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // --- Init ---
+  init();
+</script>

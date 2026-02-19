@@ -62,8 +62,8 @@ import { pricing } from "../data/pricing";
 
             <a
               href={tier.ctaHref}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={tier.ctaHref.startsWith("http") || tier.ctaHref.startsWith("mailto") ? "_blank" : undefined}
+              rel={tier.ctaHref.startsWith("http") || tier.ctaHref.startsWith("mailto") ? "noopener noreferrer" : undefined}
               class:list={[
                 "block w-full rounded-lg py-2.5 text-center text-sm font-medium transition-colors",
                 tier.highlighted

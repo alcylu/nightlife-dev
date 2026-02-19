@@ -1,0 +1,45 @@
+---
+interface Props {
+  title: string;
+  heading: string;
+}
+
+const { title, heading } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body
+    class="flex min-h-screen items-center justify-center bg-bg px-4 font-sans text-text antialiased"
+  >
+    <div class="w-full max-w-md">
+      <div class="mb-8 text-center">
+        <a href="/" class="inline-block text-2xl font-bold tracking-tight">
+          <span class="text-primary">nightlife</span><span class="text-text-muted">.dev</span>
+        </a>
+      </div>
+
+      <div class="rounded-xl border border-border bg-bg-card p-8">
+        <h1 class="mb-6 text-center text-xl font-semibold">{heading}</h1>
+        <slot />
+      </div>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  @import "../styles/tailwind.css";
+</style>
