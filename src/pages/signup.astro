@@ -32,13 +32,6 @@ import AuthPage from "../layouts/AuthPage.astro";
     <div id="error-msg" class="hidden rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-400">
     </div>
 
-    <div
-      id="success-msg"
-      class="hidden rounded-lg bg-green-500/10 px-3 py-2 text-sm text-green-400"
-    >
-      Check your email for a confirmation link.
-    </div>
-
     <button
       type="submit"
       id="submit-btn"
@@ -47,6 +40,13 @@ import AuthPage from "../layouts/AuthPage.astro";
       Create account
     </button>
   </form>
+
+  <div
+    id="success-msg"
+    class="hidden rounded-lg bg-green-500/10 px-4 py-3 text-sm text-green-400"
+  >
+    Check your email to confirm your account.
+  </div>
 
   <p class="mt-6 text-center text-sm text-text-muted">
     Already have an account?
