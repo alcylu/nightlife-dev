@@ -7,10 +7,26 @@ interface Props {
 }
 
 const { name, description, params, example } = Astro.props;
+
+function highlightJson(json: string): string {
+  return json.replace(
+    /("(?:\\.|[^"\\])*")\s*(:)|("(?:\\.|[^"\\])*")|(\b\d+(?:\.\d+)?\b)|(\btrue\b|\bfalse\b|\bnull\b)|([{}[\],:])/g,
+    (match, key, colon, str, num, bool, punct) => {
+      if (key && colon) return `<span class="text-violet-400">${key}</span><span class="text-gray-400">:</span>`;
+      if (str) return `<span class="text-emerald-400">${str}</span>`;
+      if (num) return `<span class="text-cyan-400">${num}</span>`;
+      if (bool) return `<span class="text-amber-400">${bool}</span>`;
+      if (punct) return `<span class="text-gray-400">${punct}</span>`;
+      return match;
+    }
+  );
+}
+
+const highlightedExample = highlightJson(example);
 ---
 
 <div
-  class="group rounded-xl border border-border bg-bg-card p-6 transition-colors hover:border-border-hover hover:bg-bg-card-hover"
+  class="group min-w-0 rounded-xl border border-border bg-bg-card p-6 transition-colors hover:border-border-hover hover:bg-bg-card-hover"
 >
   <div class="mb-3 flex items-center gap-3">
     <div class="rounded-lg bg-primary/10 p-2">
@@ -43,6 +59,6 @@ const { name, description, params, example } = Astro.props;
   </div>
 
   <pre
-    class="overflow-x-auto rounded-lg bg-bg p-4 text-xs leading-relaxed font-mono text-text-muted"
-    ><code set:text={example} /></pre>
+    class="max-w-full overflow-x-auto rounded-lg bg-bg p-4 text-xs leading-relaxed font-mono"
+    ><code set:html={highlightedExample} /></pre>
 </div>

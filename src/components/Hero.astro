@@ -1,23 +1,23 @@
 ---
-const terminalOutput = `{
-  "city": "tokyo",
-  "events": [
-    {
-      "name": "WOMB FRIDAY",
-      "venue": { "name": "WOMB", "area": "Shibuya" },
-      "performers": ["DJ NOBU", "KEN ISHII"],
-      "genres": ["Techno", "House"],
-      "price": "¥3,500"
-    },
-    {
-      "name": "AGEHA SATURDAY",
-      "venue": { "name": "ageHa", "area": "Shin-Kiba" },
-      "performers": ["AMELIE LENS"],
-      "genres": ["Techno"],
-      "price": "¥4,000"
-    }
-  ]
-}`;
+const terminalOutput = `<span class="text-gray-400">{</span>
+  <span class="text-violet-400">"city"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"tokyo"</span><span class="text-gray-400">,</span>
+  <span class="text-violet-400">"events"</span><span class="text-gray-400">:</span> <span class="text-gray-400">[</span>
+    <span class="text-gray-400">{</span>
+      <span class="text-violet-400">"name"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"WOMB FRIDAY"</span><span class="text-gray-400">,</span>
+      <span class="text-violet-400">"venue"</span><span class="text-gray-400">:</span> <span class="text-gray-400">{</span> <span class="text-violet-400">"name"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"WOMB"</span><span class="text-gray-400">,</span> <span class="text-violet-400">"area"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"Shibuya"</span> <span class="text-gray-400">}</span><span class="text-gray-400">,</span>
+      <span class="text-violet-400">"performers"</span><span class="text-gray-400">:</span> <span class="text-gray-400">[</span><span class="text-emerald-400">"DJ NOBU"</span><span class="text-gray-400">,</span> <span class="text-emerald-400">"KEN ISHII"</span><span class="text-gray-400">]</span><span class="text-gray-400">,</span>
+      <span class="text-violet-400">"genres"</span><span class="text-gray-400">:</span> <span class="text-gray-400">[</span><span class="text-emerald-400">"Techno"</span><span class="text-gray-400">,</span> <span class="text-emerald-400">"House"</span><span class="text-gray-400">]</span><span class="text-gray-400">,</span>
+      <span class="text-violet-400">"price"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"¥3,500"</span>
+    <span class="text-gray-400">}</span><span class="text-gray-400">,</span>
+    <span class="text-gray-400">{</span>
+      <span class="text-violet-400">"name"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"AGEHA SATURDAY"</span><span class="text-gray-400">,</span>
+      <span class="text-violet-400">"venue"</span><span class="text-gray-400">:</span> <span class="text-gray-400">{</span> <span class="text-violet-400">"name"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"ageHa"</span><span class="text-gray-400">,</span> <span class="text-violet-400">"area"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"Shin-Kiba"</span> <span class="text-gray-400">}</span><span class="text-gray-400">,</span>
+      <span class="text-violet-400">"performers"</span><span class="text-gray-400">:</span> <span class="text-gray-400">[</span><span class="text-emerald-400">"AMELIE LENS"</span><span class="text-gray-400">]</span><span class="text-gray-400">,</span>
+      <span class="text-violet-400">"genres"</span><span class="text-gray-400">:</span> <span class="text-gray-400">[</span><span class="text-emerald-400">"Techno"</span><span class="text-gray-400">]</span><span class="text-gray-400">,</span>
+      <span class="text-violet-400">"price"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"¥4,000"</span>
+    <span class="text-gray-400">}</span>
+  <span class="text-gray-400">]</span>
+<span class="text-gray-400">}</span>`;
 ---
 
 <section class="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
@@ -38,7 +38,7 @@ const terminalOutput = `{
           Open Source &middot; MCP Protocol
         </div>
 
-        <h1 class="mb-6 text-4xl leading-tight font-bold tracking-tight md:text-5xl lg:text-6xl">
+        <h1 class="mb-6 text-3xl leading-tight font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
           The first nightlife<br />
           discovery
           <span
@@ -61,7 +61,7 @@ const terminalOutput = `{
             Get Started
           </a>
           <a
-            href="https://github.com/nicepicks/nightlife-mcp"
+            href="https://github.com/alcylu/nightlife-mcp"
             target="_blank"
             rel="noopener noreferrer"
             class="rounded-lg border border-border px-6 py-3 font-medium text-text transition-colors hover:border-border-hover hover:bg-bg-card"
@@ -73,7 +73,7 @@ const terminalOutput = `{
 
       <!-- Right: Terminal preview -->
       <div
-        class="rounded-xl border border-border bg-bg-card shadow-2xl shadow-primary/5"
+        class="min-w-0 max-w-full rounded-xl border border-border bg-bg-card shadow-2xl shadow-primary/5"
       >
         <div class="flex items-center gap-2 border-b border-border px-4 py-3">
           <span class="h-3 w-3 rounded-full bg-[#ff5f56]"></span>
@@ -82,8 +82,8 @@ const terminalOutput = `{
           <span class="ml-3 text-xs text-text-muted font-mono">get_tonight</span>
         </div>
         <pre
-          class="overflow-x-auto p-5 text-sm leading-relaxed font-mono text-text-muted"
-          ><code set:text={terminalOutput} /></pre>
+          class="overflow-x-auto p-5 text-sm leading-relaxed font-mono"
+          ><code set:html={terminalOutput} /></pre>
       </div>
     </div>
   </div>

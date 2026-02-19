@@ -1,4 +1,51 @@
 ---
+function highlightJson(code: string): string {
+  return code.replace(
+    /("(?:\\.|[^"\\])*")\s*(:)|("(?:\\.|[^"\\])*")|(\b\d+(?:\.\d+)?\b)|(\btrue\b|\bfalse\b|\bnull\b)|([{}[\],:])/g,
+    (match, key, colon, str, num, bool, punct) => {
+      if (key && colon) return `<span class="text-violet-400">${key}</span><span class="text-gray-400">:</span>`;
+      if (str) return `<span class="text-emerald-400">${str}</span>`;
+      if (num) return `<span class="text-cyan-400">${num}</span>`;
+      if (bool) return `<span class="text-amber-400">${bool}</span>`;
+      if (punct) return `<span class="text-gray-400">${punct}</span>`;
+      return match;
+    }
+  );
+}
+
+function highlightBash(code: string): string {
+  // Escape HTML first
+  const escaped = code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return escaped
+    .replace(/^(curl)\b/gm, '<span class="text-cyan-400">$1</span>')
+    .replace(/(-H|-d)\b/g, '<span class="text-amber-400">$1</span>')
+    .replace(/(&#39;|')([^']*?)(&#39;|')/g, '<span class="text-emerald-400">\'$2\'</span>')
+    .replace(/(https?:\/\/[^\s\\]+)/g, '<span class="text-emerald-400">$1</span>');
+}
+
+function highlightTypeScript(code: string): string {
+  const escaped = code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return escaped
+    .replace(/\b(import|from|const|new|await)\b/g, '<span class="text-violet-400">$1</span>')
+    .replace(/"([^"]*)"/g, '<span class="text-emerald-400">"$1"</span>')
+    .replace(/\b(\d+)\b/g, '<span class="text-cyan-400">$1</span>')
+    .replace(/(\{|\}|\(|\)|;|,|:)/g, '<span class="text-gray-400">$1</span>')
+    .replace(/(\.\w+)/g, '<span class="text-cyan-300">$1</span>');
+}
+
+function highlight(code: string, language: string): string {
+  if (language === 'json') return highlightJson(code);
+  if (language === 'bash') return highlightBash(code);
+  if (language === 'typescript') return highlightTypeScript(code);
+  return code;
+}
+
 const tabs = [
   {
     id: "claude",
@@ -53,7 +100,7 @@ const result = await client.callTool({
   arguments: { city: "tokyo", limit: 5 }
 });`,
   },
-];
+].map(tab => ({ ...tab, highlighted: highlight(tab.code, tab.language) }));
 ---
 
 <section id="connect" class="py-20 md:py-28">
@@ -99,7 +146,7 @@ const result = await client.callTool({
             role="tabpanel"
             class:list={["connect-panel", i !== 0 && "hidden"]}
           >
-            <pre class="overflow-x-auto p-6 text-sm leading-relaxed font-mono text-text-muted"><code set:text={tab.code} /></pre>
+            <pre class="overflow-x-auto p-6 text-sm leading-relaxed font-mono"><code set:html={tab.highlighted} /></pre>
           </div>
         ))
       }
