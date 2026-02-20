@@ -54,7 +54,7 @@ const tabs = [
     code: `{
   "mcpServers": {
     "nightlife": {
-      "url": "https://nightlife-mcp-production.up.railway.app/mcp",
+      "url": "https://api.nightlife.dev/mcp",
       "headers": {
         "x-api-key": "YOUR_API_KEY"
       }
@@ -66,7 +66,7 @@ const tabs = [
     id: "curl",
     label: "curl",
     language: "bash",
-    code: `curl https://nightlife-mcp-production.up.railway.app/mcp \\
+    code: `curl https://api.nightlife.dev/mcp \\
   -H 'content-type: application/json' \\
   -H 'accept: application/json, text/event-stream' \\
   -H 'x-api-key: YOUR_API_KEY' \\
@@ -88,7 +88,7 @@ const tabs = [
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 
 const transport = new StreamableHTTPClientTransport(
-  new URL("https://nightlife-mcp-production.up.railway.app/mcp"),
+  new URL("https://api.nightlife.dev/mcp"),
   { requestInit: { headers: { "x-api-key": "YOUR_API_KEY" } } }
 );
 

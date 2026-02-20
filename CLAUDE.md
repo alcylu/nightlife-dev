@@ -102,7 +102,7 @@ curl https://nightlife-dev-production.up.railway.app/health
 - "Get API Key" CTA → /signup (self-service)
 - "Dashboard" → /dashboard
 - GitHub links → https://github.com/alcylu/nightlife-mcp (MCP server repo, not this repo)
-- MCP endpoint → https://nightlife-mcp-production.up.railway.app/mcp
+- MCP endpoint → https://api.nightlife.dev/mcp
 
 ## DB Migration (in nightlife-mcp repo)
 - `~/Apps/nightlife-mcp/supabase/migrations/20260220_user_api_keys.sql`
@@ -110,12 +110,24 @@ curl https://nightlife-dev-production.up.railway.app/health
 - Must be applied via Supabase SQL editor before dashboard works
 - After migration: set `MCP_HTTP_USE_DB_KEYS=true` on nightlife-mcp Railway
 
-## Supabase Dashboard Config Needed
-- Add redirect URLs: `http://localhost:4321/dashboard`, `https://nightlife.dev/dashboard`
+## Supabase Auth Redirect URLs (DONE)
+Added via Management API on 2026-02-20:
+- `http://localhost:4321/dashboard` (local dev)
+- `https://nightlife.dev/dashboard` (production custom domain)
+- `https://nightlife-dev-production.up.railway.app/dashboard` (Railway URL)
+
+## Custom Domain
+- **Domain**: `nightlife.dev` (Cloudflare DNS)
+- **Railway CNAME target**: `eyeop10b.up.railway.app`
+- **Status**: Domain registered on Railway. Cloudflare CNAME needs to be pointed (replace existing A records with CNAME to `eyeop10b.up.railway.app`). Start DNS Only (gray cloud) for Railway verification, then flip to Proxied.
+
+## Completed (2026-02-19/20)
+- ~~Apply DB migration + flip MCP_HTTP_USE_DB_KEYS=true~~ ✅
+- ~~E2E test: signup → key → curl MCP → dashboard usage~~ ✅ 7/7 tests PASS
+- ~~Supabase redirect URLs~~ ✅
+- ~~Custom domain registered on Railway~~ ✅
 
 ## Pending
-- Custom domain: nightlife.dev → Railway CNAME
+- Cloudflare DNS: point nightlife.dev CNAME to `eyeop10b.up.railway.app`
 - OG image (needs design)
 - GitHub star count (currently placeholder)
-- Apply DB migration + flip MCP_HTTP_USE_DB_KEYS=true
-- E2E test: signup → key → curl MCP → dashboard usage
