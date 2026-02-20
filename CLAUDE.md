@@ -116,18 +116,21 @@ Added via Management API on 2026-02-20:
 - `https://nightlife.dev/dashboard` (production custom domain)
 - `https://nightlife-dev-production.up.railway.app/dashboard` (Railway URL)
 
-## Custom Domain
+## Custom Domain (DONE)
 - **Domain**: `nightlife.dev` (Cloudflare DNS)
-- **Railway CNAME target**: `eyeop10b.up.railway.app`
-- **Status**: Domain registered on Railway. Cloudflare CNAME needs to be pointed (replace existing A records with CNAME to `eyeop10b.up.railway.app`). Start DNS Only (gray cloud) for Railway verification, then flip to Proxied.
+- **Live URL**: https://nightlife.dev
+- **Railway CNAME target**: `s7u51lce.up.railway.app`
+- **Cloudflare DNS**: CNAME `@` → `s7u51lce.up.railway.app` (DNS only for Railway verification)
+- **TXT record**: `_railway-verify` → `railway-verify=f8475fba4196f6ffef9c0475...`
+- **API subdomain**: `api.nightlife.dev` → `7dc2dqau.up.railway.app` (DNS only)
 
 ## Completed (2026-02-19/20)
 - ~~Apply DB migration + flip MCP_HTTP_USE_DB_KEYS=true~~ ✅
 - ~~E2E test: signup → key → curl MCP → dashboard usage~~ ✅ 7/7 tests PASS
 - ~~Supabase redirect URLs~~ ✅
 - ~~Custom domain registered on Railway~~ ✅
+- ~~Cloudflare DNS → Railway~~ ✅ nightlife.dev live
 
 ## Pending
-- Cloudflare DNS: point nightlife.dev CNAME to `eyeop10b.up.railway.app`
 - OG image (needs design)
 - GitHub star count (currently placeholder)
