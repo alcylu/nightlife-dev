@@ -37,6 +37,8 @@ nightlife-dev/
 │   │   ├── index.astro    # Landing page assembling all components
 │   │   ├── signup.astro   # Email + password → supabase.auth.signUp()
 │   │   ├── login.astro    # Email + password → signInWithPassword() → /dashboard
+│   │   ├── forgot-password.astro # Email → resetPasswordForEmail() → check email
+│   │   ├── reset-password.astro  # New password form → updateUser() → /dashboard
 │   │   └── dashboard.astro # Key management + usage (auth-guarded, client-side JS)
 │   ├── components/
 │   │   ├── Header.astro   # Sticky nav, "Dashboard" link, "Get API Key" → /signup
@@ -61,6 +63,7 @@ All auth/dashboard is **client-side JavaScript** (Astro static output, no SSR).
 1. User signs up at `/signup` → confirmation email sent
 2. Clicks email link → redirected to `/dashboard` with session tokens
 3. Dashboard calls `supabase.auth.getSession()` to validate, redirects to `/login` if none
+4. Forgot password: `/login` → "Forgot password?" → `/forgot-password` → email sent → `/reset-password` → new password → `/dashboard`
 
 ### Dashboard features
 - **Auth guard**: redirects to /login if no session
@@ -116,6 +119,11 @@ Added via Management API on 2026-02-20:
 - `https://nightlife.dev/dashboard` (production custom domain)
 - `https://nightlife-dev-production.up.railway.app/dashboard` (Railway URL)
 
+Added on 2026-03-02 (password reset):
+- `http://localhost:4321/reset-password` (local dev)
+- `https://nightlife.dev/reset-password` (production)
+- `https://nightlife-dev-production.up.railway.app/reset-password` (Railway)
+
 ## Custom Domain (DONE)
 - **Domain**: `nightlife.dev` (Cloudflare DNS)
 - **Live URL**: https://nightlife.dev
@@ -131,6 +139,11 @@ Added via Management API on 2026-02-20:
 - ~~Custom domain registered on Railway~~ ✅
 - ~~Cloudflare DNS → Railway~~ ✅ nightlife.dev live
 
+## Completed (2026-03-02)
+- ~~OG image~~ ✅ `public/og-image.png` (1200x630), og:image + twitter:image meta tags in Base.astro
+- ~~Forgot password flow~~ ✅ `/forgot-password` + `/reset-password` pages, link on login page
+- ~~Per-minute rate limit display~~ ✅ Plan banner + usage card show 20 req/min
+- ~~Supabase redirect URLs for reset~~ ✅ 3 URLs added via Management API
+
 ## Pending
-- OG image (needs design)
 - GitHub star count (currently placeholder)
