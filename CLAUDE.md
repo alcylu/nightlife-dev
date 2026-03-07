@@ -93,9 +93,13 @@ All auth/dashboard is **client-side JavaScript** (Astro static output, no SSR).
 # Push to GitHub (auto-deploy if connected, or manual):
 git push origin main
 
-# Manual Railway deploy:
+# Manual Railway deploy (ALWAYS use token — never bare `railway up`):
+source ~/.railway/tokens.env
 cd ~/Apps/nightlife-dev
-railway up --service nightlife-dev
+RAILWAY_TOKEN=$RAILWAY_TOKEN_NIGHTLIFE_DEV railway up
+
+# Check logs:
+RAILWAY_TOKEN=$RAILWAY_TOKEN_NIGHTLIFE_DEV railway logs -n 50
 
 # Health check:
 curl https://nightlife-dev-production.up.railway.app/health
