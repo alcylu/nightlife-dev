@@ -245,11 +245,11 @@
 
     /* ---- Chat Bubbles ---- */
     .chat-bubble {
-      padding: 7px 14px;
+      padding: 10px 16px;
       border-radius: 16px;
       max-width: 80%;
       font-size: 0.82em;
-      line-height: 1.35;
+      line-height: 1.45;
     }
     .chat-user {
       background: rgba(139, 92, 246, 0.15);
@@ -470,50 +470,108 @@
       align-items: center;
       justify-content: center;
     }
+
+    /* ---- Revenue Projection Chart ---- */
+    .proj-chart-wrap {
+      position: relative;
+      width: 100%;
+      height: 420px;
+    }
+    .proj-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 360px;
+      padding-left: 50px;
+    }
+    .proj-bar {
+      display: flex;
+      flex-direction: column;
+      min-height: 4px;
+      border-radius: 2px 2px 0 0;
+    }
+    .proj-bar-monthly { flex: 1; }
+    .proj-bar-quarterly { flex: 1.8; }
+    .proj-seg {
+      min-height: 1px;
+    }
+    .proj-bar-label {
+      display: block;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5em;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .proj-y-axis {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 360px;
+      width: 45px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .proj-y-axis span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5em;
+      color: var(--text-dim);
+      text-align: right;
+      padding-right: 8px;
+    }
+    .proj-arr-marker {
+      position: absolute;
+      left: 50px;
+      right: 0;
+      border-top: 2px dashed var(--green);
+      opacity: 0.6;
+    }
+    .proj-arr-marker::after {
+      content: '$1M ARR';
+      position: absolute;
+      right: 0;
+      top: -18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6em;
+      color: var(--green);
+    }
+    .proj-milestone {
+      position: absolute;
+      bottom: 0;
+      transform: translateX(-50%);
+    }
+    .proj-milestone-line {
+      width: 1px;
+      height: 12px;
+      background: var(--accent-purple);
+      margin: 0 auto;
+    }
+    .proj-milestone-label {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55em;
+      color: var(--accent-purple);
+      white-space: nowrap;
+      text-align: center;
+      margin-top: 2px;
+    }
+    .proj-year-divider {
+      width: 1px;
+      background: var(--border);
+      align-self: stretch;
+      flex-shrink: 0;
+    }
+    .proj-legend {
+      display: flex;
+      gap: 16px;
+      font-size: 0.65em;
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
-  <!-- Email Gate -->
-  <div id="email-gate" style="
-    position: fixed; inset: 0; z-index: 9999;
-    background: #0B0B0C;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Inter', system-ui, sans-serif;
-  ">
-    <div style="
-      max-width: 420px; width: 90%; text-align: center;
-      padding: 48px 36px; border-radius: 16px;
-      background: #12121e; border: 1px solid rgba(255,255,255,0.14);
-    ">
-      <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 28px; color: #e4e4e7; margin-bottom: 6px;">
-        NIGHTLIFE <span style="color: #8b5cf6;">X</span>
-      </div>
-      <div style="color: #71717a; font-size: 14px; margin-bottom: 32px;">
-        Enter your email to view the pitch deck
-      </div>
-      <form id="gate-form" style="display: flex; flex-direction: column; gap: 12px;">
-        <input id="gate-email" type="email" required placeholder="you@example.com" autocomplete="email" style="
-          width: 100%; padding: 12px 16px; border-radius: 8px;
-          background: #0B0B0C; border: 1px solid rgba(255,255,255,0.14);
-          color: #e4e4e7; font-size: 16px; font-family: inherit;
-          outline: none; box-sizing: border-box;
-          transition: border-color 0.2s;
-        " onfocus="this.style.borderColor='#8b5cf6'" onblur="this.style.borderColor='rgba(255,255,255,0.14)'">
-        <div id="gate-error" style="color: #ef4444; font-size: 13px; min-height: 20px;"></div>
-        <button type="submit" style="
-          width: 100%; padding: 12px 24px; border-radius: 8px;
-          background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-          color: white; font-size: 15px; font-weight: 600;
-          border: none; cursor: pointer; font-family: inherit;
-          transition: opacity 0.2s;
-        " onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-          View Pitch Deck
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <div class="reveal" style="display: none;">
+  <div class="reveal">
     <div class="slides">
 
       <!-- ============================================
@@ -569,7 +627,7 @@
             <div class="card card-glow" style="border-color: rgba(139, 92, 246, 0.3); height: 100%;">
               <h4 style="color: #fff; margin-bottom: 12px;">How it works <span style="color: var(--accent-purple);">now</span></h4>
               <p class="small" style="margin-bottom: 10px; color: var(--text);">"What should I do tonight?" → AI already knows your music taste, checks your calendar, researches the vibe → one perfect recommendation → books your spot</p>
-              <div class="smaller" style="color: var(--accent-cyan); border-top: 1px solid rgba(139, 92, 246, 0.2); padding-top: 10px;">This future needs two things: personal agents that know you and structured nightlife data for them to act on. We're building the data layer now — so it's ready when the agents are.</div>
+              <div class="smaller" style="color: var(--accent-cyan); border-top: 1px solid rgba(139, 92, 246, 0.2); padding-top: 10px;">Agents need structured data to deliver this.<br>Feeding it to them is called <strong>AEO</strong> — Agent Engine Optimization.</div>
             </div>
           </div>
         </div>
@@ -648,196 +706,99 @@
       <section data-transition="fade" class="slide-gradient-purple">
         <span class="slide-label">Solution</span>
         <div class="accent-line"></div>
-        <h2>One Data Layer, Every Interface</h2>
-        <p class="text-muted mb-16 small" style="max-width: 700px;">One structured nightlife database powers every product we ship &mdash; from consumer discovery to AI agents to hotel concierges.</p>
+        <h2>Two Products, One Platform</h2>
 
-        <!-- TIER 1: The Data Layer -->
-        <div class="fragment fade-up">
-          <div style="border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; padding: 14px 20px; background: linear-gradient(180deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.02));">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-              <div class="tiny text-purple" style="letter-spacing: 0.1em; font-weight: 600;">THE DATA LAYER</div>
-              <div class="tiny text-cyan">AI-structured &middot; Real-time &middot; Compounds every city</div>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;">
-              <div style="text-align: center; padding: 8px 4px; background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 6px;">
-                <div style="font-size: 1.1em; margin-bottom: 3px;">&#x1F4F1;</div>
-                <div class="tiny" style="color: var(--accent-purple); font-weight: 500;">Social Media</div>
-                <div style="font-size: 0.55em; color: var(--text-dim); margin-top: 2px;">Instagram, X, Facebook</div>
+        <div class="grid-2 mt-24 gap-32">
+          <!-- Consumer proof -->
+          <div class="fragment fade-up">
+            <div class="card" style="border-color: rgba(155, 140, 255, 0.3);">
+              <div class="flex-between mb-16">
+                <h3 style="margin: 0;">nightlife<span style="color: var(--accent-purple);">X</span>.com</h3>
+                <span class="badge badge-purple">Consumer</span>
               </div>
-              <div style="text-align: center; padding: 8px 4px; background: rgba(34, 211, 238, 0.06); border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 6px;">
-                <div style="font-size: 1.1em; margin-bottom: 3px;">&#x1F3AB;</div>
-                <div class="tiny" style="color: var(--accent-cyan); font-weight: 500;">Ticketing Sites</div>
-                <div style="font-size: 0.55em; color: var(--text-dim); margin-top: 2px;">RA, Peatix, EventBrite</div>
-              </div>
-              <div style="text-align: center; padding: 8px 4px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 6px;">
-                <div style="font-size: 1.1em; margin-bottom: 3px;">&#x1F310;</div>
-                <div class="tiny" style="color: var(--text); font-weight: 500;">Venue Sites</div>
-                <div style="font-size: 0.55em; color: var(--text-dim); margin-top: 2px;">Websites &amp; schedules</div>
-              </div>
-              <div style="text-align: center; padding: 8px 4px; background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 6px;">
-                <div style="font-size: 1.1em; margin-bottom: 3px;">&#x1F4AC;</div>
-                <div class="tiny" style="color: var(--accent-purple); font-weight: 500;">Promoter Networks</div>
-                <div style="font-size: 0.55em; color: var(--text-dim); margin-top: 2px;">DJs, staff, DMs</div>
-              </div>
-              <div style="text-align: center; padding: 8px 4px; background: rgba(34, 211, 238, 0.06); border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 6px;">
-                <div style="font-size: 1.1em; margin-bottom: 3px;">&#x1F512;</div>
-                <div class="tiny" style="color: var(--accent-cyan); font-weight: 500;">Gated Knowledge</div>
-                <div style="font-size: 0.55em; color: var(--text-dim); margin-top: 2px;">Door staff, dancers</div>
-              </div>
-              <div style="text-align: center; padding: 8px 4px; background: rgba(34, 197, 94, 0.06); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 6px;">
-                <div style="font-size: 1.1em; margin-bottom: 3px;">&#x1F4CA;</div>
-                <div class="tiny" style="color: var(--green); font-weight: 500;">Survey Data</div>
-                <div style="font-size: 0.55em; color: var(--text-dim); margin-top: 2px;">Feedback &amp; signals</div>
+              <p class="small text-muted mb-16">One site per city. Tokyo live today, 200+ cities ahead.</p>
+              <div class="grid-2 gap-8">
+                <div class="card-sm"><span class="stat-big" style="font-size: 1.4em;">2,200+</span><div class="stat-label">Events</div></div>
+                <div class="card-sm"><span class="stat-big" style="font-size: 1.4em;">3,500+</span><div class="stat-label">DJs</div></div>
+                <div class="card-sm"><span class="stat-big" style="font-size: 1.4em;">200+</span><div class="stat-label">Venues</div></div>
+                <div class="card-sm"><span class="stat-big" style="font-size: 1.4em;">18</span><div class="stat-label">Genres</div></div>
               </div>
             </div>
-            <div class="tiny mt-8" style="text-align: center; color: var(--text-dim);">
-              Chaotic, multilingual nightlife data &rarr; structured, queryable, monetizable. <span style="color: var(--accent-cyan);">The gated knowledge is the moat.</span>
+          </div>
+
+          <!-- API/MCP -->
+          <div class="fragment fade-up">
+            <div class="card card-glow" style="border-color: rgba(34, 211, 238, 0.3);">
+              <div class="flex-between mb-16">
+                <h3 style="margin: 0; color: var(--accent-cyan);">nightlife.dev</h3>
+                <span class="badge badge-cyan">API + MCP</span>
+              </div>
+              <p class="small text-muted mb-16">The business. Structured data for agents and enterprises.</p>
+              <div class="grid-2 gap-8">
+                <div class="card-sm"><span class="stat-big" style="font-size: 1.4em; color: var(--accent-cyan);">16</span><div class="stat-label">MCP Tools</div></div>
+                <div class="card-sm"><span class="stat-big" style="font-size: 1.4em; color: var(--accent-cyan);">REST</span><div class="stat-label">API v1</div></div>
+                <div class="card-sm"><span class="stat-big" style="font-size: 1.4em; color: var(--accent-cyan);">VIP</span><div class="stat-label">Booking</div></div>
+                <div class="card-sm"><span class="stat-big" style="font-size: 1.4em; color: var(--accent-cyan);">OpenAPI</span><div class="stat-label">3.1 Spec</div></div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <!-- Connector: Data Layer → Services -->
-        <div style="display: flex; justify-content: center; margin: 4px 0;">
-          <div style="width: 2px; height: 14px; background: linear-gradient(180deg, var(--accent-purple), var(--accent-cyan));"></div>
-        </div>
-
-        <!-- TIER 2: Services -->
-        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
-          <div class="fragment fade-up card-sm" style="text-align: center; border-color: rgba(155, 140, 255, 0.25); padding: 12px 8px;">
-            <div style="font-size: 1.2em; margin-bottom: 4px;">&#x1F310;</div>
-            <div class="small" style="color: #fff; font-weight: 600;">Consumer Site</div>
-            <div class="tiny text-muted" style="margin-top: 2px;">nightlife<span style="color: var(--accent-purple);">X</span>.com</div>
-            <div class="tiny text-purple mt-8">Discovery &amp; events</div>
-          </div>
-          <div class="fragment fade-up card-sm" style="text-align: center; border-color: rgba(34, 211, 238, 0.25); padding: 12px 8px;">
-            <div style="font-size: 1.2em; margin-bottom: 4px;">&#x26A1;</div>
-            <div class="small" style="color: var(--accent-cyan); font-weight: 600;">Developer API</div>
-            <div class="tiny text-muted" style="margin-top: 2px;">nightlife.dev</div>
-            <div class="tiny text-cyan mt-8">MCP + REST</div>
-          </div>
-          <div class="fragment fade-up card-sm" style="text-align: center; border-color: rgba(155, 140, 255, 0.25); padding: 12px 8px;">
-            <div style="font-size: 1.2em; margin-bottom: 4px;">&#x1F916;</div>
-            <div class="small" style="color: var(--accent-purple); font-weight: 600;">City Agent</div>
-            <div class="tiny text-muted" style="margin-top: 2px;">Per-city AI expert</div>
-            <div class="tiny text-purple mt-8">Recs + booking</div>
-          </div>
-          <div class="fragment fade-up card-sm" style="text-align: center; border-color: rgba(34, 211, 238, 0.25); padding: 12px 8px;">
-            <div style="font-size: 1.2em; margin-bottom: 4px;">&#x1F517;</div>
-            <div class="small" style="color: var(--accent-cyan); font-weight: 600;">Venue Agent</div>
-            <div class="tiny text-muted" style="margin-top: 2px;">Supply-side AI</div>
-            <div class="tiny text-cyan mt-8">Pricing + availability</div>
-          </div>
-          <div class="fragment fade-up card-sm" style="text-align: center; border-color: rgba(34, 197, 94, 0.25); padding: 12px 8px;">
-            <div style="font-size: 1.2em; margin-bottom: 4px;">&#x1F3E8;</div>
-            <div class="small" style="color: var(--green); font-weight: 600;">Hotel Concierge</div>
-            <div class="tiny text-muted" style="margin-top: 2px;">White-label product</div>
-            <div class="tiny text-green mt-8">Turnkey for hotels</div>
-          </div>
-        </div>
-
-        <!-- Connector: Services → Users (5 vertical lines) -->
-        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
-          <div style="display: flex; justify-content: center;"><div style="width: 2px; height: 12px; background: rgba(155, 140, 255, 0.3);"></div></div>
-          <div style="display: flex; justify-content: center;"><div style="width: 2px; height: 12px; background: rgba(34, 211, 238, 0.3);"></div></div>
-          <div style="display: flex; justify-content: center;"><div style="width: 2px; height: 12px; background: rgba(155, 140, 255, 0.3);"></div></div>
-          <div style="display: flex; justify-content: center;"><div style="width: 2px; height: 12px; background: rgba(34, 211, 238, 0.3);"></div></div>
-          <div style="display: flex; justify-content: center;"><div style="width: 2px; height: 12px; background: rgba(34, 197, 94, 0.3);"></div></div>
-        </div>
-
-        <!-- TIER 3: Users -->
-        <div class="fragment fade-up" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
-          <div style="text-align: center; padding: 6px 4px; border: 1px solid rgba(155, 140, 255, 0.15); border-radius: 6px; background: rgba(155, 140, 255, 0.04);">
-            <div class="tiny text-muted">&#x1F9F3; Tourists &amp; locals</div>
-          </div>
-          <div style="text-align: center; padding: 6px 4px; border: 1px solid rgba(34, 211, 238, 0.15); border-radius: 6px; background: rgba(34, 211, 238, 0.04);">
-            <div class="tiny text-muted">&#x1F916; AI agents &amp; apps</div>
-          </div>
-          <div style="text-align: center; padding: 6px 4px; border: 1px solid rgba(155, 140, 255, 0.15); border-radius: 6px; background: rgba(155, 140, 255, 0.04);">
-            <div class="tiny text-muted">&#x2708;&#xFE0F; Travelers &amp; guests</div>
-          </div>
-          <div style="text-align: center; padding: 6px 4px; border: 1px solid rgba(34, 211, 238, 0.15); border-radius: 6px; background: rgba(34, 211, 238, 0.04);">
-            <div class="tiny text-muted">&#x1F3B5; Clubs &amp; promoters</div>
-          </div>
-          <div style="text-align: center; padding: 6px 4px; border: 1px solid rgba(34, 197, 94, 0.15); border-radius: 6px; background: rgba(34, 197, 94, 0.04);">
-            <div class="tiny text-muted">&#x1F3E8; Hotels &amp; chains</div>
           </div>
         </div>
 
         <aside class="notes">
-          We're not building one product — we're building the data infrastructure that powers many products. Our AI pipeline ingests from six source types: social media scraping (Instagram stories, Facebook events), ticketing platform feeds (RA, Peatix, EventBrite), venue websites and schedules, promoter and DJ networks, gated insider knowledge from door staff and dancers and regulars, and survey and feedback data. It takes chaotic, multilingual nightlife data — Japanese flyers, Instagram stories, WhatsApp group chats — and structures it into clean, queryable, monetizable feeds. The gated knowledge is the moat: you can't scrape what lives in a promoter's head or a bouncer's DM thread. And each new city makes the pipeline smarter — compounding returns. That single data layer powers five interfaces, each serving a different user: the consumer site for tourists and locals, the developer API for AI agents and travel apps, a City Agent for travelers and hotel guests, a Venue Agent that automates the messy supply side for clubs and promoters, and a white-label hotel concierge product. Each new interface is just another surface on the same data. That's the platform play.
+          We're not building a Yelp for nightlife. We're building the data infrastructure. The consumer site is proof the data works. But the real business is the API layer — nightlife.dev. When ChatGPT needs nightlife data, when a hotel's AI concierge gets asked 'what's happening tonight,' they call our API. Every event is ticketed or gated, making every data point monetizable.
         </aside>
       </section>
 
       <!-- ============================================
-           SLIDE 10: COMPETITIVE LANDSCAPE
+           SLIDE 5: PRODUCT DEEP DIVE
            ============================================ -->
       <section data-transition="fade">
-        <span class="slide-label">Competition</span>
+        <span class="slide-label">Product</span>
         <div class="accent-line"></div>
-        <h2>No One Occupies Our Quadrant</h2>
+        <h2>16 MCP Tools &mdash; One API Call Away</h2>
 
-        <div class="mt-16" style="position: relative; max-width: 800px; margin: 0 auto;">
-          <!-- Axis labels -->
-          <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.7em; font-family: 'JetBrains Mono', monospace;">
-            <span class="text-dim">GENERAL / HORIZONTAL</span>
-            <span class="text-dim">NIGHTLIFE SPECIALIST</span>
-          </div>
-
-          <!-- Matrix grid -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; border: 1px solid var(--border);">
-            <!-- Top Left: Data/API + General -->
-            <div class="matrix-quadrant fragment fade-up" style="min-height: 140px;">
-              <div class="tiny text-dim" style="margin-bottom: 8px;">DATA & API INFRASTRUCTURE</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                <span class="badge smaller">Foursquare</span>
-                <span class="badge smaller">Placer.ai</span>
-              </div>
-              <div class="smaller text-muted mt-16">Proved the model — but general purpose</div>
-            </div>
-
-            <!-- Top Right: Data/API + Nightlife = NLT -->
-            <div class="matrix-quadrant empty fragment fade-up" style="min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              <div class="nlt-star" style="font-size: 2em; font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--accent-purple);">
-                NLT
-              </div>
-              <div class="smaller text-cyan mt-16">nightlife.dev</div>
-              <div class="tiny text-muted mt-8">Only player here</div>
-            </div>
-
-            <!-- Bottom Left: Consumer + General -->
-            <div class="matrix-quadrant fragment fade-up" style="min-height: 140px;">
-              <div class="tiny text-dim" style="margin-bottom: 8px;">CONSUMER APP / MARKETPLACE</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                <span class="badge smaller">Yelp</span>
-                <span class="badge smaller">Google Maps</span>
-                <span class="badge smaller">Eventbrite</span>
-                <span class="badge smaller">Time Out</span>
-                <span class="badge smaller">Ticketmaster</span>
-              </div>
-              <div class="smaller text-dim mt-16">Crowded. Commodity.</div>
-            </div>
-
-            <!-- Bottom Right: Consumer + Nightlife -->
-            <div class="matrix-quadrant fragment fade-up" style="min-height: 140px;">
-              <div class="tiny text-dim" style="margin-bottom: 8px;">CONSUMER + NIGHTLIFE</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                <span class="badge smaller">Resident Advisor</span>
-                <span class="badge smaller">Dice / Fever</span>
-                <span class="badge smaller">Discotech</span>
-                <span class="badge smaller">SevenRooms</span>
-              </div>
-              <div class="smaller text-dim mt-16">Night-out vertical, but no data API</div>
+        <div class="grid-2 mt-16 gap-24">
+          <!-- Tool grid -->
+          <div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <div class="tool-chip"><span class="icon">&#9632;</span> search_events</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> get_tonight</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> get_event_details</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> search_venues</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> get_venue_info</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> search_performers</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> get_performer_info</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> get_recommendations</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> get_vip_availability</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> create_vip_booking</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> list_cities</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> list_genres</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> list_areas</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> log_unmet_request</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> join_guest_list</div>
+              <div class="tool-chip"><span class="icon">&#9632;</span> get_guest_list_count</div>
             </div>
           </div>
 
-          <!-- Y-axis label -->
-          <div style="position: absolute; left: -32px; top: 50%; transform: rotate(-90deg) translateX(-50%); transform-origin: left center; font-size: 0.65em; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); white-space: nowrap;">
-            CONSUMER APP &larr;&rarr; DATA &amp; API
+          <!-- Terminal animation -->
+          <div>
+            <div class="terminal" id="terminal-slide5">
+              <div class="terminal-header">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <span class="terminal-title">api.nightlife.dev</span>
+              </div>
+              <div class="terminal-body" id="terminal-content-5" style="min-height: 280px;">
+                <div class="prompt">$ <span class="cmd" id="typing-cmd-5"></span><span class="typing-cursor" id="cursor-5"></span></div>
+                <pre id="terminal-response-5" style="margin-top: 12px; white-space: pre; margin: 12px 0 0 0; padding: 0; background: transparent; border: none;"></pre>
+              </div>
+            </div>
           </div>
         </div>
 
         <aside class="notes">
-          Classic 2x2. Every competitor is either horizontal and general — Yelp, Google — or nightlife-vertical but consumer-only — RA, Discotech. Nobody occupies top-right: nightlife specialist plus structured data API. Foursquare proved the data/API model works but they're general. RA proved nightlife vertical but took 25 years and only covers electronic music. We're the first to combine both.
+          16 MCP tools covering the full nightlife data surface — events, venues, performers, VIP booking, guest lists, recommendations. All accessible via MCP protocol or REST API. The terminal shows a live API call: search for techno events in Shibuya tonight, get structured data back instantly.
         </aside>
       </section>
 
@@ -848,232 +809,42 @@
         <span class="slide-label">Demo</span>
         <div class="accent-line"></div>
         <h2>The "Aha" Moment</h2>
-        <p class="text-muted mb-16 small">The agent doesn&rsquo;t just search &mdash; it knows the city, reads the room, and handles everything.</p>
+        <p class="text-muted mb-24 small">Tourist &rarr; AI Agent &rarr; nightlife.dev API &rarr; Structured Answer &rarr; VIP Booking</p>
 
-        <div style="max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 2px; font-size: 0.88em;">
+        <div style="max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px;">
           <div class="fragment fade-up chat-bubble chat-user">
-            <strong>Guest:</strong> &ldquo;We&rsquo;re a group of 6 in Tokyo for a bachelorette party tonight. Fun, upscale, great music &mdash; we want to celebrate and dance!&rdquo;
+            <strong>Tourist:</strong> "We're 4 people looking for a good techno night in Shibuya tonight"
           </div>
 
-          <div class="fragment fade-up chat-bubble chat-system" style="font-size: 0.72em;">
-            <span class="prompt">Agent calls:</span> get_recommendations({ city: "tokyo", vibe: "upscale, danceable", party_size: 6, occasion: "bachelorette" })<br>
-            <span class="prompt">Agent calls:</span> get_vip_availability({ venues: ["celavi", "zouk", "zero"], date: "tonight" })
+          <div class="fragment fade-up chat-bubble chat-system">
+            <span class="prompt">Agent calls:</span> search_events({ city: "tokyo", area: "shibuya", genre: "techno", date: "tonight" })
           </div>
 
           <div class="fragment fade-up chat-bubble chat-agent">
-            <strong>Agent:</strong> &ldquo;Great options tonight! <strong>Charlotte de Witte</strong> is at Zero if you like techno &mdash; but only one VIP table left. For a celebration I&rsquo;d suggest <strong>CeLaVi</strong> or <strong>Zouk</strong> &mdash; both have great bottle service and the vibe is perfect for bachelorettes. Want me to book?&rdquo;
+            <strong>AI Agent:</strong> "I found 3 events tonight in Shibuya! WOMB has a Drumcode Night with DJ Nobu — cover is ¥3,500. Want me to add you to the guest list or check VIP tables?"
           </div>
 
           <div class="fragment fade-up chat-bubble chat-user">
-            <strong>Guest:</strong> &ldquo;Can you lock in that table at Zouk? I love Charlotte! Get us on the guest list at Zero too.&rdquo;
+            <strong>Tourist:</strong> "Book us a VIP table at WOMB"
           </div>
 
-          <div class="fragment fade-up chat-bubble chat-system" style="font-size: 0.72em;">
-            <span class="prompt">Agent calls:</span> create_vip_booking({ venue: "zouk", table: "A3", party_size: 6 })<br>
-            <span class="prompt">Agent calls:</span> join_guest_list({ venue: "zero", party_size: 6, name: "Sarah + group" })
+          <div class="fragment fade-up chat-bubble chat-system">
+            <span class="prompt">Agent calls:</span> get_vip_table_availability(venue: "womb", date: "tonight")<br>
+            <span class="prompt">Agent calls:</span> create_vip_booking_request(table: "V3", party_size: 4)
           </div>
 
           <div class="fragment fade-up chat-bubble chat-agent">
-            <strong>Agent:</strong> &ldquo;Done! Table A3 at Zouk confirmed for 11 PM &mdash; champagne tower for the bride included. You&rsquo;re on the guest list at Zero for Charlotte too. Have an amazing night!&rdquo;
+            <strong>AI Agent:</strong> "Done! Table V3 at WOMB, ¥200K minimum. Confirmed tonight 11 PM. Details sent to your room."
           </div>
         </div>
 
         <aside class="notes">
-          This is the aha moment. Notice what the agent does that Google can't: it understands the occasion (bachelorette), searches for matching venues, then checks real-time VIP availability across all three results simultaneously. It knows Charlotte de Witte is playing at Zero tonight — that's gated knowledge you can't scrape from a website. It reads the room: techno is wrong for a bachelorette, so it steers toward CeLaVi and Zouk for the celebration vibe. The guest went from "we want to go out" to a VIP table booking plus backup guest list in 60 seconds. The hotel earns 10-30% commission on that table.
+          This is the aha moment. A tourist asks their AI agent, agent calls our API, gets real structured data — real events, real prices, real lineups — and the guest can go from discovery to VIP booking in 60 seconds. No googling. No reading Japanese flyers. Just ask and go. The hotel earns 10-30% commission on that VIP table.
         </aside>
       </section>
 
       <!-- ============================================
-           SLIDE 7: TWO-SIDED AGENT ARCHITECTURE
-           ============================================ -->
-      <section data-transition="fade" class="slide-gradient-cyan">
-        <span class="slide-label">Architecture</span>
-        <div class="accent-line"></div>
-        <h2>Two AI Agents. <span class="gradient-text">One Platform.</span></h2>
-        <p class="text-muted mb-16 small" style="max-width: 700px;">The consumer side gets a local expert. The venue side gets an AI that speaks their language.</p>
-
-        <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; margin-top: 12px; align-items: start;">
-
-          <!-- Left: City Agent -->
-          <div class="fragment fade-up">
-            <div class="card card-glow" style="border-color: rgba(139, 92, 246, 0.3);">
-              <div class="flex-between mb-12">
-                <h3 style="margin: 0; font-size: 1em;">City Agent</h3>
-                <span class="badge badge-purple" style="font-size: 0.65em;">Consumer-Facing</span>
-              </div>
-              <p class="small text-muted mb-12">A local nightlife expert for every city. Knows the vibe, not just the data.</p>
-
-              <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px;">
-                <div class="card-sm" style="padding: 8px 12px;">
-                  <div class="tiny" style="color: var(--accent-purple); margin-bottom: 2px;">STRUCTURED DATA</div>
-                  <div class="smaller text-muted">Events, venues, lineups, prices, availability</div>
-                </div>
-                <div class="card-sm" style="padding: 8px 12px;">
-                  <div class="tiny" style="color: var(--accent-cyan); margin-bottom: 2px;">LOCAL KNOWLEDGE</div>
-                  <div class="smaller text-muted">Vibe intel from promoters, DJs, security, dancers, performers</div>
-                </div>
-              </div>
-
-              <div class="smaller" style="color: var(--accent-cyan); border-top: 1px solid var(--border); padding-top: 8px;">
-                <strong>Actions:</strong> Book VIP &middot; Buy tickets &middot; Guest list &middot; Recommendations
-              </div>
-            </div>
-          </div>
-
-          <!-- Center: Platform -->
-          <div class="fragment fade-up" style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding-top: 32px;">
-            <div style="width: 2px; height: 40px; background: linear-gradient(180deg, transparent, var(--accent-purple));"></div>
-            <div style="
-              background: var(--bg-card);
-              border: 1px solid rgba(139, 92, 246, 0.4);
-              border-radius: 12px;
-              padding: 16px 20px;
-              text-align: center;
-              box-shadow: 0 0 24px rgba(139, 92, 246, 0.15);
-            ">
-              <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1em; color: #fff;">
-                NLT<span style="color: var(--accent-purple);"> X</span>
-              </div>
-              <div class="tiny text-muted" style="margin-top: 4px;">Data Layer</div>
-            </div>
-            <div style="width: 2px; height: 40px; background: linear-gradient(180deg, var(--accent-cyan), transparent);"></div>
-          </div>
-
-          <!-- Right: Venue Agent -->
-          <div class="fragment fade-up">
-            <div class="card" style="border-color: rgba(34, 211, 238, 0.3);">
-              <div class="flex-between mb-12">
-                <h3 style="margin: 0; font-size: 1em; color: var(--accent-cyan);">Venue Agent</h3>
-                <span class="badge badge-cyan" style="font-size: 0.65em;">Supply-Side</span>
-              </div>
-              <p class="small text-muted mb-12">Venues don't use APIs. They gatekeep. Our AI agent talks to them so you don't have to.</p>
-
-              <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px;">
-                <div class="card-sm" style="padding: 8px 12px;">
-                  <div class="tiny" style="color: var(--red); margin-bottom: 2px;">THE PROBLEM</div>
-                  <div class="smaller text-muted">No APIs, no online booking, info locked in DMs and group chats</div>
-                </div>
-                <div class="card-sm" style="padding: 8px 12px;">
-                  <div class="tiny" style="color: var(--green); margin-bottom: 2px;">OUR SOLUTION</div>
-                  <div class="smaller text-muted">AI agent interfaces with venues via their preferred channels</div>
-                </div>
-              </div>
-
-              <div class="smaller" style="color: var(--accent-cyan); border-top: 1px solid var(--border); padding-top: 8px;">
-                <strong>Handles:</strong> Table availability &middot; Pricing &middot; Booking confirmation &middot; Event details
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bottom flow -->
-        <div class="fragment fade-up mt-16">
-          <div class="card-sm" style="text-align: center; border-color: rgba(139, 92, 246, 0.2);">
-            <div class="small">
-              <span class="text-muted">Guest asks &rarr;</span>
-              <span style="color: var(--accent-purple);"> City Agent </span>
-              <span class="text-muted">&rarr; checks data + books via &rarr;</span>
-              <span style="color: var(--accent-cyan);"> Venue Agent </span>
-              <span class="text-muted">&rarr; confirms with venue &rarr;</span>
-              <span style="color: var(--green);"> Done</span>
-            </div>
-            <div class="smaller text-muted mt-8">The guest never knows how messy the supply side is. That's the moat.</div>
-          </div>
-        </div>
-
-        <aside class="notes">
-          This is the full architecture. On the consumer side, we're building an AI agent for every city — not a chatbot, a genuine local expert. It has structured event data plus qualitative knowledge seeded from club promoters, DJs, venue security, dancers, performers. It knows which club has the best sound system, which night to avoid, which DJ is actually good live. And it can take action — book a VIP table, buy tickets, put you on the guest list.
-
-          On the supply side, we have a second AI agent that faces the venues. Here's the thing about nightlife venues: they don't use APIs. They don't have online booking systems. Everything is gatekept — locked in DMs, WhatsApp groups, relationships. Our venue agent handles that. It talks to venues through whatever channel they prefer, gets real-time availability, negotiates pricing, confirms bookings. The guest asks one question and gets a seamless answer. They never see the messy supply-side integration. That abstraction layer is the moat — it's incredibly hard to replicate because it requires both the data infrastructure AND the venue relationships.
-        </aside>
-      </section>
-
-      <!-- ============================================
-           SLIDE 11: TRACTION
-           ============================================ -->
-      <section data-transition="fade" class="slide-gradient-cyan">
-        <span class="slide-label">Traction</span>
-        <div class="accent-line"></div>
-        <h2>Live Today</h2>
-
-        <div class="grid-2 mt-24 gap-24">
-          <!-- Tokyo Data -->
-          <div>
-            <h3 style="font-size: 0.95em; margin-bottom: 16px;">Tokyo &mdash; City Data</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-              <div class="card" style="text-align: center; padding: 16px;">
-                <div class="stat-big count-up" data-target="2200" style="font-size: 2em;">2,200+</div>
-                <div class="stat-label">Structured Events</div>
-              </div>
-              <div class="card" style="text-align: center; padding: 16px;">
-                <div class="stat-big count-up" data-target="3500" style="font-size: 2em;">3,500+</div>
-                <div class="stat-label">DJ Profiles</div>
-              </div>
-              <div class="card" style="text-align: center; padding: 16px;">
-                <div class="stat-big count-up" data-target="200" style="font-size: 2em;">200+</div>
-                <div class="stat-label">Venues Mapped</div>
-              </div>
-              <div class="card" style="text-align: center; padding: 16px;">
-                <div class="stat-big" style="font-size: 2em; color: var(--accent-purple);">2x</div>
-                <div class="stat-label">Daily Pipeline Refresh</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- MCP / API -->
-          <div>
-            <h3 style="font-size: 0.95em; margin-bottom: 16px; color: var(--accent-cyan);">MCP &amp; API Platform</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-              <div class="card" style="text-align: center; padding: 16px;">
-                <div class="stat-big count-up" data-target="16" style="font-size: 2em;">16</div>
-                <div class="stat-label">MCP Tools Live</div>
-              </div>
-              <div class="card" style="text-align: center; padding: 16px;">
-                <div class="stat-big" style="font-size: 2em; color: var(--accent-cyan);">1st</div>
-                <div class="stat-label">Nightlife MCP Server</div>
-              </div>
-              <div class="card" style="text-align: center; padding: 16px;">
-                <div class="stat-big count-up" data-target="3" style="font-size: 2em;">3</div>
-                <div class="stat-label">VIP Venues (30+ tables)</div>
-              </div>
-              <div class="card" style="text-align: center; padding: 16px;">
-                <div class="stat-big" style="font-size: 2em; color: var(--green);">&#10003;</div>
-                <div class="stat-label">VIP Booking System</div>
-              </div>
-            </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-              <span class="badge badge-green" style="font-size: 0.65em;">Self-service API keys</span>
-              <span class="badge badge-green" style="font-size: 0.65em;">OpenAPI 3.1 docs</span>
-              <span class="badge badge-green" style="font-size: 0.65em;">REST API v1</span>
-              <span class="badge badge-green" style="font-size: 0.65em;">VIP pricing engine</span>
-              <span class="badge badge-green" style="font-size: 0.65em;">Guest list system</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Next Up -->
-        <div class="mt-20" style="border-top: 1px solid var(--border); padding-top: 16px;">
-          <h3 style="font-size: 0.9em; margin-bottom: 12px;">Next &mdash; US Expansion</h3>
-          <div style="display: flex; gap: 16px; align-items: center;">
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-              <span class="badge badge-purple" style="font-size: 0.7em; opacity: 1;">Tokyo <span style="color: var(--green);">&check;</span></span>
-              <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent; color: var(--text);">NYC</span>
-              <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent; color: var(--text);">LA</span>
-              <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent; color: var(--text);">Miami</span>
-              <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent; color: var(--text);">Las Vegas</span>
-              <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent; color: var(--text);">Chicago</span>
-            </div>
-            <span class="smaller text-muted" style="white-space: nowrap;">&rarr; US cities first, then Asia, then global</span>
-          </div>
-        </div>
-
-        <aside class="notes">
-          This isn't a pitch for a concept — we have a live product. Two sides of traction: First, Tokyo city data — 2,200 events, 3,500 DJ profiles, 200 venues, all refreshed twice daily by our AI pipeline. Second, the MCP and API platform — 16 tools live, the first nightlife MCP server among 17,744+ indexed, a full VIP booking system with 3 venues and 30+ tables with pricing, and an active guest list system. Next up: US cities — NYC, LA, Miami, Las Vegas, Chicago. Then Phase 2 back to Asia, Phase 3 rest of world.
-        </aside>
-      </section>
-
-      <!-- ============================================
-           SLIDE 8: MARKET SIZE
+           SLIDE 7: MARKET SIZE
            ============================================ -->
       <section data-transition="fade">
         <span class="slide-label">Market</span>
@@ -1172,9 +943,9 @@
       <section data-transition="fade" class="slide-gradient-cyan">
         <span class="slide-label">Revenue</span>
         <div class="accent-line"></div>
-        <h2>6 Revenue Streams</h2>
+        <h2>5 Revenue Streams</h2>
 
-        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
           <div class="fragment fade-up">
             <div class="card-sm flex-between">
               <div style="display: flex; align-items: center; gap: 16px;">
@@ -1242,22 +1013,6 @@
           <div class="fragment fade-up">
             <div class="card-sm flex-between">
               <div style="display: flex; align-items: center; gap: 16px;">
-                <span style="font-size: 1.4em;">🏨</span>
-                <div>
-                  <strong>Hotel Concierge SaaS</strong>
-                  <div class="smaller text-muted">White-label nightlife AI for hotels</div>
-                </div>
-              </div>
-              <div style="text-align: right; flex-shrink: 0;">
-                <div class="mono text-green smaller">$199-499/mo + commissions</div>
-                <div class="tiny text-muted">Building now</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="fragment fade-up">
-            <div class="card-sm flex-between">
-              <div style="display: flex; align-items: center; gap: 16px;">
                 <span style="font-size: 1.4em;">🎫</span>
                 <div>
                   <strong>Ticketing</strong>
@@ -1273,70 +1028,450 @@
         </div>
 
         <aside class="notes">
-          Six revenue streams. API licensing is the big bet — tiered pricing from free developer accounts to enterprise contracts. VIP table commissions generate revenue immediately at 10-30%. Guest list SaaS follows the SevenRooms model — $1.2B acquisition. Promoted listings follow the proven Yelp model. Hotel Concierge SaaS is our near-term GTM play — a white-label nightlife AI product for hotels at $199-499/mo plus commissions on every booking the concierge drives. 100 Tokyo hotels alone is $1-3M ARR. Ticketing is the future phase that opens up the $53B market.
+          Five revenue streams, all activatable from day one. API licensing is the big bet — tiered pricing from free developer accounts to enterprise hotel contracts. VIP table commissions generate revenue immediately at 10-30%. Guest list SaaS follows the SevenRooms model — they were acquired for $1.2B. And ticketing is the future phase that nearly doubles the revenue.
         </aside>
       </section>
 
       <!-- ============================================
-           SLIDE 11: GO TO MARKET — HOTEL CONCIERGE
+           SLIDE 8a: REVENUE PROJECTIONS CHART
+           ============================================ -->
+      <section data-transition="fade">
+        <span class="slide-label">Projections</span>
+        <div class="accent-line"></div>
+        <h2 style="font-size: 1.3em; margin-bottom: 4px;">Path to <span class="text-green">$1M ARR</span> in 12 Months</h2>
+
+        <div class="proj-legend">
+          <span><span style="color: #f472b6;">&#9679;</span> Hotel Concierge App</span>
+          <span><span style="color: #22d3ee;">&#9679;</span> API Licensing</span>
+          <span><span style="color: #22c55e;">&#9679;</span> VIP Commissions</span>
+          <span><span style="color: #9b8cff;">&#9679;</span> Guest List SaaS</span>
+          <span><span style="color: #f59e0b;">&#9679;</span> Promoted Listings</span>
+          <span><span style="color: #8b5cf6;">&#9679;</span> Ticketing</span>
+        </div>
+
+        <div class="proj-chart-wrap">
+          <!-- Y-axis labels -->
+          <div class="proj-y-axis">
+            <span>$514K</span>
+            <span>$386K</span>
+            <span>$257K</span>
+            <span>$129K</span>
+            <span>$0</span>
+          </div>
+
+          <!-- $1M ARR marker line ($83,333 MRR / $514,000 max = 16.2% of 360px = ~58px) -->
+          <div class="proj-arr-marker" style="bottom: 58px;"></div>
+
+          <div class="proj-chart">
+            <!-- M1: $9,700 = 1.9% -->
+            <div class="proj-bar proj-bar-monthly" style="height: 1.9%;">
+              <div class="proj-seg" style="flex-grow: 5000; background: #f472b6;" title="Hotel: $5,000"></div>
+              <div class="proj-seg" style="flex-grow: 500; background: #22d3ee;" title="API: $500"></div>
+              <div class="proj-seg" style="flex-grow: 4200; background: #22c55e;" title="VIP: $4,200"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #9b8cff;" title="SaaS: $0"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #f59e0b;" title="Promo: $0"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
+              <span class="proj-bar-label">M1</span>
+            </div>
+
+            <!-- M2: $12,250 = 2.4% -->
+            <div class="proj-bar proj-bar-monthly" style="height: 2.4%;">
+              <div class="proj-seg" style="flex-grow: 5750; background: #f472b6;" title="Hotel: $5,750"></div>
+              <div class="proj-seg" style="flex-grow: 700; background: #22d3ee;" title="API: $700"></div>
+              <div class="proj-seg" style="flex-grow: 5800; background: #22c55e;" title="VIP: $5,800"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #9b8cff;" title="SaaS: $0"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #f59e0b;" title="Promo: $0"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
+              <span class="proj-bar-label"></span>
+            </div>
+
+            <!-- M3: $16,200 = 3.2% — Milestone: US Launch -->
+            <div class="proj-bar proj-bar-monthly" style="height: 3.2%;">
+              <div class="proj-seg" style="flex-grow: 6500; background: #f472b6;" title="Hotel: $6,500"></div>
+              <div class="proj-seg" style="flex-grow: 1000; background: #22d3ee;" title="API: $1,000"></div>
+              <div class="proj-seg" style="flex-grow: 8000; background: #22c55e;" title="VIP: $8,000"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #9b8cff;" title="SaaS: $0"></div>
+              <div class="proj-seg" style="flex-grow: 700; background: #f59e0b;" title="Promo: $700"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
+              <span class="proj-bar-label">M3</span>
+              <span class="proj-milestone-label">US Launch</span>
+            </div>
+
+            <!-- M4: $20,250 = 3.9% -->
+            <div class="proj-bar proj-bar-monthly" style="height: 3.9%;">
+              <div class="proj-seg" style="flex-grow: 7250; background: #f472b6;" title="Hotel: $7,250"></div>
+              <div class="proj-seg" style="flex-grow: 1500; background: #22d3ee;" title="API: $1,500"></div>
+              <div class="proj-seg" style="flex-grow: 10000; background: #22c55e;" title="VIP: $10,000"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #9b8cff;" title="SaaS: $0"></div>
+              <div class="proj-seg" style="flex-grow: 1500; background: #f59e0b;" title="Promo: $1,500"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
+              <span class="proj-bar-label"></span>
+            </div>
+
+            <!-- M5: $24,500 = 4.8% -->
+            <div class="proj-bar proj-bar-monthly" style="height: 4.8%;">
+              <div class="proj-seg" style="flex-grow: 8000; background: #f472b6;" title="Hotel: $8,000"></div>
+              <div class="proj-seg" style="flex-grow: 2000; background: #22d3ee;" title="API: $2,000"></div>
+              <div class="proj-seg" style="flex-grow: 11500; background: #22c55e;" title="VIP: $11,500"></div>
+              <div class="proj-seg" style="flex-grow: 500; background: #9b8cff;" title="SaaS: $500"></div>
+              <div class="proj-seg" style="flex-grow: 2500; background: #f59e0b;" title="Promo: $2,500"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
+              <span class="proj-bar-label"></span>
+            </div>
+
+            <!-- M6: $30,500 = 5.9% -->
+            <div class="proj-bar proj-bar-monthly" style="height: 5.9%;">
+              <div class="proj-seg" style="flex-grow: 9000; background: #f472b6;" title="Hotel: $9,000"></div>
+              <div class="proj-seg" style="flex-grow: 2500; background: #22d3ee;" title="API: $2,500"></div>
+              <div class="proj-seg" style="flex-grow: 13500; background: #22c55e;" title="VIP: $13,500"></div>
+              <div class="proj-seg" style="flex-grow: 2000; background: #9b8cff;" title="SaaS: $2,000"></div>
+              <div class="proj-seg" style="flex-grow: 3500; background: #f59e0b;" title="Promo: $3,500"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
+              <span class="proj-bar-label">M6</span>
+            </div>
+
+            <!-- M7: $37,700 = 7.3% -->
+            <div class="proj-bar proj-bar-monthly" style="height: 7.3%;">
+              <div class="proj-seg" style="flex-grow: 10000; background: #f472b6;" title="Hotel: $10,000"></div>
+              <div class="proj-seg" style="flex-grow: 3200; background: #22d3ee;" title="API: $3,200"></div>
+              <div class="proj-seg" style="flex-grow: 16000; background: #22c55e;" title="VIP: $16,000"></div>
+              <div class="proj-seg" style="flex-grow: 3500; background: #9b8cff;" title="SaaS: $3,500"></div>
+              <div class="proj-seg" style="flex-grow: 5000; background: #f59e0b;" title="Promo: $5,000"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
+              <span class="proj-bar-label"></span>
+            </div>
+
+            <!-- M8: $45,500 = 8.9% -->
+            <div class="proj-bar proj-bar-monthly" style="height: 8.9%;">
+              <div class="proj-seg" style="flex-grow: 11500; background: #f472b6;" title="Hotel: $11,500"></div>
+              <div class="proj-seg" style="flex-grow: 4000; background: #22d3ee;" title="API: $4,000"></div>
+              <div class="proj-seg" style="flex-grow: 18500; background: #22c55e;" title="VIP: $18,500"></div>
+              <div class="proj-seg" style="flex-grow: 5000; background: #9b8cff;" title="SaaS: $5,000"></div>
+              <div class="proj-seg" style="flex-grow: 6500; background: #f59e0b;" title="Promo: $6,500"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
+              <span class="proj-bar-label"></span>
+            </div>
+
+            <!-- M9: $53,500 = 10.4% — Milestone: 10 Cities -->
+            <div class="proj-bar proj-bar-monthly" style="height: 10.4%;">
+              <div class="proj-seg" style="flex-grow: 13000; background: #f472b6;" title="Hotel: $13,000"></div>
+              <div class="proj-seg" style="flex-grow: 5000; background: #22d3ee;" title="API: $5,000"></div>
+              <div class="proj-seg" style="flex-grow: 21000; background: #22c55e;" title="VIP: $21,000"></div>
+              <div class="proj-seg" style="flex-grow: 7000; background: #9b8cff;" title="SaaS: $7,000"></div>
+              <div class="proj-seg" style="flex-grow: 7500; background: #f59e0b;" title="Promo: $7,500"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
+              <span class="proj-bar-label">M9</span>
+              <span class="proj-milestone-label">10 Cities</span>
+            </div>
+
+            <!-- M10: $63,000 = 12.3% -->
+            <div class="proj-bar proj-bar-monthly" style="height: 12.3%;">
+              <div class="proj-seg" style="flex-grow: 15000; background: #f472b6;" title="Hotel: $15,000"></div>
+              <div class="proj-seg" style="flex-grow: 6000; background: #22d3ee;" title="API: $6,000"></div>
+              <div class="proj-seg" style="flex-grow: 23000; background: #22c55e;" title="VIP: $23,000"></div>
+              <div class="proj-seg" style="flex-grow: 8500; background: #9b8cff;" title="SaaS: $8,500"></div>
+              <div class="proj-seg" style="flex-grow: 8500; background: #f59e0b;" title="Promo: $8,500"></div>
+              <div class="proj-seg" style="flex-grow: 2000; background: #8b5cf6;" title="Ticket: $2,000"></div>
+              <span class="proj-bar-label"></span>
+            </div>
+
+            <!-- M11: $72,500 = 14.1% -->
+            <div class="proj-bar proj-bar-monthly" style="height: 14.1%;">
+              <div class="proj-seg" style="flex-grow: 17000; background: #f472b6;" title="Hotel: $17,000"></div>
+              <div class="proj-seg" style="flex-grow: 7000; background: #22d3ee;" title="API: $7,000"></div>
+              <div class="proj-seg" style="flex-grow: 25500; background: #22c55e;" title="VIP: $25,500"></div>
+              <div class="proj-seg" style="flex-grow: 10000; background: #9b8cff;" title="SaaS: $10,000"></div>
+              <div class="proj-seg" style="flex-grow: 9500; background: #f59e0b;" title="Promo: $9,500"></div>
+              <div class="proj-seg" style="flex-grow: 3500; background: #8b5cf6;" title="Ticket: $3,500"></div>
+              <span class="proj-bar-label"></span>
+            </div>
+
+            <!-- M12: $83,000 = 16.1% — Milestone: $1M ARR -->
+            <div class="proj-bar proj-bar-monthly" style="height: 16.1%;">
+              <div class="proj-seg" style="flex-grow: 19000; background: #f472b6;" title="Hotel: $19,000"></div>
+              <div class="proj-seg" style="flex-grow: 8000; background: #22d3ee;" title="API: $8,000"></div>
+              <div class="proj-seg" style="flex-grow: 28000; background: #22c55e;" title="VIP: $28,000"></div>
+              <div class="proj-seg" style="flex-grow: 12000; background: #9b8cff;" title="SaaS: $12,000"></div>
+              <div class="proj-seg" style="flex-grow: 11000; background: #f59e0b;" title="Promo: $11,000"></div>
+              <div class="proj-seg" style="flex-grow: 5000; background: #8b5cf6;" title="Ticket: $5,000"></div>
+              <span class="proj-bar-label">M12</span>
+              <span class="proj-milestone-label">$1M ARR</span>
+            </div>
+
+            <!-- Year divider: Y1 → Y2 -->
+            <div class="proj-year-divider"></div>
+
+            <!-- Q1Y2: $103,500 = 20.1% -->
+            <div class="proj-bar proj-bar-quarterly" style="height: 20.1%;">
+              <div class="proj-seg" style="flex-grow: 21000; background: #f472b6;" title="Hotel: $21,000"></div>
+              <div class="proj-seg" style="flex-grow: 12000; background: #22d3ee;" title="API: $12,000"></div>
+              <div class="proj-seg" style="flex-grow: 34000; background: #22c55e;" title="VIP: $34,000"></div>
+              <div class="proj-seg" style="flex-grow: 16000; background: #9b8cff;" title="SaaS: $16,000"></div>
+              <div class="proj-seg" style="flex-grow: 13500; background: #f59e0b;" title="Promo: $13,500"></div>
+              <div class="proj-seg" style="flex-grow: 7000; background: #8b5cf6;" title="Ticket: $7,000"></div>
+              <span class="proj-bar-label">Q1Y2</span>
+            </div>
+
+            <!-- Q2Y2: $131,000 = 25.5% — Milestone: 50 Cities -->
+            <div class="proj-bar proj-bar-quarterly" style="height: 25.5%;">
+              <div class="proj-seg" style="flex-grow: 23000; background: #f472b6;" title="Hotel: $23,000"></div>
+              <div class="proj-seg" style="flex-grow: 22000; background: #22d3ee;" title="API: $22,000"></div>
+              <div class="proj-seg" style="flex-grow: 40000; background: #22c55e;" title="VIP: $40,000"></div>
+              <div class="proj-seg" style="flex-grow: 20000; background: #9b8cff;" title="SaaS: $20,000"></div>
+              <div class="proj-seg" style="flex-grow: 16000; background: #f59e0b;" title="Promo: $16,000"></div>
+              <div class="proj-seg" style="flex-grow: 10000; background: #8b5cf6;" title="Ticket: $10,000"></div>
+              <span class="proj-bar-label">Q2Y2</span>
+              <span class="proj-milestone-label">50 Cities</span>
+            </div>
+
+            <!-- Q3Y2: $163,000 = 31.7% -->
+            <div class="proj-bar proj-bar-quarterly" style="height: 31.7%;">
+              <div class="proj-seg" style="flex-grow: 25000; background: #f472b6;" title="Hotel: $25,000"></div>
+              <div class="proj-seg" style="flex-grow: 34000; background: #22d3ee;" title="API: $34,000"></div>
+              <div class="proj-seg" style="flex-grow: 46000; background: #22c55e;" title="VIP: $46,000"></div>
+              <div class="proj-seg" style="flex-grow: 25000; background: #9b8cff;" title="SaaS: $25,000"></div>
+              <div class="proj-seg" style="flex-grow: 19000; background: #f59e0b;" title="Promo: $19,000"></div>
+              <div class="proj-seg" style="flex-grow: 14000; background: #8b5cf6;" title="Ticket: $14,000"></div>
+              <span class="proj-bar-label">Q3Y2</span>
+            </div>
+
+            <!-- Q4Y2: $200,000 = 38.9% — Milestone: $2M+ ARR -->
+            <div class="proj-bar proj-bar-quarterly" style="height: 38.9%;">
+              <div class="proj-seg" style="flex-grow: 28000; background: #f472b6;" title="Hotel: $28,000"></div>
+              <div class="proj-seg" style="flex-grow: 48000; background: #22d3ee;" title="API: $48,000"></div>
+              <div class="proj-seg" style="flex-grow: 52000; background: #22c55e;" title="VIP: $52,000"></div>
+              <div class="proj-seg" style="flex-grow: 30000; background: #9b8cff;" title="SaaS: $30,000"></div>
+              <div class="proj-seg" style="flex-grow: 22000; background: #f59e0b;" title="Promo: $22,000"></div>
+              <div class="proj-seg" style="flex-grow: 20000; background: #8b5cf6;" title="Ticket: $20,000"></div>
+              <span class="proj-bar-label">Q4Y2</span>
+              <span class="proj-milestone-label">$2M+ ARR</span>
+            </div>
+
+            <!-- Year divider: Y2 → Y3 -->
+            <div class="proj-year-divider"></div>
+
+            <!-- Q1Y3: $273,000 = 53.1% -->
+            <div class="proj-bar proj-bar-quarterly" style="height: 53.1%;">
+              <div class="proj-seg" style="flex-grow: 30000; background: #f472b6;" title="Hotel: $30,000"></div>
+              <div class="proj-seg" style="flex-grow: 80000; background: #22d3ee;" title="API: $80,000"></div>
+              <div class="proj-seg" style="flex-grow: 62000; background: #22c55e;" title="VIP: $62,000"></div>
+              <div class="proj-seg" style="flex-grow: 37000; background: #9b8cff;" title="SaaS: $37,000"></div>
+              <div class="proj-seg" style="flex-grow: 26000; background: #f59e0b;" title="Promo: $26,000"></div>
+              <div class="proj-seg" style="flex-grow: 38000; background: #8b5cf6;" title="Ticket: $38,000"></div>
+              <span class="proj-bar-label">Q1Y3</span>
+            </div>
+
+            <!-- Q2Y3: $353,000 = 68.7% -->
+            <div class="proj-bar proj-bar-quarterly" style="height: 68.7%;">
+              <div class="proj-seg" style="flex-grow: 33000; background: #f472b6;" title="Hotel: $33,000"></div>
+              <div class="proj-seg" style="flex-grow: 120000; background: #22d3ee;" title="API: $120,000"></div>
+              <div class="proj-seg" style="flex-grow: 72000; background: #22c55e;" title="VIP: $72,000"></div>
+              <div class="proj-seg" style="flex-grow: 43000; background: #9b8cff;" title="SaaS: $43,000"></div>
+              <div class="proj-seg" style="flex-grow: 30000; background: #f59e0b;" title="Promo: $30,000"></div>
+              <div class="proj-seg" style="flex-grow: 55000; background: #8b5cf6;" title="Ticket: $55,000"></div>
+              <span class="proj-bar-label">Q2Y3</span>
+            </div>
+
+            <!-- Q3Y3: $432,000 = 84.0% -->
+            <div class="proj-bar proj-bar-quarterly" style="height: 84.0%;">
+              <div class="proj-seg" style="flex-grow: 35000; background: #f472b6;" title="Hotel: $35,000"></div>
+              <div class="proj-seg" style="flex-grow: 158000; background: #22d3ee;" title="API: $158,000"></div>
+              <div class="proj-seg" style="flex-grow: 80000; background: #22c55e;" title="VIP: $80,000"></div>
+              <div class="proj-seg" style="flex-grow: 50000; background: #9b8cff;" title="SaaS: $50,000"></div>
+              <div class="proj-seg" style="flex-grow: 34000; background: #f59e0b;" title="Promo: $34,000"></div>
+              <div class="proj-seg" style="flex-grow: 75000; background: #8b5cf6;" title="Ticket: $75,000"></div>
+              <span class="proj-bar-label">Q3Y3</span>
+            </div>
+
+            <!-- Q4Y3: $514,000 = 100.0% -->
+            <div class="proj-bar proj-bar-quarterly" style="height: 100.0%;">
+              <div class="proj-seg" style="flex-grow: 38000; background: #f472b6;" title="Hotel: $38,000"></div>
+              <div class="proj-seg" style="flex-grow: 195000; background: #22d3ee;" title="API: $195,000"></div>
+              <div class="proj-seg" style="flex-grow: 90000; background: #22c55e;" title="VIP: $90,000"></div>
+              <div class="proj-seg" style="flex-grow: 58000; background: #9b8cff;" title="SaaS: $58,000"></div>
+              <div class="proj-seg" style="flex-grow: 38000; background: #f59e0b;" title="Promo: $38,000"></div>
+              <div class="proj-seg" style="flex-grow: 95000; background: #8b5cf6;" title="Ticket: $95,000"></div>
+              <span class="proj-bar-label">Q4Y3</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Here's our path to $1M ARR in 12 months across six revenue streams, each staggered by product readiness. The growth follows city expansion milestones — that's why those milestones matter.
+
+Hotel Concierge App [pink] is our immediate, bankable revenue from hotel partnerships. It starts at $5,000 in month 1 from early Tokyo properties and grows steadily to $19,000 by month 12. This stream doesn't hockey-stick — it's a reliable base that proves the hotel distribution thesis while we build the higher-leverage streams on top.
+
+API/MCP Licensing [cyan] starts small — just $500 in month 1 as we seed the developer ecosystem. Growth is slow through year one ($8,000 at M12), but the inflection hits around month 18 as the AI agent ecosystem matures and enterprise adoption accelerates. By year 3, API becomes our largest stream at $195,000 per month. This is the AEO thesis playing out: slow to build, dominant once the network effects kick in.
+
+VIP Commissions [green] is our highest-conviction stream — we have live venues with live demand today. Starting at $4,200 from month 1 Tokyo bookings, it grows linearly with city launches: $28,000 at month 12, scaling to $90,000 by Q4 of year 3 as we reach 200+ cities.
+
+Guest List SaaS [purple] follows the VIP pipeline starting month 5, growing from $500 to $12,000 at M12. Lower per-unit amounts but pure SaaS margin — $58,000 per month by year 3.
+
+Promoted Listings [orange] launches at month 3 with the US expansion — slow and steady from $700 to $11,000 at M12, reaching $38,000 by year 3. This is the Yelp model — it compounds naturally with traffic and city count.
+
+Ticketing [violet] is our sleeper stream — starting month 10 at $2,000, modest through year one at $5,000. But it gets a major bump at month 18 coinciding with the API ecosystem maturity, scaling to $95,000 per month by Q4Y3 as event partnerships and AI-driven distribution mature together.
+
+The trajectory: month 1 at $9,700 MRR. Month 6 hits $30,500. Month 9 at 10 cities reaches $53,500. Month 12 at 25 cities crosses $83,000 MRR — that's just under $1M ARR. The key insight: Hotel Concierge provides bankable near-term revenue while API/MCP builds toward dominance.
+        </aside>
+      </section>
+
+      <!-- ============================================
+           SLIDE 8b: REVENUE ASSUMPTIONS TABLE
+           ============================================ -->
+      <section data-transition="fade">
+        <span class="slide-label">Unit Economics</span>
+        <div class="accent-line"></div>
+        <h2 style="font-size: 1.2em; margin-bottom: 8px;">Revenue Stream Breakdown</h2>
+
+        <table style="width: 100%; border-collapse: collapse; margin-top: 8px;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+              <th class="smaller" style="text-align: left; padding: 6px 10px;">Stream</th>
+              <th class="smaller" style="text-align: left; padding: 6px 10px;">Key Assumption</th>
+              <th class="smaller" style="text-align: left; padding: 6px 10px;">Unit Price</th>
+              <th class="smaller mono" style="text-align: right; padding: 6px 10px;">Y1 (M12)</th>
+              <th class="smaller mono" style="text-align: right; padding: 6px 10px;">Y2 (Q4Y2)</th>
+              <th class="smaller mono" style="text-align: right; padding: 6px 10px;">Y3 (Q4Y3)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 6px 10px;"><span style="color: #f472b6;">&#9679;</span> Hotel Concierge App</td>
+              <td class="smaller text-dim" style="padding: 6px 10px;">45 hotel properties at $422 avg</td>
+              <td class="smaller" style="padding: 6px 10px;">$299-599/mo</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$19K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$28K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$38K</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 6px 10px;"><span style="color: #22d3ee;">&#9679;</span> API/MCP Licensing</td>
+              <td class="smaller text-dim" style="padding: 6px 10px;">35 API subscribers at $229 avg</td>
+              <td class="smaller" style="padding: 6px 10px;">$99-499/mo</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$8K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$48K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$195K</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 6px 10px;"><span style="color: #22c55e;">&#9679;</span> VIP Commissions</td>
+              <td class="smaller text-dim" style="padding: 6px 10px;">10 venues &times; 11 bookings &times; $255</td>
+              <td class="smaller" style="padding: 6px 10px;">10-30% commission</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$28K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$52K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$90K</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 6px 10px;"><span style="color: #9b8cff;">&#9679;</span> Guest List SaaS</td>
+              <td class="smaller text-dim" style="padding: 6px 10px;">50 venues at $240 avg</td>
+              <td class="smaller" style="padding: 6px 10px;">$99-499/mo</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$12K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$30K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$58K</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 6px 10px;"><span style="color: #f59e0b;">&#9679;</span> Promoted Listings</td>
+              <td class="smaller text-dim" style="padding: 6px 10px;">47 advertisers at $234 avg</td>
+              <td class="smaller" style="padding: 6px 10px;">$100-500/mo</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$11K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$22K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$38K</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 6px 10px;"><span style="color: #8b5cf6;">&#9679;</span> Ticketing</td>
+              <td class="smaller text-dim" style="padding: 6px 10px;">1,100 tickets, 12% take rate</td>
+              <td class="smaller" style="padding: 6px 10px;">$38 avg, 12% take</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$5K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$20K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$95K</td>
+            </tr>
+            <tr style="border-top: 2px solid var(--border);">
+              <td class="smaller" style="padding: 6px 10px; font-weight: 700;" colspan="3"><strong>Total MRR</strong></td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px; font-weight: 700;">$83K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px; font-weight: 700;">$200K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px; font-weight: 700;">$514K</td>
+            </tr>
+            <tr>
+              <td class="tiny text-dim" style="padding: 2px 10px 0;" colspan="3"></td>
+              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 10px 0;">$1.0M ARR</td>
+              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 10px 0;">$2.4M ARR</td>
+              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 10px 0;">$6.2M ARR</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Callout Cards -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px;">
+          <div class="card-sm" style="text-align: center;">
+            <div class="mono text-cyan" style="font-size: 1.4em; font-weight: 700;">$441</div>
+            <div class="smaller text-muted">Blended ARPU</div>
+            <div class="tiny text-dim">M12 avg across 187 relationships</div>
+          </div>
+          <div class="card-sm" style="text-align: center;">
+            <span class="badge badge-green" style="font-size: 1.1em; padding: 6px 16px;">60%+ Gross Margin</span>
+            <div class="smaller text-muted" style="margin-top: 8px;">Trending to 70% as SaaS mix grows</div>
+          </div>
+          <div class="card-sm" style="text-align: center;">
+            <div class="mono text-purple" style="font-size: 1.4em; font-weight: 700;">$40K</div>
+            <div class="smaller text-muted">ARR per City</div>
+            <div class="tiny text-dim">$3,320/mo at 25 cities (M12)</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+Let me walk you through the unit economics driving each stream to $83,000 MRR at month 12. Every number is bottom-up — customers times price — never top-down market capture.
+
+Hotel Concierge App: This is our bankable near-term revenue. We start with Tokyo hotel partnerships at $299-599 per month, growing from $5,000 in month 1 to $19,000 at month 12 across 45 properties at a $422 average. This stream doesn't hockey-stick — it grows steadily to $28,000 by Q4Y2 and $38,000 by Q4Y3. That's the point: it's reliable, provable revenue that de-risks the business while we build the higher-leverage streams.
+
+API/MCP Licensing: This is the AEO thesis — small now, dominant later. Just $500 in month 1 from early developer access, growing to $8,000 at M12 across 35 subscribers at $229 average. The real inflection hits at month 18 as AI agent adoption accelerates — by Q4Y2 we're at $48,000, and by Q4Y3 API becomes our largest stream at $195,000 per month. The $99-499 tiered pricing captures both indie developers and enterprise hotel chains.
+
+VIP Commissions: Our highest-conviction stream — live venues, live demand, live revenue from day one. 10 venues with 11 bookings per venue at $255 average commission drives $28,000 at month 12. Linear growth with city launches takes this to $52,000 at Q4Y2 and $90,000 by Q4Y3. Commission revenue runs at 20-30% net margin after payment processing.
+
+Guest List SaaS: Follows the VIP pipeline from month 5 — 50 venues at $240 average by M12 for $12,000 per month. Pure SaaS margin following the SevenRooms model. Grows to $30,000 at Q4Y2 and $58,000 by Q4Y3.
+
+Promoted Listings: 47 advertisers at $234 average by M12 for $11,000 per month. Slow and steady — $22,000 at Q4Y2, $38,000 by Q4Y3. Like Google Ads, compounds naturally with traffic and city count. Margins 75%+.
+
+Ticketing: Our sleeper stream — launches month 10 at $2,000, modest at $5,000 by M12 with 1,100 tickets at 12% take rate. But the 18-month bump coincides with API ecosystem maturity: $20,000 at Q4Y2, then accelerating to $95,000 by Q4Y3 as AI-driven event distribution matures alongside the API network.
+
+The revenue mix tells a deliberate story: Hotel Concierge provides bankable base revenue while VIP commissions prove market demand — together they're the near-term engine. API/MCP Licensing and Ticketing are the long-term bets that inflect together around month 18. Total at month 12: $83,000 MRR across 187 paying relationships, with 60%+ blended gross margin trending toward 70% as SaaS share grows.
+        </aside>
+      </section>
+
+      <!-- ============================================
+           SLIDE 9: GO TO MARKET
            ============================================ -->
       <section data-transition="fade" class="slide-gradient-purple">
-        <span class="slide-label">GTM &mdash; 12 Months</span>
+        <span class="slide-label">GTM</span>
         <div class="accent-line"></div>
-        <h2>A Nightlife Concierge for <span class="gradient-text">Every Hotel in Japan</span></h2>
-        <p class="text-muted mb-16 small" style="max-width: 720px;">Not an API integration project. A turnkey AI concierge that any hotel can use today.</p>
+        <h2>Hotels as Distribution</h2>
 
-        <div class="grid-2 mt-16 gap-24">
-          <!-- Left: The Product -->
+        <div class="grid-2 mt-24 gap-32">
           <div>
-            <div class="fragment fade-up card card-glow mb-16" style="border-color: rgba(139, 92, 246, 0.3);">
-              <div class="flex-between mb-12">
-                <h3 style="margin: 0; font-size: 1em;">The Product</h3>
-                <span class="badge badge-green" style="font-size: 0.65em;">Building Now</span>
-              </div>
-              <p class="small text-muted mb-12">Our City Agent, white-labeled for hotels. Front desk staff or guests ask it anything about tonight &mdash; it handles everything from recommendation to booking.</p>
-              <div style="display: flex; flex-direction: column; gap: 6px;">
-                <div class="card-sm" style="padding: 8px 12px;">
-                  <div class="flex-between smaller">
-                    <span class="text-muted">"What's happening tonight?"</span>
-                    <span style="color: var(--green);">&rarr; Curated picks</span>
-                  </div>
-                </div>
-                <div class="card-sm" style="padding: 8px 12px;">
-                  <div class="flex-between smaller">
-                    <span class="text-muted">"Book us a VIP table at 1OAK"</span>
-                    <span style="color: var(--green);">&rarr; Booked via Venue Agent</span>
-                  </div>
-                </div>
-                <div class="card-sm" style="padding: 8px 12px;">
-                  <div class="flex-between smaller">
-                    <span class="text-muted">"Get us on the guest list at WOMB"</span>
-                    <span style="color: var(--green);">&rarr; Confirmed instantly</span>
-                  </div>
-                </div>
+            <div class="fragment fade-up card mb-24">
+              <h3 style="font-size: 1em; margin-bottom: 12px;">The HFTP Signal</h3>
+              <blockquote style="border-left: 3px solid var(--accent-purple); padding-left: 16px; margin: 0; font-style: italic; color: var(--text);">
+                "2026 is the year of MCP in hospitality"
+              </blockquote>
+              <div class="smaller text-muted mt-16">
+                &mdash; Hospitality Financial & Technology Professionals
               </div>
             </div>
 
             <div class="fragment fade-up">
-              <div class="card" style="border-color: rgba(34, 211, 238, 0.2);">
-                <h4 style="font-size: 0.9em; margin-bottom: 8px; color: var(--accent-cyan);">Why Hotels Say Yes</h4>
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                  <div class="smaller"><span style="color: var(--green);">&#10003;</span> <span class="text-muted">Zero integration &mdash; works alongside existing PMS</span></div>
-                  <div class="smaller"><span style="color: var(--green);">&#10003;</span> <span class="text-muted">Guests get better experience &rarr; higher satisfaction scores</span></div>
-                  <div class="smaller"><span style="color: var(--green);">&#10003;</span> <span class="text-muted">Commission on every booking &mdash; new revenue stream</span></div>
-                  <div class="smaller"><span style="color: var(--green);">&#10003;</span> <span class="text-muted">Replaces the binder with real-time, personalized recs</span></div>
-                </div>
-              </div>
+              <h4 style="color: var(--accent-purple); margin-bottom: 12px;">Target Channels</h4>
+              <ul class="small">
+                <li><strong>Apaleo Agent Hub</strong> &mdash; PMS with MCP integration</li>
+                <li><strong>Mindtrip</strong> &mdash; AI travel planning</li>
+                <li><strong>Direct hotel chains</strong> &mdash; Tokyo luxury properties</li>
+                <li><strong>Travel platforms</strong> &mdash; Booking.com, Expedia</li>
+              </ul>
             </div>
           </div>
 
-          <!-- Right: Revenue + Scale -->
-          <div>
-            <div class="fragment fade-up card mb-16">
-              <h4 style="font-size: 0.9em; margin-bottom: 12px;">Revenue Per Hotel</h4>
+          <div class="fragment fade-up">
+            <h4 style="color: var(--accent-cyan); margin-bottom: 12px;">Revenue Per Hotel</h4>
+            <div class="card">
               <table>
                 <tr>
-                  <td class="small text-muted">Concierge SaaS</td>
+                  <td class="small text-muted">API subscription</td>
                   <td class="mono smaller" style="text-align: right; white-space: nowrap;">$199-499/mo</td>
                 </tr>
                 <tr>
@@ -1352,34 +1487,171 @@
                   <td class="mono smaller text-green" style="text-align: right; white-space: nowrap;"><strong>$800-2.8K/mo</strong></td>
                 </tr>
               </table>
-              <div class="mt-12 smaller text-muted" style="border-top: 1px solid var(--border); padding-top: 10px;">
+              <div class="mt-16 smaller text-muted" style="border-top: 1px solid var(--border); padding-top: 12px;">
                 100 Tokyo hotels = <strong>$960K-$3.4M ARR</strong>
-              </div>
-            </div>
-
-            <div class="fragment fade-up card mb-16" style="border-color: rgba(139, 92, 246, 0.2);">
-              <h4 style="font-size: 0.9em; margin-bottom: 8px;">The HFTP Signal</h4>
-              <blockquote style="border-left: 3px solid var(--accent-purple); padding-left: 12px; margin: 0; font-style: italic; color: var(--text); font-size: 0.85em;">
-                "2026 is the year of MCP in hospitality"
-              </blockquote>
-              <div class="smaller text-muted mt-8">Hotels are deploying AI concierges. None have nightlife data.</div>
-            </div>
-
-            <div class="fragment fade-up">
-              <h4 style="font-size: 0.9em; margin-bottom: 8px; color: var(--accent-purple);">Distribution Channels</h4>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent;">Apaleo Agent Hub</span>
-                <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent;">Mindtrip</span>
-                <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent;">Direct hotel chains</span>
-                <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent;">Booking.com</span>
-                <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent;">Expedia</span>
               </div>
             </div>
           </div>
         </div>
 
         <aside class="notes">
-          Our 12-month GTM focus: a turnkey nightlife concierge that every hotel in Japan can use immediately. Not an API integration that requires engineering — a product. It's our City Agent, white-labeled for hotels. The front desk asks it "what's happening tonight" and gets curated, real-time picks. A guest wants a VIP table — it books it through our Venue Agent. Guest list? Instant. Hotels love this because it requires zero integration, improves guest satisfaction, and earns them commission on every booking. It replaces the dusty binder with a live, personalized nightlife concierge. HFTP called 2026 the year of MCP in hospitality — hotels are actively deploying AI concierges but none have nightlife data. We're the only ones who can power this. At $800-2,800 per hotel per month, 100 Tokyo hotels alone is $1-3M ARR.
+          Hotels are our distribution channel. HFTP declared 2026 the year of MCP in hospitality. Hotels are actively deploying AI concierges but none have nightlife data. We target the hotel PMS platforms — Apaleo's Agent Hub, Mindtrip — plus direct enterprise sales to Tokyo luxury hotels. At $800-2,800 per hotel per month, 100 Tokyo hotels alone could generate $1-3M ARR.
+        </aside>
+      </section>
+
+      <!-- ============================================
+           SLIDE 10: COMPETITIVE LANDSCAPE
+           ============================================ -->
+      <section data-transition="fade">
+        <span class="slide-label">Competition</span>
+        <div class="accent-line"></div>
+        <h2>No One Occupies Our Quadrant</h2>
+
+        <div class="mt-16" style="position: relative; max-width: 800px; margin: 0 auto;">
+          <!-- Axis labels -->
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.7em; font-family: 'JetBrains Mono', monospace;">
+            <span class="text-dim">GENERAL / HORIZONTAL</span>
+            <span class="text-dim">NIGHTLIFE SPECIALIST</span>
+          </div>
+
+          <!-- Matrix grid -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; border: 1px solid var(--border);">
+            <!-- Top Left: Data/API + General -->
+            <div class="matrix-quadrant fragment fade-up" style="min-height: 140px;">
+              <div class="tiny text-dim" style="margin-bottom: 8px;">DATA & API INFRASTRUCTURE</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                <span class="badge smaller">Foursquare</span>
+                <span class="badge smaller">Placer.ai</span>
+              </div>
+              <div class="smaller text-muted mt-16">Proved the model — but general purpose</div>
+            </div>
+
+            <!-- Top Right: Data/API + Nightlife = NLT -->
+            <div class="matrix-quadrant empty fragment fade-up" style="min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <div class="nlt-star" style="font-size: 2em; font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--accent-purple);">
+                NLT
+              </div>
+              <div class="smaller text-cyan mt-16">nightlife.dev</div>
+              <div class="tiny text-muted mt-8">Only player here</div>
+            </div>
+
+            <!-- Bottom Left: Consumer + General -->
+            <div class="matrix-quadrant fragment fade-up" style="min-height: 140px;">
+              <div class="tiny text-dim" style="margin-bottom: 8px;">CONSUMER APP / MARKETPLACE</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="badge smaller">Yelp</span>
+                <span class="badge smaller">Google Maps</span>
+                <span class="badge smaller">Eventbrite</span>
+                <span class="badge smaller">Time Out</span>
+                <span class="badge smaller">Ticketmaster</span>
+              </div>
+              <div class="smaller text-dim mt-16">Crowded. Commodity.</div>
+            </div>
+
+            <!-- Bottom Right: Consumer + Nightlife -->
+            <div class="matrix-quadrant fragment fade-up" style="min-height: 140px;">
+              <div class="tiny text-dim" style="margin-bottom: 8px;">CONSUMER + NIGHTLIFE</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="badge smaller">Resident Advisor</span>
+                <span class="badge smaller">Dice / Fever</span>
+                <span class="badge smaller">Discotech</span>
+                <span class="badge smaller">SevenRooms</span>
+              </div>
+              <div class="smaller text-dim mt-16">Night-out vertical, but no data API</div>
+            </div>
+          </div>
+
+          <!-- Y-axis label -->
+          <div style="position: absolute; left: -32px; top: 50%; transform: rotate(-90deg) translateX(-50%); transform-origin: left center; font-size: 0.65em; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); white-space: nowrap;">
+            DATA &amp; API &larr;&rarr; CONSUMER APP
+          </div>
+        </div>
+
+        <aside class="notes">
+          Classic 2x2. Every competitor is either horizontal and general — Yelp, Google — or nightlife-vertical but consumer-only — RA, Discotech. Nobody occupies top-right: nightlife specialist plus structured data API. Foursquare proved the data/API model works but they're general. RA proved nightlife vertical but took 25 years and only covers electronic music. We're the first to combine both.
+        </aside>
+      </section>
+
+      <!-- ============================================
+           SLIDE 11: TRACTION
+           ============================================ -->
+      <section data-transition="fade" class="slide-gradient-cyan">
+        <span class="slide-label">Traction</span>
+        <div class="accent-line"></div>
+        <h2>Live Today</h2>
+
+        <div class="grid-2 mt-24 gap-24">
+          <!-- Tokyo Data -->
+          <div>
+            <h3 style="font-size: 0.95em; margin-bottom: 16px;">Tokyo &mdash; City Data</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="card" style="text-align: center; padding: 16px;">
+                <div class="stat-big count-up" data-target="2200" style="font-size: 2em;">2,200+</div>
+                <div class="stat-label">Structured Events</div>
+              </div>
+              <div class="card" style="text-align: center; padding: 16px;">
+                <div class="stat-big count-up" data-target="3500" style="font-size: 2em;">3,500+</div>
+                <div class="stat-label">DJ Profiles</div>
+              </div>
+              <div class="card" style="text-align: center; padding: 16px;">
+                <div class="stat-big count-up" data-target="200" style="font-size: 2em;">200+</div>
+                <div class="stat-label">Venues Mapped</div>
+              </div>
+              <div class="card" style="text-align: center; padding: 16px;">
+                <div class="stat-big" style="font-size: 2em; color: var(--accent-purple);">2x</div>
+                <div class="stat-label">Daily Pipeline Refresh</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MCP / API -->
+          <div>
+            <h3 style="font-size: 0.95em; margin-bottom: 16px; color: var(--accent-cyan);">MCP &amp; API Platform</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="card" style="text-align: center; padding: 16px;">
+                <div class="stat-big count-up" data-target="16" style="font-size: 2em;">16</div>
+                <div class="stat-label">MCP Tools Live</div>
+              </div>
+              <div class="card" style="text-align: center; padding: 16px;">
+                <div class="stat-big" style="font-size: 2em; color: var(--accent-cyan);">1st</div>
+                <div class="stat-label">Nightlife MCP Server</div>
+              </div>
+              <div class="card" style="text-align: center; padding: 16px;">
+                <div class="stat-big count-up" data-target="3" style="font-size: 2em;">3</div>
+                <div class="stat-label">VIP Venues (30+ tables)</div>
+              </div>
+              <div class="card" style="text-align: center; padding: 16px;">
+                <div class="stat-big" style="font-size: 2em; color: var(--green);">&#10003;</div>
+                <div class="stat-label">Guest List System</div>
+              </div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+              <span class="badge badge-green" style="font-size: 0.65em;">Self-service API keys</span>
+              <span class="badge badge-green" style="font-size: 0.65em;">OpenAPI 3.1 docs</span>
+              <span class="badge badge-green" style="font-size: 0.65em;">REST API v1</span>
+              <span class="badge badge-green" style="font-size: 0.65em;">VIP pricing engine</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next Up -->
+        <div class="mt-20" style="border-top: 1px solid var(--border); padding-top: 16px;">
+          <h3 style="font-size: 0.9em; margin-bottom: 12px;">Next &mdash; US Expansion</h3>
+          <div style="display: flex; gap: 16px; align-items: center;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <span class="badge badge-purple" style="font-size: 0.7em; opacity: 1;">Tokyo <span style="color: var(--green);">&check;</span></span>
+              <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent; color: var(--text);">NYC</span>
+              <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent; color: var(--text);">LA</span>
+              <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent; color: var(--text);">Miami</span>
+              <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent; color: var(--text);">Las Vegas</span>
+              <span class="badge" style="font-size: 0.7em; border: 1px solid var(--border); background: transparent; color: var(--text);">Chicago</span>
+            </div>
+            <span class="smaller text-muted" style="white-space: nowrap;">&rarr; US cities first, then Asia, then global</span>
+          </div>
+        </div>
+
+        <aside class="notes">
+          This isn't a pitch for a concept — we have a live product. Two sides of traction: First, Tokyo city data — 2,200 events, 3,500 DJ profiles, 200 venues, all refreshed twice daily by our AI pipeline. Second, the MCP and API platform — 16 tools live, the first nightlife MCP server among 17,744+ indexed, 3 VIP venues with full table pricing, and an active guest list system. Next up: US cities — NYC, LA, Miami, Las Vegas, Chicago. Then Phase 2 back to Asia, Phase 3 rest of world.
         </aside>
       </section>
 
@@ -1460,95 +1732,6 @@
 
         <aside class="notes">
           Here's what changes the conversation from 'nice niche product' to 'venture-scale infrastructure play.' Time Out spends $1-3 million per city with editorial teams. Our AI pipeline does it for $10-20K. That's 100x cheaper. After Tokyo, we go to the US first — NYC, LA, Miami, Vegas, Chicago — the biggest nightlife markets and where the investors and hotel partners are. Phase 2 we come back to Asia. Phase 3, rest of world. 200 cities with 14 people.
-        </aside>
-      </section>
-
-      <!-- ============================================
-           SLIDE 9: AGENT-ERA TICKETING
-           ============================================ -->
-      <section data-transition="fade" class="slide-gradient-purple">
-        <span class="slide-label">Vision</span>
-        <div class="accent-line"></div>
-        <h2>The Agent Becomes the <span class="gradient-text">Ticket Counter</span></h2>
-        <p class="text-muted mb-24 small" style="max-width: 700px;">When agents are the primary interface, whoever owns the authoritative event data owns the transaction.</p>
-
-        <div class="grid-2 mt-16 gap-32">
-          <!-- Left: The agent flow -->
-          <div>
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-              <div class="fragment fade-up chat-bubble chat-user" style="font-size: 0.85em;">
-                <strong>Fan:</strong> "Get me 2 tickets to the Amelie Lens show at WOMB next Saturday"
-              </div>
-
-              <div class="fragment fade-up chat-bubble chat-system" style="font-size: 0.8em;">
-                <span class="prompt">Agent calls:</span> check_ticket_availability(event: "amelie-lens-womb", qty: 2)
-              </div>
-
-              <div class="fragment fade-up chat-bubble chat-agent" style="font-size: 0.85em;">
-                <strong>Agent:</strong> "Primary tickets are <span style="color: var(--red);">sold out</span>. I found 2 on secondary: StubHub &yen;8,200 each, Viagogo &yen;9,100, Ticketswap &yen;7,500. Want the cheapest option?"
-              </div>
-
-              <div class="fragment fade-up chat-bubble chat-user" style="font-size: 0.85em;">
-                <strong>Fan:</strong> "Yes, grab the Ticketswap ones"
-              </div>
-
-              <div class="fragment fade-up chat-bubble chat-agent" style="font-size: 0.85em;">
-                <strong>Agent:</strong> "Done. 2 tickets confirmed &mdash; &yen;15,000 total. QR codes sent to your wallet."
-              </div>
-            </div>
-          </div>
-
-          <!-- Right: The strategic insight -->
-          <div>
-            <div class="fragment fade-up card mb-16" style="border-color: rgba(139, 92, 246, 0.3);">
-              <h4 style="margin-bottom: 12px; color: #fff;">Why Data Ownership = Transaction Control</h4>
-              <div style="display: flex; flex-direction: column; gap: 10px;">
-                <div class="small">
-                  <span style="color: var(--accent-purple);">1.</span>
-                  <span class="text-muted"> Agent needs to know the event exists</span>
-                  <span class="mono text-cyan smaller"> &larr; our API</span>
-                </div>
-                <div class="small">
-                  <span style="color: var(--accent-purple);">2.</span>
-                  <span class="text-muted"> Agent needs real-time availability</span>
-                  <span class="mono text-cyan smaller"> &larr; our API</span>
-                </div>
-                <div class="small">
-                  <span style="color: var(--accent-purple);">3.</span>
-                  <span class="text-muted"> Agent needs to complete the purchase</span>
-                  <span class="mono text-cyan smaller"> &larr; our checkout</span>
-                </div>
-              </div>
-              <div class="mt-12 smaller" style="border-top: 1px solid var(--border); padding-top: 10px; color: var(--accent-cyan);">
-                If the agent calls us for discovery, it calls us for the transaction.
-              </div>
-            </div>
-
-            <div class="fragment fade-up card" style="border-color: rgba(34, 211, 238, 0.2);">
-              <h4 style="margin-bottom: 12px; color: var(--accent-cyan);">The $53B Opportunity</h4>
-              <div style="display: flex; flex-direction: column; gap: 8px;">
-                <div class="flex-between small">
-                  <span class="text-muted">Primary ticketing</span>
-                  <span class="mono">Direct sales via venue SaaS</span>
-                </div>
-                <div class="flex-between small">
-                  <span class="text-muted">Secondary aggregation</span>
-                  <span class="mono">Price-shop across resale sites</span>
-                </div>
-                <div class="flex-between small">
-                  <span class="text-muted">Agent commerce</span>
-                  <span class="mono">One-step purchase via API</span>
-                </div>
-              </div>
-              <div class="mt-12 smaller text-muted" style="border-top: 1px solid var(--border); padding-top: 10px;">
-                Ticketmaster charges 25%+ fees. Agents will price-shop instantly &mdash; lowest fee wins. Our take rate: <strong class="text-green">10-15%</strong>.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <aside class="notes">
-          Here's the bigger picture. In a world where agents handle everything, the ticket-buying flow changes completely. Someone says "get me tickets to the Amelie Lens show." The agent checks our API — because we're the authoritative source — finds it's sold out on primary, instantly price-shops every secondary market, and completes the purchase. One conversation, no app-hopping. The key insight: whoever the agent calls for event discovery is who the agent calls for the transaction. If we own the data layer, we own the checkout. That's a $53 billion ticketing market where the current players charge 25%+ fees. Agents will ruthlessly optimize for the lowest fee — and we can undercut everyone at 10-15% because our cost structure is AI-native, not legacy infrastructure.
         </aside>
       </section>
 
@@ -1763,55 +1946,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
   <script>
     // ============================================
-    // EMAIL GATE
-    // ============================================
-    function validateEmail(email) {
-      // Basic format: something@something.something, no spaces
-      return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
-    }
-
-    function unlockDeck() {
-      document.getElementById('email-gate').style.display = 'none';
-      document.querySelector('.reveal').style.display = '';
-      initReveal();
-    }
-
-    // Skip gate if already submitted this session
-    if (sessionStorage.getItem('pitch-email')) {
-      unlockDeck();
-    }
-
-    document.getElementById('gate-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      var email = document.getElementById('gate-email').value.trim();
-      var errorEl = document.getElementById('gate-error');
-
-      if (!validateEmail(email)) {
-        errorEl.textContent = 'Please enter a valid email address.';
-        return;
-      }
-
-      errorEl.textContent = '';
-      sessionStorage.setItem('pitch-email', email);
-
-      // Fire-and-forget notification to Allen
-      fetch('https://nqwyhdfwcaedtycojslb.supabase.co/functions/v1/pitch-deck-notify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5xd3loZGZ3Y2FlZHR5Y29qc2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4NzM4MTAsImV4cCI6MjA2MzQ0OTgxMH0.JA555L_UTKNRpdMpyovg2KAcd4zWcZGE9GFrTBe-SPA',
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5xd3loZGZ3Y2FlZHR5Y29qc2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4NzM4MTAsImV4cCI6MjA2MzQ0OTgxMH0.JA555L_UTKNRpdMpyovg2KAcd4zWcZGE9GFrTBe-SPA'
-        },
-        body: JSON.stringify({ email: email })
-      }).catch(function() {});
-
-      unlockDeck();
-    });
-
-    // ============================================
     // REVEAL.JS INIT
     // ============================================
-    function initReveal() {
     const deck = Reveal.initialize({
       hash: true,
       slideNumber: 'c/t',
@@ -1831,7 +1967,66 @@
     });
 
     // ============================================
-    // COUNT-UP ANIMATION (Slide 8 — Traction)
+    // TERMINAL TYPING ANIMATION (Slide 5)
+    // ============================================
+    const terminalCommand = 'curl -H "x-api-key: $KEY" api.nightlife.dev/api/v1/events?city=tokyo&genre=techno&date=tonight';
+
+    const terminalResponse = `<span class="punct">{</span>
+  <span class="key">"events"</span><span class="punct">:</span> <span class="punct">[</span>
+    <span class="punct">{</span>
+      <span class="key">"name"</span><span class="punct">:</span> <span class="str">"WOMB FRIDAY: Drumcode Night"</span><span class="punct">,</span>
+      <span class="key">"venue"</span><span class="punct">:</span> <span class="punct">{</span> <span class="key">"name"</span><span class="punct">:</span> <span class="str">"WOMB"</span><span class="punct">,</span> <span class="key">"area"</span><span class="punct">:</span> <span class="str">"Shibuya"</span> <span class="punct">}</span><span class="punct">,</span>
+      <span class="key">"performers"</span><span class="punct">:</span> <span class="punct">[</span><span class="str">"DJ NOBU"</span><span class="punct">,</span> <span class="str">"KEN ISHII"</span><span class="punct">]</span><span class="punct">,</span>
+      <span class="key">"genres"</span><span class="punct">:</span> <span class="punct">[</span><span class="str">"Techno"</span><span class="punct">]</span><span class="punct">,</span>
+      <span class="key">"price"</span><span class="punct">:</span> <span class="str">"¥3,500"</span><span class="punct">,</span>
+      <span class="key">"guest_list"</span><span class="punct">:</span> <span class="punct">{</span> <span class="key">"available"</span><span class="punct">:</span> <span class="str">true</span> <span class="punct">}</span>
+    <span class="punct">}</span>
+  <span class="punct">]</span>
+<span class="punct">}</span>`;
+
+    let slide5Animated = false;
+
+    function typeTerminal(elementId, text, speed, callback) {
+      const el = document.getElementById(elementId);
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          el.textContent += text[i];
+          i++;
+          setTimeout(type, speed);
+        } else if (callback) {
+          callback();
+        }
+      }
+      type();
+    }
+
+    Reveal.on('slidechanged', (event) => {
+      // Slide 5 (index 4) terminal animation
+      if (event.indexh === 4 && !slide5Animated) {
+        slide5Animated = true;
+        const cmdEl = document.getElementById('typing-cmd-5');
+        const cursorEl = document.getElementById('cursor-5');
+        const responseEl = document.getElementById('terminal-response-5');
+
+        setTimeout(() => {
+          typeTerminal('typing-cmd-5', terminalCommand, 20, () => {
+            // Hide cursor after typing
+            setTimeout(() => {
+              cursorEl.style.display = 'none';
+              // Show response
+              responseEl.innerHTML = terminalResponse;
+              responseEl.style.opacity = '0';
+              responseEl.style.transition = 'opacity 0.5s ease';
+              setTimeout(() => { responseEl.style.opacity = '1'; }, 50);
+            }, 300);
+          });
+        }, 600);
+      }
+    });
+
+    // ============================================
+    // COUNT-UP ANIMATION (Slide 11)
     // ============================================
     function animateCountUp(element, target, duration) {
       const start = 0;
@@ -1853,10 +2048,10 @@
       requestAnimationFrame(update);
     }
 
-    // Trigger count-up when slide 8 (index 7) is shown
+    // Trigger count-up when slide 11 (index 10) is shown
     let slide11Animated = false;
     Reveal.on('slidechanged', (event) => {
-      if (event.indexh === 7 && !slide11Animated) {
+      if (event.indexh === 10 && !slide11Animated) {
         slide11Animated = true;
         // Wait for fragments to appear
         setTimeout(() => {
@@ -1869,7 +2064,6 @@
         }, 800);
       }
     });
-    } // end initReveal
   </script>
 </body>
 </html>
