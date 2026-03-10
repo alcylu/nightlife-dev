@@ -463,11 +463,11 @@
     }
 
     /* ---- Revenue Projection Chart ---- */
-    .proj-chart-wrap { position: relative; width: 100%; height: 420px; }
-    .proj-chart { display: flex; align-items: flex-end; gap: 2px; height: 360px; padding-left: 50px; }
+    .proj-chart-wrap { position: relative; width: 100%; height: 420px; overflow: visible; }
+    .proj-chart { display: flex; align-items: flex-end; gap: 2px; height: 360px; padding-left: 50px; padding-bottom: 40px; overflow: visible; }
     .proj-y-axis { position: absolute; left: 0; top: 0; height: 360px; display: flex; flex-direction: column; justify-content: space-between; padding-right: 8px; }
     .proj-y-label { font-family: 'JetBrains Mono', monospace; font-size: 0.5em; color: var(--text-dim); text-align: right; }
-    .proj-bar { display: flex; flex-direction: column; min-height: 4px; border-radius: 2px 2px 0 0; }
+    .proj-bar { display: flex; flex-direction: column; min-height: 4px; border-radius: 2px 2px 0 0; position: relative; overflow: visible; }
     .proj-bar-monthly { flex: 1; }
     .proj-bar-quarterly { flex: 1.8; }
     .proj-seg {
@@ -486,8 +486,9 @@
         transition: none !important;
       }
     }
-    .proj-bar-label { display: block; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 0.5em; color: var(--text-dim); margin-top: 4px; }
-    .proj-year-divider { width: 1px; background: var(--border); align-self: stretch; flex-shrink: 0; }
+    .proj-bar-label { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); white-space: nowrap; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 0.5em; color: var(--text-dim); margin-top: 4px; }
+    .proj-year-divider { width: 1px; background: var(--border); align-self: stretch; flex-shrink: 0; position: relative; overflow: visible; }
+    .proj-year-label { position: absolute; top: 2px; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 0.5em; color: var(--text-muted); white-space: nowrap; letter-spacing: 0.05em; }
     .proj-milestone {
       position: absolute;
       bottom: 0;
@@ -500,13 +501,16 @@
       margin: 0 auto;
     }
     .proj-milestone-label {
-      display: block;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.55em;
       color: var(--accent-purple);
       white-space: nowrap;
       text-align: center;
-      margin-top: 2px;
+      margin-top: 18px;
     }
     .proj-arr-line { position: absolute; left: 50px; right: 0; border-top: 2px dashed var(--accent-cyan); }
     .proj-arr-label { position: absolute; right: 4px; top: -18px; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; color: var(--accent-cyan); white-space: nowrap; }
@@ -1224,10 +1228,11 @@
       <section data-transition="fade">
         <span class="slide-label">Projections</span>
         <div class="accent-line"></div>
-        <h2 style="font-size: 1.3em; margin-bottom: 4px;">Path to <span class="text-green">$1M ARR</span> in 12 Months</h2>
+        <h2 style="font-size: 1.3em; margin-bottom: 4px;">Path to <span class="text-green">$1M ARR</span></h2>
 
         <div class="proj-legend">
-          <span><span style="color: #22d3ee;">&#9679;</span> API Licensing</span>
+          <span><span style="color: #f43f5e;">&#9679;</span> Hotel Concierge</span>
+          <span><span style="color: #22d3ee;">&#9679;</span> API / MCP</span>
           <span><span style="color: #22c55e;">&#9679;</span> VIP Commissions</span>
           <span><span style="color: #9b8cff;">&#9679;</span> Guest List SaaS</span>
           <span><span style="color: #f59e0b;">&#9679;</span> Promoted Listings</span>
@@ -1237,20 +1242,21 @@
         <div class="proj-chart-wrap">
           <!-- Y-axis labels -->
           <div class="proj-y-axis">
-            <span>$428K</span>
-            <span>$321K</span>
-            <span>$214K</span>
-            <span>$107K</span>
+            <span>$412K</span>
+            <span>$309K</span>
+            <span>$206K</span>
+            <span>$103K</span>
             <span>$0</span>
           </div>
 
-          <!-- $1M ARR marker line ($83,333 MRR / $428,251 max = 19.5% of 360px = ~70px) -->
-          <div class="proj-arr-marker" style="bottom: 70px;"></div>
+          <!-- $1M ARR marker line ($83,333 MRR / $412,000 max = 20.2% of 360px = ~73px) -->
+          <div class="proj-arr-marker" style="bottom: 73px;"></div>
 
           <div class="proj-chart">
             <!-- M1: $4,728 = 1.1% -->
             <div class="proj-bar proj-bar-monthly" style="--bar-i: 0; height: 1.1%;">
-              <div class="proj-seg" style="flex-grow: 498; background: #22d3ee;" title="API: $498"></div>
+              <div class="proj-seg" style="flex-grow: 498; background: #f43f5e;" title="Concierge: $498"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #22d3ee;" title="API: $0"></div>
               <div class="proj-seg" style="flex-grow: 4230; background: #22c55e;" title="VIP: $4,230"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #9b8cff;" title="SaaS: $0"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #f59e0b;" title="Promo: $0"></div>
@@ -1258,9 +1264,10 @@
               <span class="proj-bar-label">M1</span>
             </div>
 
-            <!-- M2: $6,034 = 1.4% -->
+            <!-- M2: $5,748 = 1.4% -->
             <div class="proj-bar proj-bar-monthly" style="--bar-i: 1; height: 1.4%;">
-              <div class="proj-seg" style="flex-grow: 1036; background: #22d3ee;" title="API: $1,036"></div>
+              <div class="proj-seg" style="flex-grow: 750; background: #f43f5e;" title="Concierge: $750"></div>
+              <div class="proj-seg" style="flex-grow: 0; background: #22d3ee;" title="API: $0"></div>
               <div class="proj-seg" style="flex-grow: 4998; background: #22c55e;" title="VIP: $4,998"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #9b8cff;" title="SaaS: $0"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #f59e0b;" title="Promo: $0"></div>
@@ -1268,105 +1275,115 @@
               <span class="proj-bar-label"></span>
             </div>
 
-            <!-- M3: $11,955 = 2.8% — Milestone: US Launch -->
-            <div class="proj-bar proj-bar-monthly" style="--bar-i: 2; height: 2.8%;">
-              <div class="proj-seg" style="flex-grow: 2790; background: #22d3ee;" title="API: $2,790"></div>
-              <div class="proj-seg" style="flex-grow: 8470; background: #22c55e;" title="VIP: $8,470"></div>
+            <!-- M3: $8,620 = 2.1% — Milestone: US Launch -->
+            <div class="proj-bar proj-bar-monthly" style="--bar-i: 2; height: 2.1%;">
+              <div class="proj-seg" style="flex-grow: 1060; background: #f43f5e;" title="Concierge: $1,060"></div>
+              <div class="proj-seg" style="flex-grow: 100; background: #22d3ee;" title="API: $100"></div>
+              <div class="proj-seg" style="flex-grow: 7260; background: #22c55e;" title="VIP: $7,260"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #9b8cff;" title="SaaS: $0"></div>
-              <div class="proj-seg" style="flex-grow: 695; background: #f59e0b;" title="Promo: $695"></div>
+              <div class="proj-seg" style="flex-grow: 200; background: #f59e0b;" title="Promo: $200"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
               <span class="proj-bar-label">M3</span>
               <span class="proj-milestone-label">US Launch</span>
             </div>
 
-            <!-- M4: $15,327 = 3.6% -->
-            <div class="proj-bar proj-bar-monthly" style="--bar-i: 3; height: 3.6%;">
-              <div class="proj-seg" style="flex-grow: 4335; background: #22d3ee;" title="API: $4,335"></div>
-              <div class="proj-seg" style="flex-grow: 9800; background: #22c55e;" title="VIP: $9,800"></div>
+            <!-- M4: $10,400 = 2.5% -->
+            <div class="proj-bar proj-bar-monthly" style="--bar-i: 3; height: 2.5%;">
+              <div class="proj-seg" style="flex-grow: 1350; background: #f43f5e;" title="Concierge: $1,350"></div>
+              <div class="proj-seg" style="flex-grow: 200; background: #22d3ee;" title="API: $200"></div>
+              <div class="proj-seg" style="flex-grow: 8500; background: #22c55e;" title="VIP: $8,500"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #9b8cff;" title="SaaS: $0"></div>
-              <div class="proj-seg" style="flex-grow: 1192; background: #f59e0b;" title="Promo: $1,192"></div>
+              <div class="proj-seg" style="flex-grow: 350; background: #f59e0b;" title="Promo: $350"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
               <span class="proj-bar-label"></span>
             </div>
 
-            <!-- M5: $20,607 = 4.8% -->
-            <div class="proj-bar proj-bar-monthly" style="--bar-i: 4; height: 4.8%;">
-              <div class="proj-seg" style="flex-grow: 6279; background: #22d3ee;" title="API: $6,279"></div>
-              <div class="proj-seg" style="flex-grow: 11904; background: #22c55e;" title="VIP: $11,904"></div>
+            <!-- M5: $13,566 = 3.3% -->
+            <div class="proj-bar proj-bar-monthly" style="--bar-i: 4; height: 3.3%;">
+              <div class="proj-seg" style="flex-grow: 1650; background: #f43f5e;" title="Concierge: $1,650"></div>
+              <div class="proj-seg" style="flex-grow: 400; background: #22d3ee;" title="API: $400"></div>
+              <div class="proj-seg" style="flex-grow: 10500; background: #22c55e;" title="VIP: $10,500"></div>
               <div class="proj-seg" style="flex-grow: 516; background: #9b8cff;" title="SaaS: $516"></div>
-              <div class="proj-seg" style="flex-grow: 1908; background: #f59e0b;" title="Promo: $1,908"></div>
+              <div class="proj-seg" style="flex-grow: 500; background: #f59e0b;" title="Promo: $500"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
               <span class="proj-bar-label"></span>
             </div>
 
-            <!-- M6: $26,076 = 6.1% -->
-            <div class="proj-bar proj-bar-monthly" style="--bar-i: 5; height: 6.1%;">
-              <div class="proj-seg" style="flex-grow: 8652; background: #22d3ee;" title="API: $8,652"></div>
-              <div class="proj-seg" style="flex-grow: 13608; background: #22c55e;" title="VIP: $13,608"></div>
-              <div class="proj-seg" style="flex-grow: 1112; background: #9b8cff;" title="SaaS: $1,112"></div>
-              <div class="proj-seg" style="flex-grow: 2704; background: #f59e0b;" title="Promo: $2,704"></div>
+            <!-- M6: $18,800 = 4.6% -->
+            <div class="proj-bar proj-bar-monthly" style="--bar-i: 5; height: 4.6%;">
+              <div class="proj-seg" style="flex-grow: 2200; background: #f43f5e;" title="Concierge: $2,200"></div>
+              <div class="proj-seg" style="flex-grow: 1000; background: #22d3ee;" title="API: $1,000"></div>
+              <div class="proj-seg" style="flex-grow: 13600; background: #22c55e;" title="VIP: $13,600"></div>
+              <div class="proj-seg" style="flex-grow: 1100; background: #9b8cff;" title="SaaS: $1,100"></div>
+              <div class="proj-seg" style="flex-grow: 900; background: #f59e0b;" title="Promo: $900"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
               <span class="proj-bar-label">M6</span>
             </div>
 
-            <!-- M7: $32,695 = 7.6% -->
-            <div class="proj-bar proj-bar-monthly" style="--bar-i: 6; height: 7.6%;">
-              <div class="proj-seg" style="flex-grow: 11165; background: #22d3ee;" title="API: $11,165"></div>
-              <div class="proj-seg" style="flex-grow: 16065; background: #22c55e;" title="VIP: $16,065"></div>
-              <div class="proj-seg" style="flex-grow: 1885; background: #9b8cff;" title="SaaS: $1,885"></div>
-              <div class="proj-seg" style="flex-grow: 3580; background: #f59e0b;" title="Promo: $3,580"></div>
+            <!-- M7: $22,700 = 5.5% -->
+            <div class="proj-bar proj-bar-monthly" style="--bar-i: 6; height: 5.5%;">
+              <div class="proj-seg" style="flex-grow: 2600; background: #f43f5e;" title="Concierge: $2,600"></div>
+              <div class="proj-seg" style="flex-grow: 1500; background: #22d3ee;" title="API: $1,500"></div>
+              <div class="proj-seg" style="flex-grow: 15500; background: #22c55e;" title="VIP: $15,500"></div>
+              <div class="proj-seg" style="flex-grow: 1900; background: #9b8cff;" title="SaaS: $1,900"></div>
+              <div class="proj-seg" style="flex-grow: 1200; background: #f59e0b;" title="Promo: $1,200"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
               <span class="proj-bar-label"></span>
             </div>
 
-            <!-- M8: $39,285 = 9.2% -->
-            <div class="proj-bar proj-bar-monthly" style="--bar-i: 7; height: 9.2%;">
-              <div class="proj-seg" style="flex-grow: 13818; background: #22d3ee;" title="API: $13,818"></div>
-              <div class="proj-seg" style="flex-grow: 18060; background: #22c55e;" title="VIP: $18,060"></div>
-              <div class="proj-seg" style="flex-grow: 2682; background: #9b8cff;" title="SaaS: $2,682"></div>
-              <div class="proj-seg" style="flex-grow: 4725; background: #f59e0b;" title="Promo: $4,725"></div>
+            <!-- M8: $27,400 = 6.7% -->
+            <div class="proj-bar proj-bar-monthly" style="--bar-i: 7; height: 6.7%;">
+              <div class="proj-seg" style="flex-grow: 3200; background: #f43f5e;" title="Concierge: $3,200"></div>
+              <div class="proj-seg" style="flex-grow: 2000; background: #22d3ee;" title="API: $2,000"></div>
+              <div class="proj-seg" style="flex-grow: 18000; background: #22c55e;" title="VIP: $18,000"></div>
+              <div class="proj-seg" style="flex-grow: 2700; background: #9b8cff;" title="SaaS: $2,700"></div>
+              <div class="proj-seg" style="flex-grow: 1500; background: #f59e0b;" title="Promo: $1,500"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
               <span class="proj-bar-label"></span>
             </div>
 
-            <!-- M9: $49,693 = 11.6% — Milestone: 10 Cities -->
-            <div class="proj-bar proj-bar-monthly" style="--bar-i: 8; height: 11.6%;">
-              <div class="proj-seg" style="flex-grow: 18645; background: #22d3ee;" title="API: $18,645"></div>
-              <div class="proj-seg" style="flex-grow: 20960; background: #22c55e;" title="VIP: $20,960"></div>
-              <div class="proj-seg" style="flex-grow: 3720; background: #9b8cff;" title="SaaS: $3,720"></div>
-              <div class="proj-seg" style="flex-grow: 6368; background: #f59e0b;" title="Promo: $6,368"></div>
+            <!-- M9: $32,700 = 7.9% — Milestone: 10 Cities -->
+            <div class="proj-bar proj-bar-monthly" style="--bar-i: 8; height: 7.9%;">
+              <div class="proj-seg" style="flex-grow: 3900; background: #f43f5e;" title="Concierge: $3,900"></div>
+              <div class="proj-seg" style="flex-grow: 2800; background: #22d3ee;" title="API: $2,800"></div>
+              <div class="proj-seg" style="flex-grow: 20500; background: #22c55e;" title="VIP: $20,500"></div>
+              <div class="proj-seg" style="flex-grow: 3700; background: #9b8cff;" title="SaaS: $3,700"></div>
+              <div class="proj-seg" style="flex-grow: 1800; background: #f59e0b;" title="Promo: $1,800"></div>
               <div class="proj-seg" style="flex-grow: 0; background: #8b5cf6;" title="Ticket: $0"></div>
               <span class="proj-bar-label">M9</span>
               <span class="proj-milestone-label">10 Cities</span>
             </div>
 
-            <!-- M10: $60,265 = 14.1% -->
-            <div class="proj-bar proj-bar-monthly" style="--bar-i: 9; height: 14.1%;">
-              <div class="proj-seg" style="flex-grow: 22336; background: #22d3ee;" title="API: $22,336"></div>
-              <div class="proj-seg" style="flex-grow: 23850; background: #22c55e;" title="VIP: $23,850"></div>
-              <div class="proj-seg" style="flex-grow: 4611; background: #9b8cff;" title="SaaS: $4,611"></div>
-              <div class="proj-seg" style="flex-grow: 7524; background: #f59e0b;" title="Promo: $7,524"></div>
-              <div class="proj-seg" style="flex-grow: 1944; background: #8b5cf6;" title="Ticket: $1,944"></div>
+            <!-- M10: $39,700 = 9.6% -->
+            <div class="proj-bar proj-bar-monthly" style="--bar-i: 9; height: 9.6%;">
+              <div class="proj-seg" style="flex-grow: 4600; background: #f43f5e;" title="Concierge: $4,600"></div>
+              <div class="proj-seg" style="flex-grow: 3500; background: #22d3ee;" title="API: $3,500"></div>
+              <div class="proj-seg" style="flex-grow: 23000; background: #22c55e;" title="VIP: $23,000"></div>
+              <div class="proj-seg" style="flex-grow: 4600; background: #9b8cff;" title="SaaS: $4,600"></div>
+              <div class="proj-seg" style="flex-grow: 2100; background: #f59e0b;" title="Promo: $2,100"></div>
+              <div class="proj-seg" style="flex-grow: 1900; background: #8b5cf6;" title="Ticket: $1,900"></div>
               <span class="proj-bar-label"></span>
             </div>
 
-            <!-- M11: $70,925 = 16.6% -->
-            <div class="proj-bar proj-bar-monthly" style="--bar-i: 10; height: 16.6%;">
-              <div class="proj-seg" style="flex-grow: 26566; background: #22d3ee;" title="API: $26,566"></div>
-              <div class="proj-seg" style="flex-grow: 26532; background: #22c55e;" title="VIP: $26,532"></div>
-              <div class="proj-seg" style="flex-grow: 5610; background: #9b8cff;" title="SaaS: $5,610"></div>
-              <div class="proj-seg" style="flex-grow: 9198; background: #f59e0b;" title="Promo: $9,198"></div>
-              <div class="proj-seg" style="flex-grow: 3019; background: #8b5cf6;" title="Ticket: $3,019"></div>
+            <!-- M11: $46,300 = 11.2% -->
+            <div class="proj-bar proj-bar-monthly" style="--bar-i: 10; height: 11.2%;">
+              <div class="proj-seg" style="flex-grow: 5500; background: #f43f5e;" title="Concierge: $5,500"></div>
+              <div class="proj-seg" style="flex-grow: 4200; background: #22d3ee;" title="API: $4,200"></div>
+              <div class="proj-seg" style="flex-grow: 25500; background: #22c55e;" title="VIP: $25,500"></div>
+              <div class="proj-seg" style="flex-grow: 5600; background: #9b8cff;" title="SaaS: $5,600"></div>
+              <div class="proj-seg" style="flex-grow: 2500; background: #f59e0b;" title="Promo: $2,500"></div>
+              <div class="proj-seg" style="flex-grow: 3000; background: #8b5cf6;" title="Ticket: $3,000"></div>
               <span class="proj-bar-label"></span>
             </div>
 
-            <!-- M12: $85,586 = 20.0% — Milestone: 25 Cities -->
-            <div class="proj-bar proj-bar-monthly" style="--bar-i: 11; height: 20.0%;">
-              <div class="proj-seg" style="flex-grow: 32250; background: #22d3ee;" title="API: $32,250"></div>
-              <div class="proj-seg" style="flex-grow: 30030; background: #22c55e;" title="VIP: $30,030"></div>
-              <div class="proj-seg" style="flex-grow: 7224; background: #9b8cff;" title="SaaS: $7,224"></div>
-              <div class="proj-seg" style="flex-grow: 11750; background: #f59e0b;" title="Promo: $11,750"></div>
-              <div class="proj-seg" style="flex-grow: 4332; background: #8b5cf6;" title="Ticket: $4,332"></div>
+            <!-- M12: $54,300 = 13.2% — Milestone: 25 Cities -->
+            <div class="proj-bar proj-bar-monthly" style="--bar-i: 11; height: 13.2%;">
+              <div class="proj-seg" style="flex-grow: 6800; background: #f43f5e;" title="Concierge: $6,800"></div>
+              <div class="proj-seg" style="flex-grow: 5000; background: #22d3ee;" title="API: $5,000"></div>
+              <div class="proj-seg" style="flex-grow: 28000; background: #22c55e;" title="VIP: $28,000"></div>
+              <div class="proj-seg" style="flex-grow: 7200; background: #9b8cff;" title="SaaS: $7,200"></div>
+              <div class="proj-seg" style="flex-grow: 3000; background: #f59e0b;" title="Promo: $3,000"></div>
+              <div class="proj-seg" style="flex-grow: 4300; background: #8b5cf6;" title="Ticket: $4,300"></div>
               <span class="proj-bar-label">M12</span>
               <span class="proj-milestone-label">25 Cities</span>
             </div>
@@ -1374,44 +1391,48 @@
             <!-- Year divider: Y1 → Y2 -->
             <div class="proj-year-divider"></div>
 
-            <!-- Q1Y2: $101,369 = 23.7% -->
-            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 12; height: 23.7%;">
-              <div class="proj-seg" style="flex-grow: 37142; background: #22d3ee;" title="API: $37,142"></div>
-              <div class="proj-seg" style="flex-grow: 33638; background: #22c55e;" title="VIP: $33,638"></div>
-              <div class="proj-seg" style="flex-grow: 10175; background: #9b8cff;" title="SaaS: $10,175"></div>
-              <div class="proj-seg" style="flex-grow: 13862; background: #f59e0b;" title="Promo: $13,862"></div>
-              <div class="proj-seg" style="flex-grow: 6552; background: #8b5cf6;" title="Ticket: $6,552"></div>
+            <!-- Q1Y2: $73,000 = 17.7% -->
+            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 12; height: 17.7%;">
+              <div class="proj-seg" style="flex-grow: 9000; background: #f43f5e;" title="Concierge: $9,000"></div>
+              <div class="proj-seg" style="flex-grow: 12000; background: #22d3ee;" title="API: $12,000"></div>
+              <div class="proj-seg" style="flex-grow: 30000; background: #22c55e;" title="VIP: $30,000"></div>
+              <div class="proj-seg" style="flex-grow: 9000; background: #9b8cff;" title="SaaS: $9,000"></div>
+              <div class="proj-seg" style="flex-grow: 5000; background: #f59e0b;" title="Promo: $5,000"></div>
+              <div class="proj-seg" style="flex-grow: 8000; background: #8b5cf6;" title="Ticket: $8,000"></div>
               <span class="proj-bar-label">Q1Y2</span>
             </div>
 
-            <!-- Q2Y2: $121,439 = 28.4% — Milestone: 50 Cities -->
-            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 13; height: 28.4%;">
-              <div class="proj-seg" style="flex-grow: 44735; background: #22d3ee;" title="API: $44,735"></div>
-              <div class="proj-seg" style="flex-grow: 37620; background: #22c55e;" title="VIP: $37,620"></div>
-              <div class="proj-seg" style="flex-grow: 13260; background: #9b8cff;" title="SaaS: $13,260"></div>
-              <div class="proj-seg" style="flex-grow: 16932; background: #f59e0b;" title="Promo: $16,932"></div>
-              <div class="proj-seg" style="flex-grow: 8892; background: #8b5cf6;" title="Ticket: $8,892"></div>
+            <!-- Q2Y2: $113,000 = 27.4% — Milestone: $1M ARR -->
+            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 13; height: 27.4%;">
+              <div class="proj-seg" style="flex-grow: 11000; background: #f43f5e;" title="Concierge: $11,000"></div>
+              <div class="proj-seg" style="flex-grow: 35000; background: #22d3ee;" title="API: $35,000"></div>
+              <div class="proj-seg" style="flex-grow: 32000; background: #22c55e;" title="VIP: $32,000"></div>
+              <div class="proj-seg" style="flex-grow: 11000; background: #9b8cff;" title="SaaS: $11,000"></div>
+              <div class="proj-seg" style="flex-grow: 10000; background: #f59e0b;" title="Promo: $10,000"></div>
+              <div class="proj-seg" style="flex-grow: 14000; background: #8b5cf6;" title="Ticket: $14,000"></div>
               <span class="proj-bar-label">Q2Y2</span>
-              <span class="proj-milestone-label">50 Cities</span>
+              <span class="proj-milestone-label">$1M ARR</span>
             </div>
 
-            <!-- Q3Y2: $152,192 = 35.5% -->
-            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 14; height: 35.5%;">
-              <div class="proj-seg" style="flex-grow: 52140; background: #22d3ee;" title="API: $52,140"></div>
-              <div class="proj-seg" style="flex-grow: 51040; background: #22c55e;" title="VIP: $51,040"></div>
-              <div class="proj-seg" style="flex-grow: 16810; background: #9b8cff;" title="SaaS: $16,810"></div>
-              <div class="proj-seg" style="flex-grow: 20202; background: #f59e0b;" title="Promo: $20,202"></div>
-              <div class="proj-seg" style="flex-grow: 12000; background: #8b5cf6;" title="Ticket: $12,000"></div>
+            <!-- Q3Y2: $156,500 = 38.0% -->
+            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 14; height: 38.0%;">
+              <div class="proj-seg" style="flex-grow: 13000; background: #f43f5e;" title="Concierge: $13,000"></div>
+              <div class="proj-seg" style="flex-grow: 58000; background: #22d3ee;" title="API: $58,000"></div>
+              <div class="proj-seg" style="flex-grow: 33500; background: #22c55e;" title="VIP: $33,500"></div>
+              <div class="proj-seg" style="flex-grow: 13000; background: #9b8cff;" title="SaaS: $13,000"></div>
+              <div class="proj-seg" style="flex-grow: 17000; background: #f59e0b;" title="Promo: $17,000"></div>
+              <div class="proj-seg" style="flex-grow: 22000; background: #8b5cf6;" title="Ticket: $22,000"></div>
               <span class="proj-bar-label">Q3Y2</span>
             </div>
 
-            <!-- Q4Y2: $200,066 = 46.7% — Milestone: $2M+ ARR -->
-            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 15; height: 46.7%;">
-              <div class="proj-seg" style="flex-grow: 59850; background: #22d3ee;" title="API: $59,850"></div>
-              <div class="proj-seg" style="flex-grow: 77880; background: #22c55e;" title="VIP: $77,880"></div>
-              <div class="proj-seg" style="flex-grow: 21070; background: #9b8cff;" title="SaaS: $21,070"></div>
-              <div class="proj-seg" style="flex-grow: 24210; background: #f59e0b;" title="Promo: $24,210"></div>
-              <div class="proj-seg" style="flex-grow: 17056; background: #8b5cf6;" title="Ticket: $17,056"></div>
+            <!-- Q4Y2: $207,000 = 50.2% — Milestone: $2M+ ARR -->
+            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 15; height: 50.2%;">
+              <div class="proj-seg" style="flex-grow: 15000; background: #f43f5e;" title="Concierge: $15,000"></div>
+              <div class="proj-seg" style="flex-grow: 85000; background: #22d3ee;" title="API: $85,000"></div>
+              <div class="proj-seg" style="flex-grow: 35000; background: #22c55e;" title="VIP: $35,000"></div>
+              <div class="proj-seg" style="flex-grow: 15000; background: #9b8cff;" title="SaaS: $15,000"></div>
+              <div class="proj-seg" style="flex-grow: 25000; background: #f59e0b;" title="Promo: $25,000"></div>
+              <div class="proj-seg" style="flex-grow: 32000; background: #8b5cf6;" title="Ticket: $32,000"></div>
               <span class="proj-bar-label">Q4Y2</span>
               <span class="proj-milestone-label">$2M+ ARR</span>
             </div>
@@ -1419,62 +1440,54 @@
             <!-- Year divider: Y2 → Y3 -->
             <div class="proj-year-divider"></div>
 
-            <!-- Q1Y3: $245,151 = 57.3% -->
-            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 16; height: 57.3%;">
-              <div class="proj-seg" style="flex-grow: 68850; background: #22d3ee;" title="API: $68,850"></div>
-              <div class="proj-seg" style="flex-grow: 100128; background: #22c55e;" title="VIP: $100,128"></div>
-              <div class="proj-seg" style="flex-grow: 25875; background: #9b8cff;" title="SaaS: $25,875"></div>
-              <div class="proj-seg" style="flex-grow: 28458; background: #f59e0b;" title="Promo: $28,458"></div>
-              <div class="proj-seg" style="flex-grow: 21840; background: #8b5cf6;" title="Ticket: $21,840"></div>
+            <!-- Q1Y3: $260,000 = 63.1% -->
+            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 16; height: 63.1%;">
+              <div class="proj-seg" style="flex-grow: 17000; background: #f43f5e;" title="Concierge: $17,000"></div>
+              <div class="proj-seg" style="flex-grow: 115000; background: #22d3ee;" title="API: $115,000"></div>
+              <div class="proj-seg" style="flex-grow: 36000; background: #22c55e;" title="VIP: $36,000"></div>
+              <div class="proj-seg" style="flex-grow: 17000; background: #9b8cff;" title="SaaS: $17,000"></div>
+              <div class="proj-seg" style="flex-grow: 33000; background: #f59e0b;" title="Promo: $33,000"></div>
+              <div class="proj-seg" style="flex-grow: 42000; background: #8b5cf6;" title="Ticket: $42,000"></div>
               <span class="proj-bar-label">Q1Y3</span>
             </div>
 
-            <!-- Q2Y3: $293,836 = 68.6% -->
-            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 17; height: 68.6%;">
-              <div class="proj-seg" style="flex-grow: 77710; background: #22d3ee;" title="API: $77,710"></div>
-              <div class="proj-seg" style="flex-grow: 123216; background: #22c55e;" title="VIP: $123,216"></div>
-              <div class="proj-seg" style="flex-grow: 31725; background: #9b8cff;" title="SaaS: $31,725"></div>
-              <div class="proj-seg" style="flex-grow: 33235; background: #f59e0b;" title="Promo: $33,235"></div>
-              <div class="proj-seg" style="flex-grow: 27950; background: #8b5cf6;" title="Ticket: $27,950"></div>
+            <!-- Q2Y3: $312,500 = 75.8% -->
+            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 17; height: 75.8%;">
+              <div class="proj-seg" style="flex-grow: 19000; background: #f43f5e;" title="Concierge: $19,000"></div>
+              <div class="proj-seg" style="flex-grow: 145000; background: #22d3ee;" title="API: $145,000"></div>
+              <div class="proj-seg" style="flex-grow: 37000; background: #22c55e;" title="VIP: $37,000"></div>
+              <div class="proj-seg" style="flex-grow: 19500; background: #9b8cff;" title="SaaS: $19,500"></div>
+              <div class="proj-seg" style="flex-grow: 40000; background: #f59e0b;" title="Promo: $40,000"></div>
+              <div class="proj-seg" style="flex-grow: 52000; background: #8b5cf6;" title="Ticket: $52,000"></div>
               <span class="proj-bar-label">Q2Y3</span>
             </div>
 
-            <!-- Q3Y3: $361,237 = 84.4% -->
-            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 18; height: 84.4%;">
-              <div class="proj-seg" style="flex-grow: 87150; background: #22d3ee;" title="API: $87,150"></div>
-              <div class="proj-seg" style="flex-grow: 160160; background: #22c55e;" title="VIP: $160,160"></div>
-              <div class="proj-seg" style="flex-grow: 37975; background: #9b8cff;" title="SaaS: $37,975"></div>
-              <div class="proj-seg" style="flex-grow: 37760; background: #f59e0b;" title="Promo: $37,760"></div>
-              <div class="proj-seg" style="flex-grow: 38192; background: #8b5cf6;" title="Ticket: $38,192"></div>
+            <!-- Q3Y3: $366,000 = 88.8% -->
+            <div class="proj-bar proj-bar-quarterly" style="--bar-i: 18; height: 88.8%;">
+              <div class="proj-seg" style="flex-grow: 20500; background: #f43f5e;" title="Concierge: $20,500"></div>
+              <div class="proj-seg" style="flex-grow: 175000; background: #22d3ee;" title="API: $175,000"></div>
+              <div class="proj-seg" style="flex-grow: 38500; background: #22c55e;" title="VIP: $38,500"></div>
+              <div class="proj-seg" style="flex-grow: 22000; background: #9b8cff;" title="SaaS: $22,000"></div>
+              <div class="proj-seg" style="flex-grow: 48000; background: #f59e0b;" title="Promo: $48,000"></div>
+              <div class="proj-seg" style="flex-grow: 62000; background: #8b5cf6;" title="Ticket: $62,000"></div>
               <span class="proj-bar-label">Q3Y3</span>
             </div>
 
-            <!-- Q4Y3: $428,251 = 100.0% -->
+            <!-- Q4Y3: $412,000 = 100.0% -->
             <div class="proj-bar proj-bar-quarterly" style="--bar-i: 19; height: 100.0%;">
-              <div class="proj-seg" style="flex-grow: 98465; background: #22d3ee;" title="API: $98,465"></div>
-              <div class="proj-seg" style="flex-grow: 194688; background: #22c55e;" title="VIP: $194,688"></div>
-              <div class="proj-seg" style="flex-grow: 45390; background: #9b8cff;" title="SaaS: $45,390"></div>
-              <div class="proj-seg" style="flex-grow: 42458; background: #f59e0b;" title="Promo: $42,458"></div>
-              <div class="proj-seg" style="flex-grow: 47250; background: #8b5cf6;" title="Ticket: $47,250"></div>
+              <div class="proj-seg" style="flex-grow: 22000; background: #f43f5e;" title="Concierge: $22,000"></div>
+              <div class="proj-seg" style="flex-grow: 200000; background: #22d3ee;" title="API: $200,000"></div>
+              <div class="proj-seg" style="flex-grow: 40000; background: #22c55e;" title="VIP: $40,000"></div>
+              <div class="proj-seg" style="flex-grow: 25000; background: #9b8cff;" title="SaaS: $25,000"></div>
+              <div class="proj-seg" style="flex-grow: 55000; background: #f59e0b;" title="Promo: $55,000"></div>
+              <div class="proj-seg" style="flex-grow: 70000; background: #8b5cf6;" title="Ticket: $70,000"></div>
               <span class="proj-bar-label">Q4Y3</span>
             </div>
           </div>
         </div>
 
         <aside class="notes">
-          Here's our path to $1M ARR in 12 months — not 3 years, not 18 months — across five revenue streams, each staggered by product readiness. The growth follows city expansion milestones, which is why those milestones matter.
-
-API licensing [cyan] starts day one — we're live with 16 MCP tools and closing hotel contracts at $249 per month. Month 1 is modest: $498 from 2 initial customers. The US launch at month 3 is our first inflection: we jump to 10 enterprise customers as NYC, LA, and Miami hotels come online, pushing to $2,790 per month. The 10-cities milestone at month 9 drives us to 55 customers generating $18,645. By month 12 at 25 cities, we project 86 customers at a blended $375 average — that's $32,250 per month, 37.7% of total MRR, and well within the $199-$499 range on our GTM slide.
-
-VIP commissions [green] launch immediately — this is our highest-conviction stream. We have 3 VIP venues with 30+ tables today, earning $4,230 in month 1 from 18 bookings at $235 average commission. As we add venues with each city launch, this grows to $13,608 at month 6, $20,960 at month 9, and $30,030 at month 12 across 10 venues with 11 bookings per venue. That's 35.1% of total MRR — our second largest stream. By month 18 we project 12 venues generating $37,620 per month.
-
-Guest List SaaS [purple] kicks in at month 5 once our venue sales pipeline is built — starting at 4 venues paying $129 per month, following the SevenRooms model. By month 9 we have 24 venues, and at month 12 we reach 42 venue subscriptions at $172 average for $7,224 monthly — 8.4% of total. This is pure SaaS margin and grows significantly post-Series A.
-
-Promoted listings [orange] start month 3 with the US launch — 5 venue advertisers at $139 per month, scaling to 50 advertisers at $235 by month 12 for $11,750 monthly — 13.7% of total. This is the Yelp model — it compounds naturally with traffic and city count.
-
-Ticketing [violet] launches month 10 with a 12% take rate — 450 tickets generating $1,944 in the first month, growing to 950 tickets for $4,332 at month 12 — 5.1% of total. Ticketing scales dramatically post-Series A as we add cities and event partnerships.
-
-The trajectory: month 1 we're at $4,728 MRR. Month 6 hits $26,076. Month 9 at 10 cities jumps us to $49,693. And month 12 at 25 cities we cross $85,586 MRR — that's $1,027,032 ARR. The $1M ARR milestone in year one is the Series A trigger.
+          Here's our path to $1M ARR — across six revenue streams, staggered by product readiness. Year one is driven by Hotel Concierge and VIP Commissions — live products with existing customers generating $54,300 MRR by month 12. The inflection point is month 18 when enterprise API customers arrive — hotel chains and travel platforms integrating our MCP tools at $499-999 per month. That takes API/MCP from $5,000 MRR at month 12 to $35,000 at month 18 and $200,000 at Q4Y3 — becoming 48% of total revenue. Promoted Listings and Ticketing follow the same acceleration curve as platform traffic grows with city launches. By Q4Y3 we project $412,000 MRR — that's $4.9M ARR — with API/MCP as the clear dominant stream.
         </aside>
       </section>
 
@@ -1499,56 +1512,64 @@ The trajectory: month 1 we're at $4,728 MRR. Month 6 hits $26,076. Month 9 at 10
           </thead>
           <tbody>
             <tr style="border-bottom: 1px solid var(--border);">
-              <td class="smaller" style="padding: 6px 10px;"><span style="color: #22d3ee;">&#9679;</span> API Licensing</td>
-              <td class="smaller text-dim" style="padding: 6px 10px;">86 enterprise hotels at $375 avg</td>
+              <td class="smaller" style="padding: 6px 10px;"><span style="color: #f43f5e;">&#9679;</span> Hotel Concierge</td>
+              <td class="smaller text-dim" style="padding: 6px 10px;">20 hotels at $340 avg</td>
               <td class="smaller" style="padding: 6px 10px;">$199-499/mo</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$32.3K</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$59.9K</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$98.5K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$6.8K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$15.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$22.0K</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 6px 10px;"><span style="color: #22d3ee;">&#9679;</span> API / MCP</td>
+              <td class="smaller text-dim" style="padding: 6px 10px;">500 devs &times; $10 + 0 enterprise</td>
+              <td class="smaller" style="padding: 6px 10px;">$10/mo dev, $499-999 ent</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$5.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$85.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$200.0K</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td class="smaller" style="padding: 6px 10px;"><span style="color: #22c55e;">&#9679;</span> VIP Commissions</td>
-              <td class="smaller text-dim" style="padding: 6px 10px;">10 venues &times; 11 bookings &times; $273</td>
+              <td class="smaller text-dim" style="padding: 6px 10px;">8 venues &times; 13 bookings &times; $269</td>
               <td class="smaller" style="padding: 6px 10px;">10-30% commission</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$30.0K</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$77.9K</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$194.7K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$28.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$35.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$40.0K</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td class="smaller" style="padding: 6px 10px;"><span style="color: #9b8cff;">&#9679;</span> Guest List SaaS</td>
-              <td class="smaller text-dim" style="padding: 6px 10px;">42 venues at $172 avg</td>
+              <td class="smaller text-dim" style="padding: 6px 10px;">42 venues at $171 avg</td>
               <td class="smaller" style="padding: 6px 10px;">$99-499/mo</td>
               <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$7.2K</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$21.1K</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$45.4K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$15.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$25.0K</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td class="smaller" style="padding: 6px 10px;"><span style="color: #f59e0b;">&#9679;</span> Promoted Listings</td>
-              <td class="smaller text-dim" style="padding: 6px 10px;">50 advertisers at $235 avg</td>
+              <td class="smaller text-dim" style="padding: 6px 10px;">18 advertisers at $167 avg</td>
               <td class="smaller" style="padding: 6px 10px;">$100-500/mo</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$11.8K</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$24.2K</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$42.5K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$3.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$25.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$55.0K</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td class="smaller" style="padding: 6px 10px;"><span style="color: #8b5cf6;">&#9679;</span> Ticketing</td>
               <td class="smaller text-dim" style="padding: 6px 10px;">950 tickets, 12% take rate</td>
               <td class="smaller" style="padding: 6px 10px;">$38 avg, 12% take</td>
               <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$4.3K</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$17.1K</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$47.3K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$32.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px;">$70.0K</td>
             </tr>
             <tr style="border-top: 2px solid var(--border);">
               <td class="smaller" style="padding: 6px 10px; font-weight: 700;" colspan="3"><strong>Total MRR</strong></td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px; font-weight: 700;">$85.6K</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px; font-weight: 700;">$200.1K</td>
-              <td class="smaller mono" style="text-align: right; padding: 6px 10px; font-weight: 700;">$428.3K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px; font-weight: 700;">$54.3K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px; font-weight: 700;">$207.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 6px 10px; font-weight: 700;">$412.0K</td>
             </tr>
             <tr>
               <td class="tiny text-dim" style="padding: 2px 10px 0;" colspan="3"></td>
-              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 10px 0;">$1.03M ARR</td>
-              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 10px 0;">$2.4M ARR</td>
-              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 10px 0;">$5.1M ARR</td>
+              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 10px 0;">$652K ARR</td>
+              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 10px 0;">$2.5M ARR</td>
+              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 10px 0;">$4.9M ARR</td>
             </tr>
           </tbody>
         </table>
@@ -1556,35 +1577,37 @@ The trajectory: month 1 we're at $4,728 MRR. Month 6 hits $26,076. Month 9 at 10
         <!-- Callout Cards -->
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px;">
           <div class="card-sm" style="text-align: center;">
-            <div class="mono text-cyan" style="font-size: 1.4em; font-weight: 700;">$456</div>
+            <div class="mono text-cyan" style="font-size: 1.4em; font-weight: 700;">$617</div>
             <div class="smaller text-muted">Blended ARPU</div>
-            <div class="tiny text-dim">M12 avg across 188 relationships</div>
+            <div class="tiny text-dim">M12 avg across 88 B2B relationships</div>
           </div>
           <div class="card-sm" style="text-align: center;">
             <span class="badge badge-green" style="font-size: 1.1em; padding: 6px 16px;">60%+ Gross Margin</span>
-            <div class="smaller text-muted" style="margin-top: 8px;">Trending to 70% as SaaS mix grows</div>
+            <div class="smaller text-muted" style="margin-top: 8px;">Trending to 80% as API/MCP mix grows</div>
           </div>
           <div class="card-sm" style="text-align: center;">
-            <div class="mono text-purple" style="font-size: 1.4em; font-weight: 700;">$41K</div>
+            <div class="mono text-purple" style="font-size: 1.4em; font-weight: 700;">$26K</div>
             <div class="smaller text-muted">ARR per City</div>
-            <div class="tiny text-dim">$3,423/mo at 25 cities (M12)</div>
+            <div class="tiny text-dim">$2.2K/mo at 25 cities (M12)</div>
           </div>
         </div>
 
         <aside class="notes">
-Let me walk you through the unit economics driving each stream to $85,586 MRR at month 12. Every number is bottom-up — customers times price — never top-down market capture.
+Let me walk you through the unit economics driving each stream to $54,300 MRR at month 12. Every number is bottom-up — customers times price — never top-down market capture.
 
-API licensing: We start with 2 enterprise hotel customers in Tokyo at $249 per month. Each US city launch adds 5-8 hotel customers as our sales team works the concierge market. The 10-cities milestone at month 9 accelerates us to 55 customers. By month 12 we project 86 customers at a blended $375 average — the average rises because US luxury properties pay closer to the $499 enterprise tier. This is $32,250 per month, 37.7% of total MRR. As you saw on slide 9, per-hotel API subscriptions fit squarely in the $199-$499 range. Gross margins north of 85% — pure SaaS.
+Hotel Concierge [red]: Our white-label AI concierge for hotels — steady linear SaaS growth from 2 Tokyo hotels at $249 to 20 properties at $340 average. This is the product on the GTM slide. Pure SaaS margins north of 85%.
 
-VIP commissions: Our highest-conviction stream — live venues, live demand, live revenue from day one. We have 3 VIP venues with 30+ tables today, earning $4,230 in month 1 from 18 bookings at $235 average commission. As we add venues with each city launch, this grows to $13,608 at month 6, $20,960 at month 9, and $30,030 at month 12 across 10 venues with 11 bookings per venue. That's 35.1% of total MRR — our second largest stream. By month 18 this reaches 12 venues generating $37,620 per month. Commission revenue runs at roughly 20-30% net margin after payment processing.
+API/MCP [cyan]: The developer platform at nightlife.dev — $10/mo dev tier with a slow organic ramp from month 3. We start with 10 developers, grow to 500 by month 12 generating $5,000 MRR. The real story is post-M12: enterprise customers at $499-999 per month as hotel chains and travel platforms integrate our MCP tools. That inflection at M18 takes this from 9% to 48% of total revenue by Q4Y3.
 
-Guest List SaaS: Starting month 5, we ramp from 4 venues at $129 per month to 42 venues at $172 average by month 12 — contributing $7,224 per month, 8.4% of total. This is 80%+ margin SaaS following the SevenRooms model, and scales significantly post-Series A as we deepen city penetration.
+VIP Commissions [green]: Our highest-conviction day-one stream — 3 live VIP venues with 30+ tables generating $4,230 in month 1. This is our Year 1 anchor at $28,000 MRR by month 12 (52% of total) but plateaus as we shift focus to scalable streams.
 
-Promoted listings: Venue advertisers paying $139-$235 per month for featured placement. We grow from 5 advertisers at US launch to 50 by month 12, generating $11,750 per month — 13.7% of total. Like Google Ads, scales naturally with query volume and city count. Margins 75%+.
+Guest List SaaS [purple]: SevenRooms model starting month 5 — 4 venues at $129, growing to 42 venues at $171 for $7,200 MRR. 80%+ margin SaaS that scales with city penetration.
 
-Ticketing: Launches month 10 with 450 tickets at $36 average price and 12% take rate, yielding $1,944. By month 12 we're at 950 tickets for $4,332 — 5.1% of total. Ticketing is our highest-growth post-Series A stream as city footprint expands and event partnerships mature.
+Promoted Listings [orange]: Starts modest at $200 MRR in month 3, growing to $3,000 at M12. Accelerates dramatically post-M18 with platform traffic — $55,000 MRR by Q4Y3.
 
-The revenue mix tells a deliberate story: API and VIP dominate because they're live products with existing customers — together 72.8% of revenue. The SaaS streams add high-margin recurring base. Total at month 12: $85,586 MRR across 188 paying relationships, with 60%+ blended gross margin trending toward 70% as SaaS share grows.
+Ticketing [violet]: Launches month 10 at 12% take rate. $4,300 MRR at M12, scaling to $70,000 MRR by Q4Y3 as city count and event partnerships multiply.
+
+The revenue mix tells a deliberate story: VIP and Hotel Concierge anchor Year 1 with live revenue. API/MCP is the long-term platform play that becomes dominant. Total at month 12: $54,300 MRR across 88 B2B relationships, with 60%+ blended gross margin trending toward 80% as API/MCP share grows.
         </aside>
       </section>
 
@@ -2067,6 +2090,154 @@ The revenue mix tells a deliberate story: API and VIP dominate because they're l
         </aside>
       </section>
 
+      <!-- ============================================
+           SLIDE 17: APPENDIX — UNIT ECONOMICS
+           ============================================ -->
+      <section data-transition="fade">
+        <span class="slide-label">Appendix</span>
+        <div class="accent-line"></div>
+        <h2 style="font-size: 1.1em; margin-bottom: 4px;">Unit Economics &mdash; Bottom-Up Build</h2>
+        <p class="tiny text-dim" style="margin-bottom: 8px;">Every revenue number: units &times; price = MRR. Nothing top-down.</p>
+
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+              <th class="smaller" style="text-align: left; padding: 4px 6px;">Stream</th>
+              <th class="smaller mono" style="text-align: right; padding: 4px 6px;">M1</th>
+              <th class="smaller mono" style="text-align: right; padding: 4px 6px;">M6</th>
+              <th class="smaller mono" style="text-align: right; padding: 4px 6px;">M12</th>
+              <th class="smaller mono" style="text-align: right; padding: 4px 6px;">Q4Y2</th>
+              <th class="smaller mono" style="text-align: right; padding: 4px 6px;">Q4Y3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Hotel Concierge SaaS: hotels × avg_price — linear steady growth -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 3px 6px 1px;"><span style="color: #f43f5e;">&#9679;</span> Hotel Concierge</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">2 &times; $249</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">8 &times; $275</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">20 &times; $340</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">40 &times; $375</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">60 &times; $367</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0 6px 3px;"></td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$498</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$2.2K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$6.8K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$15.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$22.0K</td>
+            </tr>
+            <!-- API/MCP: $10/mo devs, slow ramp from M3, enterprise lift at M18 -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 3px 6px 1px;"><span style="color: #22d3ee;">&#9679;</span> API / MCP</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">&mdash;</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">100 &times; $10</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">500 &times; $10</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">2K + 65 ent</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">4K + 160 ent</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0 6px 3px;"></td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$0</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$1K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$5K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$85.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$200.0K</td>
+            </tr>
+            <!-- VIP Commissions: venues · bookings · avg_commission -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 3px 6px 1px;"><span style="color: #22c55e;">&#9679;</span> VIP Commissions</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">3v &middot; 6b &middot; $235</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">6v &middot; 9b &middot; $252</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">8v &middot; 13b &middot; $269</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">10v &middot; 13b &middot; $269</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">11v &middot; 13b &middot; $280</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0 6px 3px;"></td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$4,230</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$13.6K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$28.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$35.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$40.0K</td>
+            </tr>
+            <!-- Guest List SaaS: customers × avg_price -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 3px 6px 1px;"><span style="color: #9b8cff;">&#9679;</span> Guest List SaaS</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">&mdash;</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">8 &times; $138</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">42 &times; $171</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">82 &times; $183</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">125 &times; $200</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0 6px 3px;"></td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$0</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$1.1K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$7.2K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$15.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$25.0K</td>
+            </tr>
+            <!-- Promoted Listings: customers × avg_price -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 3px 6px 1px;"><span style="color: #f59e0b;">&#9679;</span> Promoted Listings</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">&mdash;</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">6 &times; $150</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">18 &times; $167</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">75 &times; $333</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">150 &times; $367</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0 6px 3px;"></td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$0</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$0.9K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$3.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$25.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$55.0K</td>
+            </tr>
+            <!-- Ticketing: tickets × price × take_rate -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td class="smaller" style="padding: 3px 6px 1px;"><span style="color: #8b5cf6;">&#9679;</span> Ticketing</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">&mdash;</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">&mdash;</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">950 &times; $38 &times; 12%</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">5K &times; $43 &times; 15%</td>
+              <td class="mono" style="text-align: right; padding: 3px 6px 1px; font-size: 0.52em; color: rgba(255,255,255,0.45);">11K &times; $45 &times; 14%</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0 6px 3px;"></td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$0</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$0</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$4.3K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$32.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 0 6px 3px;">$70.0K</td>
+            </tr>
+            <!-- Totals -->
+            <tr style="border-top: 2px solid var(--border);">
+              <td class="smaller" style="padding: 4px 6px; font-weight: 700;"><strong>Total MRR</strong></td>
+              <td class="smaller mono" style="text-align: right; padding: 4px 6px; font-weight: 700;">$4,728</td>
+              <td class="smaller mono" style="text-align: right; padding: 4px 6px; font-weight: 700;">$18.8K</td>
+              <td class="smaller mono" style="text-align: right; padding: 4px 6px; font-weight: 700;">$54.3K</td>
+              <td class="smaller mono" style="text-align: right; padding: 4px 6px; font-weight: 700;">$207.0K</td>
+              <td class="smaller mono" style="text-align: right; padding: 4px 6px; font-weight: 700;">$412.0K</td>
+            </tr>
+            <tr>
+              <td class="tiny text-dim" style="padding: 2px 6px 0;">ARR Run Rate</td>
+              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 6px 0;">$57K</td>
+              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 6px 0;">$226K</td>
+              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 6px 0;">$652K</td>
+              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 6px 0;">$2.5M</td>
+              <td class="tiny text-dim mono" style="text-align: right; padding: 2px 6px 0;">$4.9M</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <aside class="notes">
+Six revenue streams, all bottom-up. Hotel Concierge is our white-label AI concierge for hotels — steady linear growth from 2 Tokyo hotels at $249 to 60 properties at $367, pure SaaS. This is the product on the GTM slide. API/MCP is the developer platform at nightlife.dev — $10/mo dev tier, very slow organic ramp from month 3. The inflection comes at month 18 when enterprise customers arrive at $499-999/mo as hotel chains and travel platforms integrate our MCP tools directly. That enterprise lift takes API from $5K at M12 to $85K at Q4Y2 and $200K at Q4Y3 — becoming 48% of total revenue. VIP commissions remain our highest-conviction day-one stream — 3 venues with live tables generating $4,230 in month 1, growing to $28K at M12 but then plateauing around $35-40K as we shift focus to scalable platform streams. Guest List SaaS and Promoted Listings layer in as city count grows. Ticketing scales with city expansion and event partnerships. M12 total: $54.3K MRR ($652K ARR) — the $1M ARR milestone lands around month 16 as enterprise API customers ramp. Total path to $412K MRR by Q4Y3 — that's $4.9M ARR run rate.
+        </aside>
+      </section>
+
     </div><!-- /slides -->
   </div><!-- /reveal -->
 
@@ -2150,6 +2321,17 @@ The revenue mix tells a deliberate story: API and VIP dominate because they're l
       if (chartAnimated) return;
       chartAnimated = true;
       document.querySelector('.proj-chart').classList.add('animated');
+      // Add year divider labels
+      var wrap = document.querySelector('.proj-chart-wrap');
+      if (wrap && !wrap.querySelector('.proj-year-label')) {
+        [['44.5%','Year 1 \u2192 2'],['68.5%','Year 2 \u2192 3']].forEach(function(d) {
+          var s = document.createElement('span');
+          s.className = 'proj-year-label';
+          s.style.cssText = 'position:absolute;top:2px;left:'+d[0]+';transform:translateX(-50%);font-family:JetBrains Mono,monospace;font-size:0.5em;color:rgba(255,255,255,0.45);white-space:nowrap;z-index:10;';
+          s.textContent = d[1];
+          wrap.appendChild(s);
+        });
+      }
     }
 
     Reveal.on('slidetransitionend', (event) => {
