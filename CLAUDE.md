@@ -161,6 +161,11 @@ the API, not this client. CI builds each PR/push.
 
 - `/checkout`: US$19/month Pro offer; confirmed Supabase account → Stripe-hosted
   subscription checkout. Pricing CTA and dashboard Upgrade link target this page.
+- The Supabase browser client uses the supported `sb_publishable_*` public key;
+  the retired legacy JWT returns 401 even on auth/settings. Launch regression:
+  GET `/auth/v1/settings` with the public key must return 200; unauthenticated
+  POST `get_user_usage_summary` must reach Postgres (not "Legacy API keys are
+  disabled"). Browser signup/login and authenticated key RPCs must work.
 - `src/lib/billing.ts`: authenticated calls to `https://api.nightlife.dev/billing`;
   `PUBLIC_BILLING_API_URL` can override it for isolated tests. Signup intent and
   source survive login/email confirmation using localStorage; all redirects are
