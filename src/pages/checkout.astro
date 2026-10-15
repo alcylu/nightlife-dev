@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 ---
-<Base title="Get Pro — nightlife.dev" description="Live Tokyo nightlife data for your app or AI agent. US$29/month, cancel anytime.">
+<Base title="Get Pro — nightlife.dev" description="Live Tokyo nightlife data for your app or AI agent. US$19/month, cancel anytime.">
   <div class="relative min-h-screen overflow-hidden">
     <div aria-hidden="true" class="pointer-events-none absolute -right-40 -top-56 h-[650px] w-[650px] rounded-full bg-primary/10 blur-[100px]"></div>
     <header class="relative mx-auto flex max-w-5xl items-center justify-between px-6 py-7">
@@ -14,7 +14,7 @@ import Base from "../layouts/Base.astro";
         <h1 class="mb-5 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">Your agent’s next<br />night out starts here.</h1>
         <p class="mb-8 max-w-md text-lg leading-relaxed text-text-muted">Give your app or AI agent live Tokyo events, venues, performers, and the context to recommend a great night.</p>
         <ul class="space-y-4 text-sm">
-          <li class="flex gap-3"><span class="text-cyan-400">✓</span><span><strong>1,000 requests per day, per key</strong><br /><span class="text-text-muted">60 requests per minute. Up to 3 API keys.</span></span></li>
+          <li class="flex gap-3"><span class="text-cyan-400">✓</span><span><strong>2,000 requests per month</strong><br /><span class="text-text-muted">Shared across up to 3 keys. 30 requests/minute per key.</span></span></li>
           <li class="flex gap-3"><span class="text-cyan-400">✓</span><span><strong>Public MCP tools + REST API</strong><br /><span class="text-text-muted">Events, lineups, genre filters, areas, images, and video.</span></span></li>
           <li class="flex gap-3"><span class="text-cyan-400">✓</span><span><strong>Connect to your existing agent</strong><br /><span class="text-text-muted">Claude, Cursor, or any compatible MCP client.</span></span></li>
         </ul>
@@ -22,8 +22,8 @@ import Base from "../layouts/Base.astro";
       </section>
       <section aria-labelledby="plan-heading" class="self-start rounded-2xl border border-primary/30 bg-bg-card p-7 shadow-2xl shadow-primary/5 sm:p-8">
         <div class="mb-6 flex items-center justify-between"><h2 id="plan-heading" class="text-xl font-semibold">Pro</h2><span class="rounded-full bg-primary/15 px-3 py-1 text-xs text-primary">Monthly</span></div>
-        <p class="mb-2"><span class="text-5xl font-bold tracking-tight">US$29</span><span class="ml-2 text-text-muted">/ month</span></p>
-        <p class="mb-7 text-sm text-text-muted">Billed monthly. Cancel anytime from your dashboard.</p>
+        <p class="mb-2"><span class="text-5xl font-bold tracking-tight">US$19</span><span class="ml-2 text-text-muted">/ month</span></p>
+        <p class="mb-7 text-sm text-text-muted">Billed monthly. Cancel anytime. Hard cap, no automatic overage charges.</p>
         <div id="status" role="status" aria-live="polite" class="mb-5 rounded-lg border border-border bg-bg p-4 text-sm text-text-muted">Checking checkout availability…</div>
         <p id="account" class="mb-4 hidden break-all text-sm text-text-muted"></p>
         <button id="checkout-btn" disabled class="w-full rounded-lg bg-primary px-5 py-3.5 font-semibold text-white transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50">Continue to secure checkout</button>
@@ -33,9 +33,9 @@ import Base from "../layouts/Base.astro";
         </div>
         <a id="dashboard-link" href="/dashboard" class="mt-4 hidden text-center text-sm text-primary hover:underline">Go to dashboard &rarr;</a>
         <p class="mt-5 text-center text-xs leading-relaxed text-text-muted">Payment details are entered securely on Stripe.<br />Your API keys upgrade after payment is confirmed.</p>
-        <p class="mt-5 border-t border-border pt-5 text-xs leading-relaxed text-text-muted">By subscribing, you agree to the <a href="/terms" class="underline hover:text-text">subscription terms</a>. Your subscription renews at US$29/month until cancelled. Questions? <a href="mailto:allen@nightlifetokyo.com" class="underline hover:text-text">Contact us</a>.</p>
+        <p class="mt-5 border-t border-border pt-5 text-xs leading-relaxed text-text-muted">By subscribing, you agree to the <a href="/terms" class="underline hover:text-text">subscription terms</a>. Your subscription renews at US$19/month until cancelled. Questions? <a href="mailto:allen@nightlifetokyo.com" class="underline hover:text-text">Contact us</a>.</p>
       </section>
-      <p class="text-sm text-text-muted md:col-span-2">Just exploring? <a href="/signup" class="text-primary hover:underline">Start free with 100 requests/day</a>. No card required.</p>
+      <p class="text-sm text-text-muted md:col-span-2">Just exploring? <a href="/signup" class="text-primary hover:underline">Start free with 100 requests/month</a>. No card required.</p>
     </main>
   </div>
 </Base>
@@ -60,7 +60,7 @@ import Base from "../layouts/Base.astro";
   async function init() {
     try {
       const config = await billingRequest<{ enabled: boolean; amount?: number; currency?: string }>("config");
-      if (!config.enabled || config.amount !== 2900 || config.currency !== "usd") {
+      if (!config.enabled || config.amount !== 1900 || config.currency !== "usd") {
         message("Checkout is being prepared. You can still create a free account or contact us.");
         button.classList.add("hidden");
         auth.classList.remove("hidden");
@@ -88,7 +88,7 @@ import Base from "../layouts/Base.astro";
         }
       }
       if (billing.plan === "pro" || (billing.can_manage && !["canceled", "incomplete_expired"].includes(billing.status))) {
-        message(billing.plan === "pro" ? "Pro is active. Your API keys now have 1,000 requests/day and 60 requests/minute." : "You already have a subscription. Manage your payment or subscription from the dashboard.");
+        message(billing.plan === "pro" ? "Pro is active. Your account now has 2,000 requests/month, shared across your API keys." : "You already have a subscription. Manage your payment or subscription from the dashboard.");
         button.classList.add("hidden"); dashboard.classList.remove("hidden");
       } else {
         message(params.get("result") === "cancelled" ? "Checkout cancelled. Your account is still on Free. You can try again whenever you’re ready." : "Ready when you are. Pro access starts after your first payment.");

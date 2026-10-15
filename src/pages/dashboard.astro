@@ -60,7 +60,7 @@ import Base from "../layouts/Base.astro";
       <!-- Usage -->
       <div class="mb-8 grid gap-4 sm:grid-cols-2">
         <div class="rounded-xl border border-border bg-bg-card p-5">
-          <p class="mb-1 text-sm text-text-muted">Today's usage</p>
+          <p class="mb-1 text-sm text-text-muted">Monthly allowance</p>
           <div class="mb-2 flex items-baseline gap-2">
             <span id="usage-today" class="text-2xl font-bold">--</span>
             <span id="usage-quota" class="text-sm text-text-muted"></span>
@@ -73,10 +73,10 @@ import Base from "../layouts/Base.astro";
             >
             </div>
           </div>
-          <p id="per-minute-info" class="mt-2 text-xs text-text-muted">Per-minute limit: 20 req/min</p>
+          <p id="per-minute-info" class="mt-2 text-xs text-text-muted">Loading allowance reset time…</p>
         </div>
         <div class="rounded-xl border border-border bg-bg-card p-5">
-          <p class="mb-1 text-sm text-text-muted">Last 30 days</p>
+          <p class="mb-1 text-sm text-text-muted">Last 30 days · all authenticated traffic</p>
           <span id="usage-30d" class="text-2xl font-bold">--</span>
           <span class="ml-1 text-sm text-text-muted">requests</span>
         </div>
@@ -260,7 +260,7 @@ import Base from "../layouts/Base.astro";
     try {
       const billing = await billingRequest<BillingStatus>("status");
       document.getElementById("plan-name")!.textContent = billing.plan === "pro" ? "Pro Plan" : "Free Plan";
-      document.getElementById("plan-limits")!.textContent = `${billing.daily_quota.toLocaleString()} requests / day · ${billing.per_minute_quota} requests / minute, per key`;
+      document.getElementById("plan-limits")!.textContent = `${billing.monthly_quota.toLocaleString()} requests / month, shared · ${billing.per_minute_quota} requests / minute per key`;
       canManageBilling = billing.can_manage;
       if (canManageBilling) {
         billingAction.textContent = "Manage billing";
@@ -326,41 +326,40 @@ import Base from "../layouts/Base.astro";
       return;
     }
 
-    const active = data.filter((k: any) => k.status === "active");
-    quota = active.reduce((sum: number, k: any) => sum + (k.daily_quota ?? 100), 0);
-    document.getElementById("usage-quota")!.textContent = `/ ${quota.toLocaleString()} across active keys`;
-    document.getElementById("per-minute-info")!.textContent = `Per-minute limit: ${active[0]?.per_minute_quota ?? 20} req/min per key`;
 
     isFirstLoad = false;
     renderKeys(data);
   }
 
   async function loadUsage() {
+    const { data: monthly, error: monthlyError } = await supabase.rpc("get_user_monthly_usage");
+    if (monthlyError || !monthly?.[0]) {
+      usageTodayEl.textContent = "Unavailable";
+      document.getElementById("usage-quota")!.textContent = "";
+      document.getElementById("per-minute-info")!.textContent = "Refresh to retry loading your allowance.";
+    } else {
+      const m = monthly[0];
+      quota = m.monthly_quota;
+      usageTodayEl.textContent = String(m.monthly_count);
+      document.getElementById("usage-quota")!.textContent = `/ ${quota.toLocaleString()} shared across all keys`;
+      document.getElementById("per-minute-info")!.textContent = `Resets ${new Date(m.monthly_reset_at).toLocaleString()}`;
+      const pct = Math.min(m.monthly_count / quota * 100, 100);
+      usageBarEl.style.width = `${pct}%`;
+      usageBarEl.classList.toggle("bg-red-500", pct >= 90);
+    }
     const { data } = await supabase.rpc("get_user_usage_summary");
     if (!data || data.length === 0) {
-      usageTodayEl.textContent = "0";
       usage30dEl.textContent = "0";
       return;
     }
 
-    const todayTotal = data.reduce(
-      (sum: number, k: any) => sum + (k.today_usage || 0),
-      0,
-    );
     const thirtyDayTotal = data.reduce(
       (sum: number, k: any) => sum + (k.last_30_days_usage || 0),
       0,
     );
 
-    usageTodayEl.textContent = String(todayTotal);
     usage30dEl.textContent = String(thirtyDayTotal);
 
-    const pct = quota ? Math.min((todayTotal / quota) * 100, 100) : 0;
-    usageBarEl.style.width = `${pct}%`;
-    if (pct >= 90) {
-      usageBarEl.classList.remove("bg-primary");
-      usageBarEl.classList.add("bg-red-500");
-    }
   }
 
   function renderKeys(keys: any[]) {

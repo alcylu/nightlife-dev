@@ -16,7 +16,8 @@ export const pricing: PricingTier[] = [
     period: "forever",
     description: "For experimentation and hobby projects.",
     features: [
-      "100 requests / day",
+      "100 requests / month, shared across keys",
+      "5 requests / minute per key",
       "Public MCP tools + REST API",
       "Tokyo events",
       "Community support",
@@ -26,15 +27,16 @@ export const pricing: PricingTier[] = [
   },
   {
     name: "Pro",
-    price: "$29",
+    price: "$19",
     period: "/ month",
     description: "For production apps and agents.",
     features: [
-      "1,000 requests / day",
+      "2,000 requests / month, shared across keys",
       "Public MCP tools + REST API",
       "All supported cities",
       "Priority support",
-      "60 requests / minute",
+      "30 requests / minute per key",
+      "Hard cap — no surprise overage bills",
     ],
     cta: "Get Pro",
     ctaHref: "/checkout?source=pricing",
@@ -46,7 +48,7 @@ export const pricing: PricingTier[] = [
     period: "",
     description: "For high-volume and custom integrations.",
     features: [
-      "Unlimited requests",
+      "Custom request volume",
       "Public MCP tools + REST API",
       "All supported cities",
       "Dedicated support",

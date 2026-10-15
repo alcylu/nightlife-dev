@@ -8,7 +8,7 @@ export type BillingStatus = {
   current_period_end: string | null;
   cancel_at_period_end: boolean;
   can_manage: boolean;
-  daily_quota: number;
+  monthly_quota: number;
   per_minute_quota: number;
 };
 
