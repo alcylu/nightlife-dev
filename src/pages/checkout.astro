@@ -95,7 +95,12 @@ import Base from "../layouts/Base.astro";
         button.disabled = false;
       }
     } catch (error) {
-      message(error instanceof Error ? error.message : "Unable to load checkout. Please refresh and try again.", true);
+      if (!available) {
+        message("Checkout is being prepared. You can still create a free account or contact us.");
+        button.classList.add("hidden"); auth.classList.remove("hidden");
+      } else {
+        message("Unable to load your billing details. Please refresh and try again, or contact us for help.", true);
+      }
     }
   }
   button.addEventListener("click", async () => {
