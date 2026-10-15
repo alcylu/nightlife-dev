@@ -89,6 +89,7 @@ import Base from "../layouts/Base.astro";
           <h2 class="font-semibold">API Keys</h2>
           <button
             id="create-key-btn"
+            disabled
             class="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
           >
             Create key
@@ -226,7 +227,8 @@ import Base from "../layouts/Base.astro";
   const nameCancelBtn = document.getElementById("name-cancel-btn")!;
   const nameSubmitBtn = document.getElementById("name-submit-btn") as HTMLButtonElement;
 
-  let quota = 100;
+  let quota = 0;
+  let paidAccess = false;
   const MAX_KEYS = 3;
   let isFirstLoad = true;
 
@@ -242,7 +244,7 @@ import Base from "../layouts/Base.astro";
     }
 
     if (consumeCheckoutIntent()) {
-      window.location.href = "/checkout";
+      window.location.href = `/checkout?plan=${localStorage.getItem("nlt_checkout_plan") === "starter" ? "starter" : "pro"}`;
       return;
     }
 
@@ -260,8 +262,9 @@ import Base from "../layouts/Base.astro";
   async function loadBilling() {
     try {
       const billing = await billingRequest<BillingStatus>("status");
-      document.getElementById("plan-name")!.textContent = billing.plan === "pro" ? "Pro Plan" : "Free Plan";
-      document.getElementById("plan-limits")!.textContent = `${billing.monthly_quota.toLocaleString()} requests / month, shared · ${billing.per_minute_quota} requests / minute per key`;
+      paidAccess = billing.plan !== "none";
+      document.getElementById("plan-name")!.textContent = billing.plan === "pro" ? "Pro Plan" : billing.plan === "starter" ? "Starter Plan" : "No active subscription";
+      document.getElementById("plan-limits")!.textContent = paidAccess ? `${billing.monthly_quota.toLocaleString()} requests / month, shared · ${billing.per_minute_quota} requests / minute per key · advanced data included` : "Choose Starter or Pro to activate API access.";
       canManageBilling = billing.can_manage;
       if (canManageBilling) {
         billingAction.textContent = "Manage billing";
@@ -317,12 +320,13 @@ import Base from "../layouts/Base.astro";
     keysLoadingEl.classList.add("hidden");
 
     if (!data || data.length === 0) {
-      if (isFirstLoad) {
+      if (isFirstLoad && paidAccess) {
         isFirstLoad = false;
         await autoCreateKey();
         return;
       }
       keysEmptyEl.classList.remove("hidden");
+      keysEmptyEl.textContent = paidAccess ? 'No API keys yet. Click "Create key" to get started.' : 'Subscribe to Starter or Pro above to activate API access and create keys.';
       updateCreateBtnState(0);
       return;
     }
@@ -343,8 +347,8 @@ import Base from "../layouts/Base.astro";
       quota = m.monthly_quota;
       usageTodayEl.textContent = String(m.monthly_count);
       document.getElementById("usage-quota")!.textContent = `/ ${quota.toLocaleString()} shared across all keys`;
-      document.getElementById("per-minute-info")!.textContent = `Resets ${new Date(m.monthly_reset_at).toLocaleString()}`;
-      const pct = Math.min(m.monthly_count / quota * 100, 100);
+      document.getElementById("per-minute-info")!.textContent = quota > 0 ? `Resets ${new Date(m.monthly_reset_at).toLocaleString()}` : "API access requires an active Starter or Pro subscription.";
+      const pct = quota > 0 ? Math.min(m.monthly_count / quota * 100, 100) : 0;
       usageBarEl.style.width = `${pct}%`;
       usageBarEl.classList.toggle("bg-red-500", pct >= 90);
     }
@@ -405,7 +409,10 @@ import Base from "../layouts/Base.astro";
   }
 
   function updateCreateBtnState(activeCount: number) {
-    if (activeCount >= MAX_KEYS) {
+    if (!paidAccess) {
+      createKeyBtn.disabled = true;
+      createKeyBtn.title = "Subscribe to Starter or Pro to create API keys";
+    } else if (activeCount >= MAX_KEYS) {
       createKeyBtn.disabled = true;
       createKeyBtn.title = `Maximum ${MAX_KEYS} active keys`;
     } else {

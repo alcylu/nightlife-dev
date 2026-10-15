@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 ---
-<Base title="Get Pro — nightlife.dev" description="Live Tokyo nightlife data for your app or AI agent. US$19/month, cancel anytime.">
+<Base title="Choose Starter or Pro — nightlife.dev" description="Advanced nightlife data: Starter US$5/month for 500 requests or Pro US$19/month for 5,000.">
   <div class="relative min-h-screen overflow-hidden">
     <div aria-hidden="true" class="pointer-events-none absolute -right-40 -top-56 h-[650px] w-[650px] rounded-full bg-primary/10 blur-[100px]"></div>
     <header class="relative mx-auto flex max-w-5xl items-center justify-between px-6 py-7">
@@ -14,7 +14,7 @@ import Base from "../layouts/Base.astro";
         <h1 class="mb-5 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">Your agent’s next<br />night out starts here.</h1>
         <p class="mb-8 max-w-md text-lg leading-relaxed text-text-muted">Give your app or AI agent live Tokyo events, venues, performers, and the context to recommend a great night.</p>
         <ul class="space-y-4 text-sm">
-          <li class="flex gap-3"><span class="text-cyan-400">✓</span><span><strong>2,000 requests per month</strong><br /><span class="text-text-muted">Shared across up to 3 keys. 30 requests/minute per key.</span></span></li>
+          <li class="flex gap-3"><span class="text-cyan-400">✓</span><span><strong>Starter: 500 · Pro: 5,000 requests per month</strong><br /><span class="text-text-muted">Shared across up to 3 keys. Starter: 10/minute; Pro: 30/minute per key.</span></span></li>
           <li class="flex gap-3"><span class="text-cyan-400">✓</span><span><strong>Public MCP tools + REST API</strong><br /><span class="text-text-muted">Events, lineups, genre filters, areas, images, and video.</span></span></li>
           <li class="flex gap-3"><span class="text-cyan-400">✓</span><span><strong>Richer performer and venue profiles</strong><br /><span class="text-text-muted">Performer bios, profile images and social profiles, plus venue social links where available. No demand metrics, follower counts, rankings or VIP pricing.</span></span></li>
           <li class="flex gap-3"><span class="text-cyan-400">✓</span><span><strong>Connect to your existing agent</strong><br /><span class="text-text-muted">Claude, Cursor, or any compatible MCP client.</span></span></li>
@@ -22,8 +22,10 @@ import Base from "../layouts/Base.astro";
         <a href="https://api.nightlife.dev/api/v1/docs" class="mt-8 inline-block text-sm text-primary hover:underline">Explore the API before you buy &rarr;</a>
       </section>
       <section aria-labelledby="plan-heading" class="self-start rounded-2xl border border-primary/30 bg-bg-card p-7 shadow-2xl shadow-primary/5 sm:p-8">
-        <div class="mb-6 flex items-center justify-between"><h2 id="plan-heading" class="text-xl font-semibold">Pro</h2><span class="rounded-full bg-primary/15 px-3 py-1 text-xs text-primary">Monthly</span></div>
-        <p class="mb-2"><span class="text-5xl font-bold tracking-tight">US$19</span><span class="ml-2 text-text-muted">/ month</span></p>
+        <label for="plan-select" class="mb-2 block text-sm font-medium">Choose your plan</label>
+        <select id="plan-select" class="mb-6 w-full rounded-lg border border-border bg-bg p-3"><option value="starter">Starter — US$5/month · 500 requests</option><option value="pro">Pro — US$19/month · 5,000 requests</option></select>
+        <div class="mb-6 flex items-center justify-between"><h2 id="plan-heading" class="text-xl font-semibold">Starter</h2><span class="rounded-full bg-primary/15 px-3 py-1 text-xs text-primary">Monthly</span></div>
+        <p class="mb-2"><span id="plan-amount" class="text-5xl font-bold tracking-tight">US$5</span><span class="ml-2 text-text-muted">/ month</span></p>
         <p class="mb-7 text-sm text-text-muted">Billed monthly. Cancel anytime. Hard cap, no automatic overage charges.</p>
         <div id="status" role="status" aria-live="polite" class="mb-5 rounded-lg border border-border bg-bg p-4 text-sm text-text-muted">Checking checkout availability…</div>
         <p id="account" class="mb-4 hidden break-all text-sm text-text-muted"></p>
@@ -34,9 +36,9 @@ import Base from "../layouts/Base.astro";
         </div>
         <a id="dashboard-link" href="/dashboard" class="mt-4 hidden text-center text-sm text-primary hover:underline">Go to dashboard &rarr;</a>
         <p class="mt-5 text-center text-xs leading-relaxed text-text-muted">Payment details are entered securely on Stripe.<br />Your API keys upgrade after payment is confirmed.</p>
-        <p class="mt-5 border-t border-border pt-5 text-xs leading-relaxed text-text-muted">By subscribing, you agree to the <a href="/terms" class="underline hover:text-text">subscription terms</a>. Your subscription renews at US$19/month until cancelled. Questions? <a href="mailto:allen@nightlifetokyo.com" class="underline hover:text-text">Contact us</a>.</p>
+        <p class="mt-5 border-t border-border pt-5 text-xs leading-relaxed text-text-muted">By subscribing, you agree to the <a href="/terms" class="underline hover:text-text">subscription terms</a>. <span id="renewal-text">Starter renews at US$5/month until cancelled.</span> Questions? <a href="mailto:allen@nightlifetokyo.com" class="underline hover:text-text">Contact us</a>.</p>
       </section>
-      <p class="text-sm text-text-muted md:col-span-2">Just exploring? <a href="/signup" class="text-primary hover:underline">Start free with 100 requests/month</a>. No card required. Need more capacity? <a href="/request-usage" class="text-primary hover:underline">Ask about additional usage</a>.</p>
+      <p class="text-sm text-text-muted md:col-span-2">Both paid plans include advanced profile data where available. There is no free API tier. Need more capacity? <a href="/request-usage" class="text-primary hover:underline">Ask about additional usage</a>.</p>
     </main>
   </div>
 </Base>
@@ -50,6 +52,16 @@ import Base from "../layouts/Base.astro";
   const dashboard = document.getElementById("dashboard-link")!;
   const params = new URLSearchParams(location.search);
   const source = params.get("source") || localStorage.getItem("nlt_checkout_source") || "direct";
+  const selected = params.get("plan") || localStorage.getItem("nlt_checkout_plan") || "starter";
+  const plan = selected === "pro" ? "pro" : "starter";
+  const amount = plan === "pro" ? 1900 : 500;
+  localStorage.setItem("nlt_checkout_plan",plan);
+  const selector = document.getElementById("plan-select") as HTMLSelectElement;
+  selector.value = plan;
+  document.getElementById("plan-heading")!.textContent = plan === "pro" ? "Pro" : "Starter";
+  document.getElementById("plan-amount")!.textContent = `US$${amount/100}`;
+  document.getElementById("renewal-text")!.textContent = `${plan === "pro" ? "Pro" : "Starter"} renews at US$${amount/100}/month until cancelled.`;
+  selector.addEventListener("change",()=>location.assign(`/checkout?plan=${selector.value === "pro" ? "pro" : "starter"}&source=${encodeURIComponent(source)}`));
   let available = false;
 
   function message(text: string, error = false) {
@@ -60,9 +72,9 @@ import Base from "../layouts/Base.astro";
 
   async function init() {
     try {
-      const config = await billingRequest<{ enabled: boolean; amount?: number; currency?: string }>("config");
-      if (!config.enabled || config.amount !== 1900 || config.currency !== "usd") {
-        message("Checkout is being prepared. You can still create a free account or contact us.");
+      const config = await billingRequest<{ enabled: boolean; plans?: Record<string,{amount:number;currency:string}> }>("config");
+      if (!config.enabled || config.plans?.[plan]?.amount !== amount || config.plans?.[plan]?.currency !== "usd") {
+        message("Checkout is temporarily unavailable. You can create an account or contact us; API access requires a paid subscription.");
         button.classList.add("hidden");
         auth.classList.remove("hidden");
         return;
@@ -70,7 +82,7 @@ import Base from "../layouts/Base.astro";
       available = true;
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        message("Create a free account first, then continue to Stripe. You won’t be charged until you confirm payment.");
+        message("Create an account first, then continue to Stripe. API access starts after payment; you won’t be charged until you confirm on Stripe.");
         button.classList.add("hidden"); auth.classList.remove("hidden"); return;
       }
       localStorage.removeItem("nlt_checkout_intent");
@@ -78,26 +90,26 @@ import Base from "../layouts/Base.astro";
       account.textContent = `Signed in as ${session.user.email}`; account.classList.remove("hidden");
       let billing = await billingRequest<BillingStatus>("status");
       if (params.get("result") === "success") {
-        for (let i = 0; i < 5 && billing.plan !== "pro"; i++) {
-          message("Confirming your payment and activating Pro…");
+        for (let i = 0; i < 5 && billing.plan === "none"; i++) {
+          message("Confirming your payment and activating API access…");
           await new Promise(r => setTimeout(r, 2000));
           billing = await billingRequest<BillingStatus>("status");
         }
-        if (billing.plan !== "pro") {
+        if (billing.plan === "none") {
           message("Your payment is still being confirmed. Check your dashboard shortly; please don’t pay again.");
           button.classList.add("hidden"); dashboard.classList.remove("hidden"); return;
         }
       }
-      if (billing.plan === "pro" || (billing.can_manage && !["canceled", "incomplete_expired"].includes(billing.status))) {
-        message(billing.plan === "pro" ? "Pro is active. Your account now has 2,000 requests/month, shared across your API keys." : "You already have a subscription. Manage your payment or subscription from the dashboard.");
+      if (billing.plan !== "none" || (billing.can_manage && !["canceled", "incomplete_expired"].includes(billing.status))) {
+        message(billing.plan !== "none" ? `${billing.plan === "pro" ? "Pro" : "Starter"} is active: ${billing.monthly_quota.toLocaleString()} requests/month and advanced profiles. Manage or switch plans from your dashboard.` : "You already have a subscription. Manage your payment or subscription from the dashboard.");
         button.classList.add("hidden"); dashboard.classList.remove("hidden");
       } else {
-        message(params.get("result") === "cancelled" ? "Checkout cancelled. Your account is still on Free. You can try again whenever you’re ready." : "Ready when you are. Pro access starts after your first payment.");
+        message(params.get("result") === "cancelled" ? "Checkout cancelled. No API subscription was activated. You can try again whenever you’re ready." : "Ready when you are. API access starts after payment is confirmed.");
         button.disabled = false;
       }
     } catch (error) {
       if (!available) {
-        message("Checkout is being prepared. You can still create a free account or contact us.");
+        message("Checkout is temporarily unavailable. You can create an account or contact us; API access requires a paid subscription.");
         button.classList.add("hidden"); auth.classList.remove("hidden");
       } else {
         message("Unable to load your billing details. Please refresh and try again, or contact us for help.", true);
@@ -107,7 +119,7 @@ import Base from "../layouts/Base.astro";
   button.addEventListener("click", async () => {
     if (!available) return;
     button.disabled = true; button.textContent = "Opening Stripe…";
-    try { const result = await billingRequest<{ url: string }>("checkout", { source }); redirectToStripe(result.url); }
+    try { const result = await billingRequest<{ url: string }>("checkout", { source, plan }); redirectToStripe(result.url); }
     catch (error) { message(error instanceof Error ? error.message : "Could not open checkout.", true); button.disabled = false; button.textContent = "Try secure checkout again"; }
   });
   init();

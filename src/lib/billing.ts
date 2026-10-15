@@ -3,13 +3,14 @@ import { supabase } from "./supabase";
 const api = import.meta.env.PUBLIC_BILLING_API_URL || "https://api.nightlife.dev/billing";
 
 export type BillingStatus = {
-  plan: "free" | "pro";
+  plan: "none" | "starter" | "pro";
   status: string;
   current_period_end: string | null;
   cancel_at_period_end: boolean;
   can_manage: boolean;
   monthly_quota: number;
   per_minute_quota: number;
+  advanced_data: boolean;
 };
 
 export async function billingRequest<T>(path: string, body?: object): Promise<T> {
@@ -26,13 +27,15 @@ export async function billingRequest<T>(path: string, body?: object): Promise<T>
 }
 
 export function rememberCheckout(): void {
-  localStorage.setItem("nlt_checkout_intent", "pro");
+  localStorage.setItem("nlt_checkout_intent", "paid");
+  const plan = new URLSearchParams(location.search).get("plan");
+  if (plan === "starter" || plan === "pro") localStorage.setItem("nlt_checkout_plan", plan);
   const source = new URLSearchParams(location.search).get("source");
   if (source && /^[a-zA-Z0-9_-]{1,50}$/.test(source)) localStorage.setItem("nlt_checkout_source", source);
 }
 
 export function consumeCheckoutIntent(): boolean {
-  const intent = localStorage.getItem("nlt_checkout_intent") === "pro";
+  const intent = ["paid", "pro"].includes(localStorage.getItem("nlt_checkout_intent") || "");
   localStorage.removeItem("nlt_checkout_intent");
   return intent;
 }

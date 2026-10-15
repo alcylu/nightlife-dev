@@ -82,7 +82,7 @@ import AuthPage from "../layouts/AuthPage.astro";
       submitBtn.disabled = false;
       submitBtn.textContent = "Sign in";
     } else {
-      window.location.href = proIntent ? "/checkout" : "/dashboard";
+      window.location.href = proIntent ? `/checkout?plan=${localStorage.getItem("nlt_checkout_plan") === "starter" ? "starter" : "pro"}` : "/dashboard";
     }
   });
 </script>

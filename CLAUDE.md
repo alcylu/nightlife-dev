@@ -188,9 +188,14 @@ the API, not this client. CI builds each PR/push.
   source survive login/email confirmation using localStorage; all redirects are
   fixed destinations, and Stripe URL hosts are checked before navigation.
 - `/terms`: renewal, limits, cancellation, support and billing data disclosure.
-- Dashboard reads the paid plan and shared monthly allowance (Free 100/month,
-  Pro 2,000/billing month), links to Stripe's customer
+- Dashboard reads the paid plan and shared monthly allowance (Starter US$5/500,
+  Pro US$19/5,000 per billing month; no free allowance), links to Stripe's customer
   portal and handles scheduled cancellation/payment problems. Key RPCs unchanged.
+- Both paid plans include advanced data. Starter is 10/min/key, Pro 30/min/key.
+  No active subscription means key creation is disabled and no auto-key is issued.
+  Checkout selection survives login/signup via nlt_checkout_plan. Additional usage
+  enquiries do not require a subscription. Backend paid-plans migration:
+  `20261015140000_mcp_paid_plans.sql`; both Stripe price IDs are required.
 - Paired backend: nightlife-mcp `feat/pro-billing`, migration
   `20261015090000_mcp_pro_billing.sql` and `20261015100000_mcp_monthly_allowances.sql`,
   dedicated `/billing/webhook`, Stripe Pro
