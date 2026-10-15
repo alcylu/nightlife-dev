@@ -1,0 +1,69 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Request more API usage — nightlife.dev" description="Ask about additional nightlife API and MCP request capacity.">
+  <main class="mx-auto max-w-2xl px-6 py-16">
+    <a href="/" class="text-sm text-primary hover:underline">&larr; nightlife.dev</a>
+    <h1 class="mb-4 mt-8 text-3xl font-bold">Need more API usage?</h1>
+    <p class="mb-8 leading-relaxed text-text-muted">Tell us what you’re building and how many requests you expect. We’ll check additional usage availability and email you about options. This is an enquiry—not a purchase, automatic overage charge, or guaranteed limit increase.</p>
+    <div id="request-status" role="status" aria-live="polite" class="mb-6 rounded-xl border border-border bg-bg-card p-5 text-sm text-text-muted">Checking your account…</div>
+    <div id="request-auth" class="hidden rounded-xl border border-border bg-bg-card p-6">
+      <p class="mb-4 text-text-muted">Sign in with a confirmed email so we can contact you about your request.</p>
+      <a href="/login" class="mr-4 inline-block text-primary hover:underline">Sign in</a>
+      <a href="/signup" class="inline-block text-primary hover:underline">Create a free account</a>
+      <p class="mt-4 text-sm text-text-muted">After signing in, return to this page or choose “Request more usage” in your dashboard.</p>
+    </div>
+    <form id="usage-form" class="hidden space-y-6">
+      <div><label for="contact-email" class="mb-2 block text-sm font-medium">Contact email</label><input id="contact-email" type="email" readonly class="w-full rounded-lg border border-border bg-bg-card p-3 text-text-muted" /><p class="mt-2 text-xs text-text-muted">Your verified account email. No API keys or payment details are needed.</p></div>
+      <div><label for="monthly-requests" class="mb-2 block text-sm font-medium">Expected total requests per month</label><input id="monthly-requests" type="number" min="1" max="100000000" step="1" required inputmode="numeric" placeholder="e.g. 10000" class="w-full rounded-lg border border-border bg-bg-card p-3" /></div>
+      <div><label for="website" class="mb-2 block text-sm font-medium">Website or app URL <span class="text-text-muted">(optional)</span></label><input id="website" type="url" maxlength="500" placeholder="https://example.com" class="w-full rounded-lg border border-border bg-bg-card p-3" /></div>
+      <div><label for="use-case" class="mb-2 block text-sm font-medium">What are you building?</label><textarea id="use-case" required minlength="10" maxlength="2000" rows="5" placeholder="Tell us how you’ll use the API, your launch timeline, and any capacity needs." class="w-full rounded-lg border border-border bg-bg-card p-3"></textarea></div>
+      <p class="text-xs leading-relaxed text-text-muted">Submitting sends your email and request details to the nightlife.dev team by email and LINE for manual review. Don’t include passwords, API keys, or sensitive customer information.</p>
+      <button id="usage-submit" type="submit" class="w-full rounded-lg bg-primary px-5 py-3 font-semibold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50">Ask about additional usage</button>
+    </form>
+    <p class="mt-8 text-sm text-text-muted">Prefer email? <a href="mailto:allen@nightlifetokyo.com?subject=Additional%20API%20usage" class="text-primary hover:underline">Contact us directly</a>. <a href="/dashboard" class="ml-2 text-primary hover:underline">Back to dashboard &rarr;</a></p>
+  </main>
+</Base>
+<script>
+  import { supabase } from "../lib/supabase";
+  import { billingRequest } from "../lib/billing";
+  const status = document.getElementById("request-status")!;
+  const form = document.getElementById("usage-form") as HTMLFormElement;
+  const button = document.getElementById("usage-submit") as HTMLButtonElement;
+  let requestId = crypto.randomUUID();
+  let previousPayload = "";
+  async function init() {
+    try {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error || !user?.email_confirmed_at || !user.email) {
+        status.textContent = "Please sign in to request additional usage.";
+        document.getElementById("request-auth")!.classList.remove("hidden"); return;
+      }
+      (document.getElementById("contact-email") as HTMLInputElement).value = user.email;
+      status.textContent = "Your request goes to our team for review. Your current plan stays unchanged.";
+      form.classList.remove("hidden");
+    } catch { status.textContent = "Unable to check your account. Refresh to retry, or contact us by email."; }
+  }
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    const payload = {
+      monthly_requests: Number((document.getElementById("monthly-requests") as HTMLInputElement).value),
+      website: (document.getElementById("website") as HTMLInputElement).value.trim(),
+      use_case: (document.getElementById("use-case") as HTMLTextAreaElement).value.trim(),
+    };
+    const fingerprint = JSON.stringify(payload);
+    if (previousPayload && previousPayload !== fingerprint) requestId = crypto.randomUUID();
+    previousPayload = fingerprint;
+    button.disabled = true; button.textContent = "Sending request…";
+    status.textContent = "Saving your request…";
+    try {
+      const result = await billingRequest<{ message: string }>("usage-request", { request_id: requestId, ...payload });
+      status.textContent = result.message;
+      form.classList.add("hidden");
+    } catch (error) {
+      status.textContent = error instanceof Error ? error.message : "Could not submit. Please retry.";
+      button.disabled = false; button.textContent = "Retry request";
+    }
+  });
+  init();
+</script>
