@@ -11,19 +11,21 @@ export interface PricingTier {
 
 export const pricing: PricingTier[] = [
   {
-    name: "Free",
-    price: "$0",
-    period: "forever",
-    description: "For experimentation and hobby projects.",
+    name: "Starter",
+    price: "$5",
+    period: "/ month",
+    description: "For testing advanced data and light integrations.",
     features: [
-      "100 requests / month, shared across keys",
-      "5 requests / minute per key",
+      "500 requests / month, shared across keys",
+      "10 requests / minute per key",
+      "Performer bios, profile images & social profiles",
+      "Venue social links",
       "Public MCP tools + REST API",
-      "Tokyo events",
+      "All supported cities",
       "Community support",
     ],
-    cta: "Get API Key",
-    ctaHref: "/signup",
+    cta: "Get Starter",
+    ctaHref: "/checkout?plan=starter&source=pricing",
   },
   {
     name: "Pro",
@@ -31,7 +33,7 @@ export const pricing: PricingTier[] = [
     period: "/ month",
     description: "For production apps and agents.",
     features: [
-      "2,000 requests / month, shared across keys",
+      "5,000 requests / month, shared across keys",
       "Performer bios, profile images & social profiles",
       "Venue social links",
       "Public MCP tools + REST API",
@@ -41,7 +43,7 @@ export const pricing: PricingTier[] = [
       "Hard cap — no surprise overage bills",
     ],
     cta: "Get Pro",
-    ctaHref: "/checkout?source=pricing",
+    ctaHref: "/checkout?plan=pro&source=pricing",
     highlighted: true,
   },
   {

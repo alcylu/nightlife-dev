@@ -3,6 +3,7 @@ import AuthPage from "../layouts/AuthPage.astro";
 ---
 
 <AuthPage title="Sign Up — nightlife.dev" heading="Create your account">
+  <p class="mb-5 text-sm text-text-muted">API access requires a paid plan: Starter US$5/month or Pro US$19/month. Creating an account does not start a subscription.</p>
   <form id="signup-form" class="space-y-4">
     <div>
       <label for="email" class="mb-1 block text-sm font-medium">Email</label>
@@ -83,7 +84,7 @@ import AuthPage from "../layouts/AuthPage.astro";
       password: passwordInput.value,
       options: {
         emailRedirectTo: `${location.origin}/dashboard`,
-        data: { signup_app: "nightlife-dev", signup_source: proIntent ? "pro-checkout" : "free" },
+        data: { signup_app: "nightlife-dev", signup_source: proIntent ? "paid-checkout" : "account" },
       },
     });
 

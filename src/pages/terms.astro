@@ -1,17 +1,17 @@
 ---
 import Base from "../layouts/Base.astro";
 ---
-<Base title="Subscription terms — nightlife.dev" description="Terms for the nightlife.dev Pro API subscription.">
+<Base title="Subscription terms — nightlife.dev" description="Terms for Starter and Pro API subscriptions.">
   <main class="mx-auto max-w-2xl space-y-6 px-6 py-16 leading-relaxed">
     <a href="/" class="text-primary hover:underline">&larr; nightlife.dev</a>
-    <h1 class="text-3xl font-bold">Pro subscription terms</h1>
-    <p class="text-text-muted">Pro costs US$19 per month. Stripe processes your payment and automatically renews the subscription monthly until you cancel. The price and any applicable tax are shown before payment.</p>
-    <p class="text-text-muted">Pro includes 2,000 requests per monthly billing period, shared across up to 3 API keys, with 30 requests per minute per key. Free accounts include 100 requests per calendar month, resetting at midnight UTC on the first day, with 5 requests per minute per key. Pro allowances reset at the start of each paid billing period. Unused requests do not roll over. At the allowance limit, data requests stop; no automatic overage charges apply.</p>
+    <h1 class="text-3xl font-bold">API subscription terms</h1>
+    <p class="text-text-muted">Starter costs US$5 per month and Pro costs US$19 per month. Stripe processes your payment and automatically renews the subscription monthly until you cancel. The price and any applicable tax are shown before payment.</p>
+    <p class="text-text-muted">Starter includes 500 requests per paid billing period and 10 requests per minute per key. Pro includes 5,000 requests per paid billing period and 30 requests per minute per key. Monthly allowances are shared across up to 3 API keys and reset at the start of each billing period. There is no free API tier. Unused requests do not roll over. At the allowance limit, data requests stop; no automatic overage charges apply. You can request additional capacity separately.</p>
     <p class="text-text-muted">Each authenticated REST data request or MCP tool call counts as one request, regardless of the number of results returned. MCP connection setup, tool listing, notifications, and keep-alives do not use your monthly allowance. API access remains subject to available data, service availability, and rate limits. Event details can change; confirm booking and admission information with the venue.</p>
-    <p class="text-text-muted">Pro also includes performer biographies, primary profile images and social profiles, plus venue social links where available. Coverage varies; missing profile data may be null or empty. Demand indicators, follower counts, rankings and VIP pricing are not included in Free or Pro. Profile enrichment requires an active paid subscription and ends when Pro access ends.</p>
-    <p class="text-text-muted">Cancel through “Manage billing” in your dashboard. Cancellation takes effect at the end of the paid billing period; Pro remains available until then. Failed or overdue payments may return your account to Free limits.</p>
+    <p class="text-text-muted">Both Starter and Pro include performer biographies, primary profile images and social profiles, plus venue social links where available. Coverage varies; missing profile data may be null or empty. Demand indicators, follower counts, rankings and VIP pricing are internal-only and are not included in either plan.</p>
+    <p class="text-text-muted">Change plans or cancel through “Manage billing” in your dashboard. Downgrades and cancellations take effect at the end of the paid billing period. Upgrades may be prorated, as shown by Stripe, and the larger allowance becomes available after payment is confirmed. Switching plans mid-period does not reset usage. Expired subscriptions and failed or overdue payments may stop API access; there is no unpaid fallback allowance.</p>
     <p class="text-text-muted">For billing mistakes, refund requests, or support, contact <a class="text-primary underline" href="mailto:allen@nightlifetokyo.com">allen@nightlifetokyo.com</a>. Refunds are reviewed individually, subject to applicable law.</p>
     <p class="text-text-muted">We store your account ID, Stripe customer and subscription references, subscription status, checkout source, and checkout/payment timestamps to provide access and measure checkout conversion. Card details are handled by Stripe and are not stored in the API database.</p>
-    <a href="/checkout" class="inline-block text-primary hover:underline">Back to Pro &rarr;</a>
+    <a href="/checkout" class="inline-block text-primary hover:underline">Choose a plan &rarr;</a>
   </main>
 </Base>
