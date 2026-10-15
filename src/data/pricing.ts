@@ -57,7 +57,7 @@ export const pricing: PricingTier[] = [
       "Custom SLA",
       "On-prem option",
     ],
-    cta: "Contact Us",
-    ctaHref: "mailto:allen@nightlifetokyo.com",
+    cta: "Request more usage",
+    ctaHref: "/request-usage",
   },
 ];

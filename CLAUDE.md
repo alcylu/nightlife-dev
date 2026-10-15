@@ -150,6 +150,23 @@ Added on 2026-03-02 (password reset):
 - ~~Supabase redirect URLs for reset~~ ✅ 3 URLs added via Management API
 
 ## Pending
+
+## Additional usage requests
+
+`/request-usage` collects expected total monthly requests, optional website and
+use case from a confirmed, signed-in account. The backend uses the verified
+account email, not a browser-supplied recipient/email. Pricing, Enterprise,
+checkout and dashboard link here. Submission sends an authenticated POST to
+`/billing/usage-request`; saved requests queue email and LINE to Allen.
+The form explains manual review and no automatic quota/billing changes, keeps
+its request UUID on retry, and displays saved/error/signed-out states. Current
+Free/Pro prices and limits are unchanged by this feature.
+
+Regression recipe: signed-out shows login/signup links; verified account shows
+email read-only; submit 10,000 requests/month + a use case; 503 retains the form
+and retry UUID; 202 hides the form and confirms receipt, not guaranteed delivery.
+Check 390px and desktop layouts. Backend tests cover forged email/recipients,
+validation, daily caps, deduplication, queue leasing and per-channel retries.
 - GitHub star count (currently placeholder)
 
 ## Pro checkout (prepared 2026-10-15)
