@@ -73,7 +73,7 @@ All auth/dashboard is **client-side JavaScript** (Astro static output, no SSR).
 - **Max 3 active keys**: create button disabled at limit
 - **Key reveal modal**: monospace display, copy button, "won't be shown again" warning
 - **Usage**: today's count / 100 quota bar, last 30 days total
-- **Plan banner**: "Free Plan — 100 req/day" + "Upgrade" mailto
+- **Plan banner**: account-wide monthly allowance + checkout / Manage billing
 - **Sign out**: clears session → /login
 
 ### Supabase RPCs called
@@ -151,3 +151,36 @@ Added on 2026-03-02 (password reset):
 
 ## Pending
 - GitHub star count (currently placeholder)
+
+## Pro checkout (prepared 2026-10-15)
+
+Approved Pro enrichment: performer bios, primary profile images and social
+profiles, plus venue socials where available. Demand/followers/rankings/VIP
+pricing remain internal-only. Verified billing entitlements are enforced by
+the API, not this client. CI builds each PR/push.
+
+- `/checkout`: US$19/month Pro offer; confirmed Supabase account → Stripe-hosted
+  subscription checkout. Pricing CTA and dashboard Upgrade link target this page.
+- The Supabase browser client uses the supported `sb_publishable_*` public key;
+  the retired legacy JWT returns 401 even on auth/settings. Launch regression:
+  GET `/auth/v1/settings` with the public key must return 200; unauthenticated
+  POST `get_user_usage_summary` must reach Postgres (not "Legacy API keys are
+  disabled"). Browser signup/login and authenticated key RPCs must work.
+- `src/lib/billing.ts`: authenticated calls to `https://api.nightlife.dev/billing`;
+  `PUBLIC_BILLING_API_URL` can override it for isolated tests. Signup intent and
+  source survive login/email confirmation using localStorage; all redirects are
+  fixed destinations, and Stripe URL hosts are checked before navigation.
+- `/terms`: renewal, limits, cancellation, support and billing data disclosure.
+- Dashboard reads the paid plan and shared monthly allowance (Free 100/month,
+  Pro 2,000/billing month), links to Stripe's customer
+  portal and handles scheduled cancellation/payment problems. Key RPCs unchanged.
+- Paired backend: nightlife-mcp `feat/pro-billing`, migration
+  `20261015090000_mcp_pro_billing.sql` and `20261015100000_mcp_monthly_allowances.sql`,
+  dedicated `/billing/webhook`, Stripe Pro
+  price/portal/signing-secret configuration. VIP billing is independent.
+- Signup tags `signup_app=nightlife-dev` and `signup_source` for aggregate reports.
+- `get_user_monthly_usage()` returns the account allowance/count/reset. Quotas
+  are shared across three keys; key management RPC contracts remain unchanged.
+- Launch order and conversion report: nightlife-mcp `docs/pro-billing-rollout.md`.
+- Visual QA: desktop 1440px + mobile 390px; fixture-backed checks cover signed-out,
+  cancelled checkout, paid confirmation and cancelled-user resubscription.

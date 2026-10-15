@@ -44,24 +44,26 @@ import Base from "../layouts/Base.astro";
         class="mb-8 flex items-center justify-between rounded-xl border border-border bg-bg-card p-4"
       >
         <div>
-          <span class="text-sm font-medium">Free Plan</span>
-          <span class="ml-2 text-sm text-text-muted">100 requests / day · 20 requests / minute</span>
+          <span id="plan-name" class="text-sm font-medium">Your plan</span>
+          <span id="plan-limits" class="ml-2 text-sm text-text-muted">Loading limits…</span>
         </div>
         <a
-          href="mailto:allen@nightlifetokyo.com?subject=Upgrade to Pro"
+          id="billing-action"
+          href="/checkout?source=dashboard"
           class="rounded-lg border border-primary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-white"
         >
           Upgrade
         </a>
       </div>
+      <p id="billing-message" role="status" aria-live="polite" class="mb-6 hidden text-sm text-text-muted"></p>
 
       <!-- Usage -->
       <div class="mb-8 grid gap-4 sm:grid-cols-2">
         <div class="rounded-xl border border-border bg-bg-card p-5">
-          <p class="mb-1 text-sm text-text-muted">Today's usage</p>
+          <p class="mb-1 text-sm text-text-muted">Monthly allowance</p>
           <div class="mb-2 flex items-baseline gap-2">
             <span id="usage-today" class="text-2xl font-bold">--</span>
-            <span class="text-sm text-text-muted">/ 100</span>
+            <span id="usage-quota" class="text-sm text-text-muted"></span>
           </div>
           <div class="h-2 overflow-hidden rounded-full bg-bg">
             <div
@@ -71,10 +73,10 @@ import Base from "../layouts/Base.astro";
             >
             </div>
           </div>
-          <p id="per-minute-info" class="mt-2 text-xs text-text-muted">Per-minute limit: 20 req/min</p>
+          <p id="per-minute-info" class="mt-2 text-xs text-text-muted">Loading allowance reset time…</p>
         </div>
         <div class="rounded-xl border border-border bg-bg-card p-5">
-          <p class="mb-1 text-sm text-text-muted">Last 30 days</p>
+          <p class="mb-1 text-sm text-text-muted">Last 30 days · all authenticated traffic</p>
           <span id="usage-30d" class="text-2xl font-bold">--</span>
           <span class="ml-1 text-sm text-text-muted">requests</span>
         </div>
@@ -192,6 +194,7 @@ import Base from "../layouts/Base.astro";
 
 <script>
   import { supabase } from "../lib/supabase";
+  import { billingRequest, consumeCheckoutIntent, redirectToStripe, type BillingStatus } from "../lib/billing";
 
   // --- DOM refs ---
   const loadingEl = document.getElementById("loading")!;
@@ -222,7 +225,7 @@ import Base from "../layouts/Base.astro";
   const nameCancelBtn = document.getElementById("name-cancel-btn")!;
   const nameSubmitBtn = document.getElementById("name-submit-btn") as HTMLButtonElement;
 
-  const QUOTA = 100;
+  let quota = 100;
   const MAX_KEYS = 3;
   let isFirstLoad = true;
 
@@ -237,12 +240,58 @@ import Base from "../layouts/Base.astro";
       return;
     }
 
+    if (consumeCheckoutIntent()) {
+      window.location.href = "/checkout";
+      return;
+    }
+
     userEmailEl.textContent = session.user.email ?? "";
     loadingEl.classList.add("hidden");
     dashboardEl.classList.remove("hidden");
 
+    await loadBilling();
     await loadDashboard();
   }
+
+  const billingAction = document.getElementById("billing-action") as HTMLAnchorElement;
+  const billingMessage = document.getElementById("billing-message")!;
+  let canManageBilling = false;
+  async function loadBilling() {
+    try {
+      const billing = await billingRequest<BillingStatus>("status");
+      document.getElementById("plan-name")!.textContent = billing.plan === "pro" ? "Pro Plan" : "Free Plan";
+      document.getElementById("plan-limits")!.textContent = `${billing.monthly_quota.toLocaleString()} requests / month, shared · ${billing.per_minute_quota} requests / minute per key`;
+      canManageBilling = billing.can_manage;
+      if (canManageBilling) {
+        billingAction.textContent = "Manage billing";
+        billingAction.href = "#billing";
+      }
+      if (billing.cancel_at_period_end && billing.current_period_end) {
+        billingMessage.textContent = `Your subscription ends ${new Date(billing.current_period_end).toLocaleDateString()}. Manage billing to change your cancellation.`;
+        billingMessage.classList.remove("hidden");
+      } else if (["past_due", "unpaid", "incomplete", "paused"].includes(billing.status)) {
+        billingMessage.textContent = "Your subscription needs attention. Open Manage billing to review your payment.";
+        billingMessage.classList.remove("hidden");
+      }
+    } catch {
+      document.getElementById("plan-name")!.textContent = "API access";
+      document.getElementById("plan-limits")!.textContent = "Limits shown below reflect your current API keys.";
+      billingMessage.textContent = "Billing details are temporarily unavailable. Refresh to retry.";
+      billingMessage.classList.remove("hidden");
+    }
+  }
+  billingAction.addEventListener("click", async (event) => {
+    if (!canManageBilling) return;
+    event.preventDefault();
+    billingAction.textContent = "Opening billing…";
+    try {
+      const result = await billingRequest<{ url: string }>("portal", {});
+      redirectToStripe(result.url, true);
+    } catch (error) {
+      billingMessage.textContent = error instanceof Error ? error.message : "Could not open billing.";
+      billingMessage.classList.remove("hidden"); billingAction.textContent = "Manage billing";
+    }
+  });
 
   // --- Load keys + usage ---
   async function loadDashboard() {
@@ -277,36 +326,40 @@ import Base from "../layouts/Base.astro";
       return;
     }
 
+
     isFirstLoad = false;
     renderKeys(data);
   }
 
   async function loadUsage() {
+    const { data: monthly, error: monthlyError } = await supabase.rpc("get_user_monthly_usage");
+    if (monthlyError || !monthly?.[0]) {
+      usageTodayEl.textContent = "Unavailable";
+      document.getElementById("usage-quota")!.textContent = "";
+      document.getElementById("per-minute-info")!.textContent = "Refresh to retry loading your allowance.";
+    } else {
+      const m = monthly[0];
+      quota = m.monthly_quota;
+      usageTodayEl.textContent = String(m.monthly_count);
+      document.getElementById("usage-quota")!.textContent = `/ ${quota.toLocaleString()} shared across all keys`;
+      document.getElementById("per-minute-info")!.textContent = `Resets ${new Date(m.monthly_reset_at).toLocaleString()}`;
+      const pct = Math.min(m.monthly_count / quota * 100, 100);
+      usageBarEl.style.width = `${pct}%`;
+      usageBarEl.classList.toggle("bg-red-500", pct >= 90);
+    }
     const { data } = await supabase.rpc("get_user_usage_summary");
     if (!data || data.length === 0) {
-      usageTodayEl.textContent = "0";
       usage30dEl.textContent = "0";
       return;
     }
 
-    const todayTotal = data.reduce(
-      (sum: number, k: any) => sum + (k.today_usage || 0),
-      0,
-    );
     const thirtyDayTotal = data.reduce(
       (sum: number, k: any) => sum + (k.last_30_days_usage || 0),
       0,
     );
 
-    usageTodayEl.textContent = String(todayTotal);
     usage30dEl.textContent = String(thirtyDayTotal);
 
-    const pct = Math.min((todayTotal / QUOTA) * 100, 100);
-    usageBarEl.style.width = `${pct}%`;
-    if (pct >= 90) {
-      usageBarEl.classList.remove("bg-primary");
-      usageBarEl.classList.add("bg-red-500");
-    }
   }
 
   function renderKeys(keys: any[]) {

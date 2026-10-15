@@ -56,6 +56,13 @@ import AuthPage from "../layouts/AuthPage.astro";
 
 <script>
   import { supabase } from "../lib/supabase";
+  import { rememberCheckout } from "../lib/billing";
+
+  const proIntent = new URLSearchParams(location.search).get("next") === "checkout";
+  if (proIntent) {
+    rememberCheckout();
+    document.querySelector<HTMLAnchorElement>('a[href="/login"]')!.href = "/login?next=checkout";
+  }
 
   const form = document.getElementById("signup-form") as HTMLFormElement;
   const emailInput = document.getElementById("email") as HTMLInputElement;
@@ -74,6 +81,10 @@ import AuthPage from "../layouts/AuthPage.astro";
     const { error } = await supabase.auth.signUp({
       email: emailInput.value,
       password: passwordInput.value,
+      options: {
+        emailRedirectTo: `${location.origin}/dashboard`,
+        data: { signup_app: "nightlife-dev", signup_source: proIntent ? "pro-checkout" : "free" },
+      },
     });
 
     if (error) {
