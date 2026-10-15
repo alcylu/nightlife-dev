@@ -32,6 +32,8 @@ export const pricing: PricingTier[] = [
     description: "For production apps and agents.",
     features: [
       "2,000 requests / month, shared across keys",
+      "Performer bios, profile images & social profiles",
+      "Venue social links",
       "Public MCP tools + REST API",
       "All supported cities",
       "Priority support",

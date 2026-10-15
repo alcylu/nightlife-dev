@@ -154,6 +154,11 @@ Added on 2026-03-02 (password reset):
 
 ## Pro checkout (prepared 2026-10-15)
 
+Approved Pro enrichment: performer bios, primary profile images and social
+profiles, plus venue socials where available. Demand/followers/rankings/VIP
+pricing remain internal-only. Verified billing entitlements are enforced by
+the API, not this client. CI builds each PR/push.
+
 - `/checkout`: US$19/month Pro offer; confirmed Supabase account → Stripe-hosted
   subscription checkout. Pricing CTA and dashboard Upgrade link target this page.
 - `src/lib/billing.ts`: authenticated calls to `https://api.nightlife.dev/billing`;
