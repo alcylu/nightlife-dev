@@ -52,6 +52,12 @@ import AuthPage from "../layouts/AuthPage.astro";
 
 <script>
   import { supabase } from "../lib/supabase";
+  import { rememberCheckout } from "../lib/billing";
+  const proIntent = new URLSearchParams(location.search).get("next") === "checkout";
+  if (proIntent) {
+    rememberCheckout();
+    document.querySelector<HTMLAnchorElement>('a[href="/signup"]')!.href = "/signup?next=checkout";
+  }
 
   const form = document.getElementById("login-form") as HTMLFormElement;
   const emailInput = document.getElementById("email") as HTMLInputElement;
@@ -76,7 +82,7 @@ import AuthPage from "../layouts/AuthPage.astro";
       submitBtn.disabled = false;
       submitBtn.textContent = "Sign in";
     } else {
-      window.location.href = "/dashboard";
+      window.location.href = proIntent ? "/checkout" : "/dashboard";
     }
   });
 </script>

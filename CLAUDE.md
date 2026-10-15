@@ -151,3 +151,22 @@ Added on 2026-03-02 (password reset):
 
 ## Pending
 - GitHub star count (currently placeholder)
+
+## Pro checkout (prepared 2026-10-15)
+
+- `/checkout`: US$29/month Pro offer; confirmed Supabase account → Stripe-hosted
+  subscription checkout. Pricing CTA and dashboard Upgrade link target this page.
+- `src/lib/billing.ts`: authenticated calls to `https://api.nightlife.dev/billing`;
+  `PUBLIC_BILLING_API_URL` can override it for isolated tests. Signup intent and
+  source survive login/email confirmation using localStorage; all redirects are
+  fixed destinations, and Stripe URL hosts are checked before navigation.
+- `/terms`: renewal, limits, cancellation, support and billing data disclosure.
+- Dashboard reads the paid plan and per-key limits, links to Stripe's customer
+  portal and handles scheduled cancellation/payment problems. Key RPCs unchanged.
+- Paired backend: nightlife-mcp `feat/pro-billing`, migration
+  `20261015090000_mcp_pro_billing.sql`, dedicated `/billing/webhook`, Stripe Pro
+  price/portal/signing-secret configuration. VIP billing is independent.
+- Signup tags `signup_app=nightlife-dev` and `signup_source` for aggregate reports.
+- Launch order and conversion report: nightlife-mcp `docs/pro-billing-rollout.md`.
+- Visual QA: desktop 1440px + mobile 390px; fixture-backed checks cover signed-out,
+  cancelled checkout, paid confirmation and cancelled-user resubscription.

@@ -17,7 +17,7 @@ export const pricing: PricingTier[] = [
     description: "For experimentation and hobby projects.",
     features: [
       "100 requests / day",
-      "All 3 tools",
+      "Public MCP tools + REST API",
       "Tokyo events",
       "Community support",
     ],
@@ -31,13 +31,13 @@ export const pricing: PricingTier[] = [
     description: "For production apps and agents.",
     features: [
       "1,000 requests / day",
-      "All 3 tools",
+      "Public MCP tools + REST API",
       "All supported cities",
       "Priority support",
-      "Webhooks (coming soon)",
+      "60 requests / minute",
     ],
-    cta: "Get API Key",
-    ctaHref: "/signup",
+    cta: "Get Pro",
+    ctaHref: "/checkout?source=pricing",
     highlighted: true,
   },
   {
@@ -47,7 +47,7 @@ export const pricing: PricingTier[] = [
     description: "For high-volume and custom integrations.",
     features: [
       "Unlimited requests",
-      "All 3 tools",
+      "Public MCP tools + REST API",
       "All supported cities",
       "Dedicated support",
       "Custom SLA",
