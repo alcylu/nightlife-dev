@@ -57,6 +57,24 @@ nightlife-dev/
 ```
 
 ## Auth + Dashboard
+
+### Conversion fixes and optional analytics (2026-10-22)
+
+Production Supabase currently auto-confirms email signup. Signup must inspect
+`data.session`: an immediate session goes to the chosen Starter/Pro checkout or
+dashboard; only no-session responses show “check your email”. Do not change the
+shared auth confirmation configuration for this developer site. Plan selection
+is carried in auth links as well as localStorage, and storage/network failures
+must not strand the form. Regression: `npm test` covers both signup outcomes.
+
+`Analytics.astro` runs on public/auth pages, only after explicit opt-in. Daily
+tab UUID lives in sessionStorage; consent is a local preference, not a tracking
+identifier. DNT/GPC, webdriver, local previews and storage failures disable it.
+It sends fixed page/event/source/plan labels to `/site-analytics/event`, never
+form contents or full URLs. `/privacy` explains retention and allows opt-out.
+Backend table/RPC is private; analytics is not proof of people or payment. Both
+build CI and local checks run frontend regression tests. Landing examples are
+explicitly illustrative, not actual artist appearances or current availability.
 All auth/dashboard is **client-side JavaScript** (Astro static output, no SSR).
 
 ### Auth flow

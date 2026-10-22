@@ -196,6 +196,7 @@ import Base from "../layouts/Base.astro";
 
 <script>
   import { supabase } from "../lib/supabase";
+  import { track } from "../lib/analytics";
   import { billingRequest, consumeCheckoutIntent, redirectToStripe, type BillingStatus } from "../lib/billing";
 
   // --- DOM refs ---
@@ -243,6 +244,7 @@ import Base from "../layouts/Base.astro";
       return;
     }
 
+    if (session.user.email_confirmed_at) track("email_confirmed");
     if (consumeCheckoutIntent()) {
       window.location.href = `/checkout?plan=${localStorage.getItem("nlt_checkout_plan") === "starter" ? "starter" : "pro"}`;
       return;
