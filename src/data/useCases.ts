@@ -8,25 +8,25 @@ export const useCases: UseCase[] = [
   {
     title: "Hotel Concierge AI",
     description:
-      "Give your hotel's AI assistant real-time knowledge of what's happening tonight. Guests ask, your agent answers with live events.",
+      "Answer “Where can I hear house in Shibuya tonight?” with a shortlist of events, venue details and links guests can follow.",
     icon: "🏨",
   },
   {
     title: "Travel Planning Agents",
     description:
-      "Build travel agents that include nightlife in itineraries. Search by genre, area, or date range across supported cities.",
+      "Add an evening plan to a Tokyo itinerary. Filter by date, area and genre, then show published admission information and event links.",
     icon: "✈️",
   },
   {
     title: "Nightlife Apps",
     description:
-      "Power your nightlife discovery app with structured event data. Venues, lineups, genres, prices -- all via MCP.",
+      "Build a “This weekend” section for your website with structured events, lineups, genres and venue links through REST or MCP.",
     icon: "🎵",
   },
   {
-    title: "Venue Analytics",
+    title: "Artist & Venue Profiles",
     description:
-      "Analyze event patterns, pricing trends, and genre popularity across venues and cities for market research.",
+      "Enrich event cards with performer bios, profile images, social profiles and venue social links where available. Included with Starter and Pro; no audience rankings or demand metrics.",
     icon: "📊",
   },
 ];

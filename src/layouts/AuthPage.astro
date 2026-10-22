@@ -1,4 +1,5 @@
 ---
+import Analytics from "../components/Analytics.astro";
 interface Props {
   title: string;
   heading: string;
@@ -26,6 +27,7 @@ const { title, heading } = Astro.props;
     class="flex min-h-screen items-center justify-center bg-bg px-4 font-sans text-text antialiased"
   >
     <div class="w-full max-w-md">
+      <Analytics />
       <div class="mb-8 text-center">
         <a href="/" class="inline-block text-2xl font-bold tracking-tight">
           <span class="text-primary">nightlife</span><span class="text-text-muted">.dev</span>

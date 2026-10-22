@@ -58,11 +58,13 @@ import AuthPage from "../layouts/AuthPage.astro";
 <script>
   import { supabase } from "../lib/supabase";
   import { rememberCheckout } from "../lib/billing";
+  import { track } from "../lib/analytics";
+  import { signupOutcome } from "../lib/signupOutcome";
 
   const proIntent = new URLSearchParams(location.search).get("next") === "checkout";
   if (proIntent) {
     rememberCheckout();
-    document.querySelector<HTMLAnchorElement>('a[href="/login"]')!.href = "/login?next=checkout";
+    document.querySelector<HTMLAnchorElement>('a[href="/login"]')!.href = `/login?next=checkout&plan=${new URLSearchParams(location.search).get("plan") === "pro" ? "pro" : "starter"}`;
   }
 
   const form = document.getElementById("signup-form") as HTMLFormElement;
@@ -79,7 +81,9 @@ import AuthPage from "../layouts/AuthPage.astro";
     submitBtn.disabled = true;
     submitBtn.textContent = "Creating account...";
 
-    const { error } = await supabase.auth.signUp({
+    track("signup_attempt");
+    try {
+    const { data, error } = await supabase.auth.signUp({
       email: emailInput.value,
       password: passwordInput.value,
       options: {
@@ -89,13 +93,30 @@ import AuthPage from "../layouts/AuthPage.astro";
     });
 
     if (error) {
+      track("signup_error");
       errorMsg.textContent = error.message;
       errorMsg.classList.remove("hidden");
       submitBtn.disabled = false;
       submitBtn.textContent = "Create account";
     } else {
+      track("signup_submitted");
+      let selected = new URLSearchParams(location.search).get("plan");
+      if (!selected) { try { selected = localStorage.getItem("nlt_checkout_plan"); } catch {} }
+      const outcome = signupOutcome(!!data.session, proIntent, selected);
+      if (outcome.kind === "redirect") {
+        track("email_confirmed");
+        window.location.href = outcome.url;
+        return;
+      }
       successMsg.classList.remove("hidden");
       form.classList.add("hidden");
+    }
+    } catch {
+      track("signup_error");
+      errorMsg.textContent = "Could not connect. Please try again; if you already received a confirmation email, use that link first.";
+      errorMsg.classList.remove("hidden");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Create account";
     }
   });
 </script>

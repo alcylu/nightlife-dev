@@ -1,89 +1,25 @@
 ---
-const terminalOutput = `<span class="text-gray-400">{</span>
-  <span class="text-violet-400">"city"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"tokyo"</span><span class="text-gray-400">,</span>
-  <span class="text-violet-400">"events"</span><span class="text-gray-400">:</span> <span class="text-gray-400">[</span>
-    <span class="text-gray-400">{</span>
-      <span class="text-violet-400">"name"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"WOMB FRIDAY"</span><span class="text-gray-400">,</span>
-      <span class="text-violet-400">"venue"</span><span class="text-gray-400">:</span> <span class="text-gray-400">{</span> <span class="text-violet-400">"name"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"WOMB"</span><span class="text-gray-400">,</span> <span class="text-violet-400">"area"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"Shibuya"</span> <span class="text-gray-400">}</span><span class="text-gray-400">,</span>
-      <span class="text-violet-400">"performers"</span><span class="text-gray-400">:</span> <span class="text-gray-400">[</span><span class="text-emerald-400">"DJ NOBU"</span><span class="text-gray-400">,</span> <span class="text-emerald-400">"KEN ISHII"</span><span class="text-gray-400">]</span><span class="text-gray-400">,</span>
-      <span class="text-violet-400">"genres"</span><span class="text-gray-400">:</span> <span class="text-gray-400">[</span><span class="text-emerald-400">"Techno"</span><span class="text-gray-400">,</span> <span class="text-emerald-400">"House"</span><span class="text-gray-400">]</span><span class="text-gray-400">,</span>
-      <span class="text-violet-400">"price"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"¥3,500"</span>
-    <span class="text-gray-400">}</span><span class="text-gray-400">,</span>
-    <span class="text-gray-400">{</span>
-      <span class="text-violet-400">"name"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"AGEHA SATURDAY"</span><span class="text-gray-400">,</span>
-      <span class="text-violet-400">"venue"</span><span class="text-gray-400">:</span> <span class="text-gray-400">{</span> <span class="text-violet-400">"name"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"ageHa"</span><span class="text-gray-400">,</span> <span class="text-violet-400">"area"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"Shin-Kiba"</span> <span class="text-gray-400">}</span><span class="text-gray-400">,</span>
-      <span class="text-violet-400">"performers"</span><span class="text-gray-400">:</span> <span class="text-gray-400">[</span><span class="text-emerald-400">"AMELIE LENS"</span><span class="text-gray-400">]</span><span class="text-gray-400">,</span>
-      <span class="text-violet-400">"genres"</span><span class="text-gray-400">:</span> <span class="text-gray-400">[</span><span class="text-emerald-400">"Techno"</span><span class="text-gray-400">]</span><span class="text-gray-400">,</span>
-      <span class="text-violet-400">"price"</span><span class="text-gray-400">:</span> <span class="text-emerald-400">"¥4,000"</span>
-    <span class="text-gray-400">}</span>
-  <span class="text-gray-400">]</span>
-<span class="text-gray-400">}</span>`;
+const sample = JSON.stringify({event_id:"550e8400-e29b-41d4-a716-446655440000",name:"Example Tokyo club night",date:"2026-11-07T14:00:00Z",service_date:"2026-11-07",venue:{id:"example-venue",name:"Example venue",area:"Shibuya"},performers:["Example artist"],genres:["House"],price:"See event for admission",flyer_url:null,event_media:[],nlt_url:"https://nightlifetokyo.com"},null,2);
 ---
-
 <section class="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
-  <!-- Gradient background -->
-  <div
-    class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(139,92,246,0.15)_0%,_transparent_50%)]"
-  >
-  </div>
-
+  <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(139,92,246,0.15)_0%,_transparent_50%)]"></div>
   <div class="relative mx-auto max-w-6xl px-6">
     <div class="grid items-center gap-12 lg:grid-cols-2">
-      <!-- Left: Copy -->
       <div>
-        <div
-          class="mb-6 inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 text-sm text-text-muted"
-        >
-          <span class="inline-block h-2 w-2 rounded-full bg-secondary"></span>
-          Open Source &middot; MCP Protocol
-        </div>
-
-        <h1 class="mb-6 text-3xl leading-tight font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
-          The first nightlife<br />
-          discovery
-          <span
-            class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
-            >MCP server</span
-          >
-        </h1>
-
-        <p class="mb-8 max-w-lg text-lg text-text-muted">
-          Give your AI agents real-time access to nightlife events in Tokyo and
-          beyond. Search by city, date, genre, or area -- structured data, zero
-          scraping.
-        </p>
-
+        <span class="mb-6 inline-flex rounded-full border border-border px-4 py-1.5 text-sm text-text-muted">REST API + MCP · Built in Tokyo</span>
+        <h1 class="mb-6 text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl">Tokyo nightlife,<br /><span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">ready for your app.</span></h1>
+        <p class="mb-6 max-w-lg text-lg text-text-muted">Help your guests find tonight’s events, add nightlife to a travel itinerary, or power your website’s weekend guide. Get structured events, venues and performer profiles—without building a scraper.</p>
+        <p class="mb-8 text-sm text-text-muted">Starter: US$5/month for 500 requests. Pro: US$19/month for 5,000. Both include advanced profiles where available. No free API tier.</p>
         <div class="flex flex-wrap gap-4">
-          <a
-            href="#connect"
-            class="rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-hover"
-          >
-            Get Started
-          </a>
-          <a
-            href="https://github.com/alcylu/nightlife-mcp"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="rounded-lg border border-border px-6 py-3 font-medium text-text transition-colors hover:border-border-hover hover:bg-bg-card"
-          >
-            View on GitHub
-          </a>
+          <a href="/checkout?plan=starter&source=hero" class="rounded-lg bg-primary px-6 py-3 font-medium text-white hover:bg-primary-hover">Start with 500 requests — US$5</a>
+          <a href="https://api.nightlife.dev/api/v1/docs" class="rounded-lg border border-border px-6 py-3 font-medium hover:border-border-hover">Explore the API docs</a>
         </div>
+        <p class="mt-5 text-sm text-text-muted">Monthly billing. Cancel anytime. Hard caps, no surprise overage charges.</p>
       </div>
-
-      <!-- Right: Terminal preview -->
-      <div
-        class="min-w-0 max-w-full rounded-xl border border-border bg-bg-card shadow-2xl shadow-primary/5"
-      >
-        <div class="flex items-center gap-2 border-b border-border px-4 py-3">
-          <span class="h-3 w-3 rounded-full bg-[#ff5f56]"></span>
-          <span class="h-3 w-3 rounded-full bg-[#ffbd2e]"></span>
-          <span class="h-3 w-3 rounded-full bg-[#27c93f]"></span>
-          <span class="ml-3 text-xs text-text-muted font-mono">get_tonight</span>
-        </div>
-        <pre
-          class="overflow-x-auto p-5 text-sm leading-relaxed font-mono"
-          ><code set:html={terminalOutput} /></pre>
+      <div class="min-w-0 max-w-full rounded-xl border border-border bg-bg-card shadow-2xl shadow-primary/5">
+        <div class="border-b border-border px-4 py-3 font-mono text-xs text-text-muted">get_tonight → one event from the results</div>
+        <pre class="max-h-[540px] overflow-auto p-5 font-mono text-xs leading-relaxed text-secondary sm:text-sm"><code>{sample}</code></pre>
+        <p class="border-t border-border px-5 py-4 text-xs text-text-muted">Illustrative response shape—not a live event, artist appearance or availability claim. Use the API for current listings.</p>
       </div>
     </div>
   </div>

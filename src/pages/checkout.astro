@@ -45,17 +45,21 @@ import Base from "../layouts/Base.astro";
 
 <script>
   import { supabase } from "../lib/supabase";
+  import { track } from "../lib/analytics";
   import { billingRequest, rememberCheckout, redirectToStripe, type BillingStatus } from "../lib/billing";
   const button = document.getElementById("checkout-btn") as HTMLButtonElement;
   const status = document.getElementById("status")!;
   const auth = document.getElementById("auth-actions")!;
   const dashboard = document.getElementById("dashboard-link")!;
   const params = new URLSearchParams(location.search);
-  const source = params.get("source") || localStorage.getItem("nlt_checkout_source") || "direct";
-  const selected = params.get("plan") || localStorage.getItem("nlt_checkout_plan") || "starter";
+  let storedSource: string | null = null, storedPlan: string | null = null;
+  try { storedSource=localStorage.getItem("nlt_checkout_source");storedPlan=localStorage.getItem("nlt_checkout_plan"); } catch {}
+  const source = params.get("source") || storedSource || "direct";
+  const selected = params.get("plan") || storedPlan || "starter";
   const plan = selected === "pro" ? "pro" : "starter";
   const amount = plan === "pro" ? 1900 : 500;
-  localStorage.setItem("nlt_checkout_plan",plan);
+  try { localStorage.setItem("nlt_checkout_plan",plan); } catch {}
+  for (const [id, path] of [["signup-link","signup"],["login-link","login"]]) document.getElementById(id)!.setAttribute("href",`/${path}?next=checkout&plan=${plan}&source=${encodeURIComponent(source)}`);
   const selector = document.getElementById("plan-select") as HTMLSelectElement;
   selector.value = plan;
   document.getElementById("plan-heading")!.textContent = plan === "pro" ? "Pro" : "Starter";
@@ -85,7 +89,7 @@ import Base from "../layouts/Base.astro";
         message("Create an account first, then continue to Stripe. API access starts after payment; you won’t be charged until you confirm on Stripe.");
         button.classList.add("hidden"); auth.classList.remove("hidden"); return;
       }
-      localStorage.removeItem("nlt_checkout_intent");
+      try { localStorage.removeItem("nlt_checkout_intent"); } catch {}
       const account = document.getElementById("account")!;
       account.textContent = `Signed in as ${session.user.email}`; account.classList.remove("hidden");
       let billing = await billingRequest<BillingStatus>("status");
@@ -119,8 +123,9 @@ import Base from "../layouts/Base.astro";
   button.addEventListener("click", async () => {
     if (!available) return;
     button.disabled = true; button.textContent = "Opening Stripe…";
-    try { const result = await billingRequest<{ url: string }>("checkout", { source, plan }); redirectToStripe(result.url); }
-    catch (error) { message(error instanceof Error ? error.message : "Could not open checkout.", true); button.disabled = false; button.textContent = "Try secure checkout again"; }
+    track("checkout_attempt",plan);
+    try { const result = await billingRequest<{ url: string }>("checkout", { source, plan }); track("checkout_redirect",plan); redirectToStripe(result.url); }
+    catch (error) { track("checkout_error",plan); message(error instanceof Error ? error.message : "Could not open checkout.", true); button.disabled = false; button.textContent = "Try secure checkout again"; }
   });
   init();
 </script>

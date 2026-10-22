@@ -27,17 +27,21 @@ export async function billingRequest<T>(path: string, body?: object): Promise<T>
 }
 
 export function rememberCheckout(): void {
+  try {
   localStorage.setItem("nlt_checkout_intent", "paid");
   const plan = new URLSearchParams(location.search).get("plan");
   if (plan === "starter" || plan === "pro") localStorage.setItem("nlt_checkout_plan", plan);
   const source = new URLSearchParams(location.search).get("source");
   if (source && /^[a-zA-Z0-9_-]{1,50}$/.test(source)) localStorage.setItem("nlt_checkout_source", source);
+  } catch { /* Storage restrictions must not prevent account creation. */ }
 }
 
 export function consumeCheckoutIntent(): boolean {
+  try {
   const intent = ["paid", "pro"].includes(localStorage.getItem("nlt_checkout_intent") || "");
   localStorage.removeItem("nlt_checkout_intent");
   return intent;
+  } catch { return false; }
 }
 
 export function redirectToStripe(url: string, portal = false): void {

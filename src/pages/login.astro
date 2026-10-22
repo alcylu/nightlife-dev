@@ -56,7 +56,7 @@ import AuthPage from "../layouts/AuthPage.astro";
   const proIntent = new URLSearchParams(location.search).get("next") === "checkout";
   if (proIntent) {
     rememberCheckout();
-    document.querySelector<HTMLAnchorElement>('a[href="/signup"]')!.href = "/signup?next=checkout";
+    document.querySelector<HTMLAnchorElement>('a[href="/signup"]')!.href = `/signup?next=checkout&plan=${new URLSearchParams(location.search).get("plan") === "pro" ? "pro" : "starter"}`;
   }
 
   const form = document.getElementById("login-form") as HTMLFormElement;
@@ -71,6 +71,7 @@ import AuthPage from "../layouts/AuthPage.astro";
     submitBtn.disabled = true;
     submitBtn.textContent = "Signing in...";
 
+    try {
     const { error } = await supabase.auth.signInWithPassword({
       email: emailInput.value,
       password: passwordInput.value,
@@ -82,7 +83,15 @@ import AuthPage from "../layouts/AuthPage.astro";
       submitBtn.disabled = false;
       submitBtn.textContent = "Sign in";
     } else {
-      window.location.href = proIntent ? `/checkout?plan=${localStorage.getItem("nlt_checkout_plan") === "starter" ? "starter" : "pro"}` : "/dashboard";
+      let selected = new URLSearchParams(location.search).get("plan");
+      if (!selected) { try { selected=localStorage.getItem("nlt_checkout_plan"); } catch {} }
+      window.location.href = proIntent ? `/checkout?plan=${selected === "pro" ? "pro" : "starter"}` : "/dashboard";
+    }
+    } catch {
+      errorMsg.textContent = "Could not connect. Please try signing in again.";
+      errorMsg.classList.remove("hidden");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Sign in";
     }
   });
 </script>

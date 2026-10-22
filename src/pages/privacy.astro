@@ -1,0 +1,21 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Privacy & analytics — nightlife.dev" description="How optional first-party analytics works on nightlife.dev.">
+  <main class="mx-auto max-w-2xl space-y-6 px-6 py-16 leading-relaxed">
+    <a href="/" class="text-primary">&larr; nightlife.dev</a>
+    <h1 class="text-3xl font-bold">Privacy & analytics</h1>
+    <p class="text-text-muted">Optional analytics helps us understand whether visitors reach signup, email confirmation and checkout. It runs only after you choose “Allow analytics”. We respect Do Not Track and Global Privacy Control. Refusing analytics does not affect API access, signup or billing.</p>
+    <p class="text-text-muted">We send only a random tab-visit identifier, a fixed page label, an event label, a broad source category (such as search or GitHub) and the selected plan. The identifier is held in session storage and rotates daily; it is not a persistent visitor ID. Your consent choice is saved locally. We never send form contents, emails, passwords, API keys, account IDs, full URLs, query strings or URL fragments to analytics.</p>
+    <p class="text-text-muted">Analytics records are private to Nightlife Tokyo, are not sold or sent to an advertising service, and expire after 30 days through scheduled database cleanup. Our infrastructure still processes ordinary request metadata for security and operation; analytics does not store IP addresses or user-agent strings. These counts are estimates and may include undetected automation.</p>
+    <p class="text-text-muted">Account authentication uses Supabase; payment details are handled by Stripe. Billing records and API usage are separate from optional analytics. See the <a href="/terms" class="text-primary underline">subscription terms</a> for billing information. Contact <a href="mailto:allen@nightlifetokyo.com" class="text-primary underline">allen@nightlifetokyo.com</a> with privacy questions.</p>
+    <button id="disable-analytics" class="rounded-lg border border-border px-4 py-3">Disable analytics on this browser</button>
+    <p id="privacy-status" role="status" class="text-text-muted"></p>
+  </main>
+</Base>
+<script>
+  document.getElementById("disable-analytics")!.addEventListener("click",()=>{
+    try {localStorage.setItem("nlt_analytics_consent","no");sessionStorage.removeItem("nlt_funnel_visit");document.getElementById("analytics-choice")?.classList.add("hidden");document.getElementById("privacy-status")!.textContent="Optional analytics is disabled on this browser.";}
+    catch {document.getElementById("privacy-status")!.textContent="Browser storage is unavailable; analytics is already disabled.";}
+  });
+</script>
