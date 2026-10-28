@@ -1,6 +1,7 @@
 # Stage 1 — Build
-FROM node:22-slim AS build
+FROM node:22.23.4-slim AS build
 WORKDIR /app
+ENV ASTRO_TELEMETRY_DISABLED=1
 COPY package*.json ./
 RUN npm ci
 COPY . .
