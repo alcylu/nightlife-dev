@@ -3,10 +3,10 @@
 ## Overview
 Static marketing landing page + self-service API key dashboard for the nightlife MCP API product. Separate brand from the consumer site (nightlifetokyo.com).
 
-- **Stack**: Astro 5 (static output), Tailwind CSS v4 (Vite plugin), astro-expressive-code, @supabase/supabase-js
+- **Stack**: Astro 7 (static output), Tailwind CSS v4 (Vite plugin), astro-expressive-code, @supabase/supabase-js
 - **Location**: `~/Apps/nightlife-dev/`
 - **Domain**: nightlife.dev (Cloudflare DNS)
-- **Deployment**: Docker (node:22-slim build → nginx:alpine serve) on Railway
+- **Deployment**: Docker (node:22.23.4-slim build → nginx:alpine serve) on Railway
 - **Supabase**: Shared project `nqwyhdfwcaedtycojslb` (same as consumer site + MCP server)
 
 ## URLs
@@ -107,6 +107,25 @@ All auth/dashboard is **client-side JavaScript** (Astro static output, no SSR).
 - Client JS: tab switcher (Connect section) + auth pages + dashboard
 
 ## Deploy
+
+### Dependency security and release gates (2026-10-28)
+
+Astro 7.4.2, Expressive Code 0.44.3, Tailwind 4.3.3 and Supabase JS 2.118.0
+replace the vulnerable dependency tree. Node must be >=22.23.4; CI and Docker
+use 22.23.4. Static nginx hosting is unchanged; no SSR adapter was introduced.
+Run `npm ci`, `npm run audit:security`, `npm test`, `npm run build`, and
+`npm run test:build`. The last command checks all ten generated routes, local
+assets, client scripts, paid-plan controls and privacy markup. CI runs all these
+gates; audit fails even on low-severity advisories, without suppression/overrides.
+After framework upgrades visually verify homepage and both checkout plans on
+desktop/mobile, signup/login handoffs and the signed-out dashboard guard.
+
+Production tracks GitHub `main`, with Railway Wait for CI enabled and `/health`
+gating (120 seconds). Use reviewed, CI-passing GitHub commits for releases rather
+than uploading an arbitrary local directory. When recovering a missed release,
+deploy the exact approved SHA and verify the active deployment SHA/status.
+CLI credentials are environment-scoped in `~/.railway/tokens.env`; always supply
+the explicit service/environment, never `railway link` or bare `railway up`.
 ```bash
 # Push to GitHub (auto-deploy if connected, or manual):
 git push origin main

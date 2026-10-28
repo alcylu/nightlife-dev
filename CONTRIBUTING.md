@@ -5,8 +5,11 @@ Developer landing page + self-service dashboard for `nightlife.dev` (the develop
 ## Workflow
 
 - Branch from `main`, or push directly for hotfixes
-- No automated CI today
-- Run locally + verify pages render before pushing
+- CI gates dependency audit, regression tests, static build and generated-route checks
+- Run `npm ci`, `npm run audit:security`, `npm test`, `npm run build`, and
+  `npm run test:build`; visually verify pages before pushing
+- Use Node >=22.23.4. Production deploys GitHub main only after CI passes,
+  with a Railway `/health` deployment gate
 
 ## Rules for new code
 
